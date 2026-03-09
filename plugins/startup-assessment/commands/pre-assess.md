@@ -120,11 +120,9 @@ Confirm in chat: "Read [N] document(s): [list filenames]" before proceeding.
 
 ---
 
-## Step 1: Parallel Context Extraction & Criteria Resolution
+## Step 1: Context Extraction
 
-Two agents initialize in parallel:
-
-**Agent 1: context-extractor**
+Agent: **context-extractor**
 - Reads all files in `$WORKSPACE/assessment/business-case-docs/`
 - Extracts structured context data
 - Populates `$WORKSPACE/assessment/pre-assessment/data/context-profile.json` with fields:
@@ -137,17 +135,41 @@ Two agents initialize in parallel:
   - Any disclosed risks or material uncertainties
 - Notes extraction confidence scores
 
-**Agent 2: criteria-resolver**
-- If assessor criteria document provided: reads document, extracts investor profile (type, transaction size, sector focus, red flags, non-negotiables)
-- If no document: conducts interactive dialogue with assessor to determine:
-  - Assessor type (VC, corporate venture, angel, acquisitor, strategic partner)
-  - Typical transaction size and stage focus
-  - Top 3 investment priorities
-  - Top 3 non-negotiables
-  - Any sector exclusions or geographic constraints
-- Populates `$WORKSPACE/assessment/pre-assessment/data/assessor-profile.json`
+Wait for context-extractor to complete before proceeding.
 
-Both agents complete before proceeding.
+---
+
+## Step 1b: Assessor Profile — Interactive Questions
+
+**Check first:** If a criteria document was uploaded to `$WORKSPACE/assessment/business-case-docs/`, skip this section and pass it directly to criteria-resolver to extract the profile automatically.
+
+**If no criteria document was provided**, collect the assessor profile now using the AskUserQuestion tool. Ask each question one at a time and wait for the response before asking the next.
+
+**Q1 — Use AskUserQuestion (single-select):**
+- Question: "What is your primary investment or lending capacity?"
+- Options: Venture Capital | Angel Investor | Private Equity | Credit / Debt | Corporate Strategic | Family Office | Sovereign Wealth | Accelerator | Other
+
+**Q2 — Use AskUserQuestion (single-select):**
+- Question: "What funding stage and company maturity do you typically target?"
+- Options: Pre-Seed | Seed | Series A | Series B+ | Growth Stage | Buyout | Restructuring / Turnaround | Other
+
+**Q3 — Use AskUserQuestion (multi-select):**
+- Question: "Select your must-have criteria or deal-breakers (choose all that apply):"
+- Options: Minimum recurring revenue (MRR/ARR) | Specific vertical or sector focus | Founder/team sector experience | Regulatory approval in place | US-based team only | No single customer >50% revenue | Profitability required | None of the above
+
+**Q4 — Use AskUserQuestion (single-select):**
+- Question: "Do you have quantitative thresholds to apply? (e.g. min revenue, max burn, team size)"
+- Options: Yes — I'll describe them now | No — use standard thresholds
+
+If "Yes": ask a follow-up as plain text for the assessor to describe their thresholds.
+
+**Q5 — Use AskUserQuestion (single-select):**
+- Question: "Any sector exclusions or geographic constraints?"
+- Options: Yes — I'll describe them now | No constraints
+
+If "Yes": ask a follow-up as plain text.
+
+Once all answers are collected, pass them to the **criteria-resolver** agent to produce `$WORKSPACE/assessment/pre-assessment/data/assessor-profile.json`. The agent does not ask further questions — it processes the answers you collected and outputs the profile.
 
 ---
 
@@ -178,8 +200,13 @@ Present the summary in chat and provide a download link to the saved file.
 
 A review file has been saved to: **`$WORKSPACE/assessment/pre-assessment/reports/CP1_ContextProfile_[YYYY-MM-DD].md`**
 
-Use the **AskUserQuestion** tool to present the following single-select choice:
+First, use the **AskUserQuestion** tool (single-select):
+- **Question:** "Are there any additional priorities or constraints to add before we build the framework?"
+- **Options:** Yes — I'll describe them now | No — the profile is complete
 
+If "Yes": ask as plain text for the assessor to describe the additional constraints, record them, and update `assessor-profile.json`.
+
+Then use the **AskUserQuestion** tool (single-select):
 - **Question:** "CP1 — Context & Assessor Profile is ready for review. How would you like to proceed?"
 - **Options:**
   - "Edit & re-upload — I'll open the review file, make corrections, and re-upload it here"

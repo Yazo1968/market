@@ -51,29 +51,7 @@ If the assessor provides an investment thesis, credit policy, or similar documen
 
 #### Mode 2: No Document Provided
 
-Conduct a minimal, targeted structured dialogue:
-
-Ask each question sequentially using the **AskUserQuestion** tool. Wait for a response before asking the next.
-
-1. **Assessor Type** — use AskUserQuestion (single-select):
-   - **Question:** "What is your primary investment or lending capacity?"
-   - **Options:** Venture Capital | Angel Investor | Private Equity | Credit / Debt | Corporate Strategic | Family Office | Sovereign Wealth | Accelerator | Other
-
-2. **Transaction Type** — use AskUserQuestion (single-select):
-   - **Question:** "What funding stage and company maturity do you typically target?"
-   - **Options:** Pre-Seed | Seed | Series A | Series B+ | Growth Stage | Buyout | Restructuring / Turnaround | Other
-
-3. **Non-Negotiables** — use AskUserQuestion (multi-select):
-   - **Question:** "Select any must-have criteria or deal-breakers that apply (choose all that apply):"
-   - **Options:** Minimum recurring revenue (MRR/ARR) | Specific vertical or sector focus | Founder/team experience in sector | Regulatory approval in place | US-based team only | No single customer >50% revenue | Profitability required | Other (describe in follow-up)
-
-4. **Firm-Specific Standards** — use AskUserQuestion (single-select):
-   - **Question:** "Do you have quantitative thresholds we should apply to this assessment?"
-   - **Options:** Yes — I'll describe them now | No — use standard thresholds
-
-   If "Yes": follow up with a free-text prompt asking the assessor to describe their thresholds (revenue minimums, burn limits, team size, geographic constraints, etc.).
-
-5. **Record all responses** and proceed to priority assignment (see below).
+The assessor's answers have already been collected by the main command before this agent was launched. You will receive the answers as input — do NOT ask any questions. Process the provided answers directly and produce the assessor-profile.json output.
 
 ### Assessor Type → Report Format Mapping
 
@@ -217,13 +195,11 @@ Produce **two outputs**:
 
 ### CP1 Presentation Guidance
 
-- Present assessor profile clearly and concisely
-- Confirm that priority rankings match the assessor's intent
-- Review non-negotiables for completeness and realism
-- Use the **AskUserQuestion** tool (single-select) to ask:
-  - **Question:** "Are there any additional priorities or constraints we should add before building the framework?"
-  - **Options:** Yes — I'll describe them now | No — the profile is complete, proceed
-- Get explicit sign-off before passing to framework-builder
+- Present assessor profile clearly and concisely in the human-readable summary
+- Confirm that priority rankings match the collected answers
+- List non-negotiables and firm-specific standards clearly
+- Do NOT ask any follow-up questions — the main command handles all user interaction via AskUserQuestion
+- Output the profile and summary, then return control to the main command
 
 ### Key Principles
 
