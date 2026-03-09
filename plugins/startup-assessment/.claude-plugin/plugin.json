@@ -1,17 +1,9 @@
 {
   "name": "startup-assessment",
   "version": "1.0.0",
-  "description": "AI-powered startup investment assessment tool. Runs structured due diligence across 10 domains (market, product, business model, GTM, traction, management, financials, risk, capital, legal). Produces scored readiness reports, sensitivity analysis, and investment recommendations with go/no-go determination.",
+  "description": "AI-powered startup investment assessment. Structured due diligence across 10 domains with scoring, sensitivity analysis, and go/no-go investment recommendations.",
   "author": {
-    "name": "Yasser",
-    "email": "job.international.company@gmail.com"
+    "name": "Yasser"
   },
-  "keywords": ["startup", "investment", "due-diligence", "venture-capital", "pitch-assessment", "deal-flow", "scoring"],
-  "commands": [
-    { "name": "initiate", "description": "Set up workspace folders and import business case documents" },
-    { "name": "pre-assess", "description": "Extract context, build framework, and run pre-assessment analysis" },
-    { "name": "assess", "description": "Run full domain assessment across all active modules" },
-    { "name": "sensitivity", "description": "Run sensitivity analysis on the locked assessment" },
-    { "name": "recommend", "description": "Generate investment recommendations with improvement roadmap or deal terms" }
-  ]
+  "keywords": ["startup", "investment", "due-diligence", "venture-capital", "pitch-assessment"]
 }
