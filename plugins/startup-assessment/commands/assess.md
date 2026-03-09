@@ -1,6 +1,6 @@
 ---
 description: Run full assessment on a pre-assessed submission
-allowed-tools: Read, Write, Bash(python3:*), Bash(find:*), Agent
+allowed-tools: Read, Write, Bash(python3:*), Bash(find:*), Agent, AskUserQuestion
 model: sonnet
 argument-hint: (no arguments required — reads automatically from workspace folders)
 ---
@@ -153,22 +153,20 @@ Present the summary in chat and provide a download link to the saved file.
 
 **Your instruction to the assessor:**
 
-> A review file has been saved for your reference:
-> **`$WORKSPACE/assessment/assessment/reports/CP4_AssessmentScope_[YYYY-MM-DD].md`**
->
-> You may escalate assessment modes (gap-focused → verification → deep-independent) for any domain.
-> You may **NOT** reduce assessment modes.
->
-> You have two options:
->
-> **Option A — Edit & re-upload:** Open the file, add your escalation requests in the `## Your Escalation Requests` section (e.g., "Escalate Product & Technology to deep-independent"), save it, and re-upload it here. Valid escalations will be applied; invalid requests (reductions) will be flagged and rejected.
->
-> **Option B — Confirm in chat:** If the scope looks correct as assigned, type **`confirm`** to proceed immediately.
+A review file has been saved to: **`$WORKSPACE/assessment/assessment/reports/CP4_AssessmentScope_[YYYY-MM-DD].md`**
+
+You may escalate assessment modes (gap-focused → verification → deep-independent). You may **NOT** reduce modes.
+
+Use the **AskUserQuestion** tool to present the following single-select choice:
+
+- **Question:** "CP4 — Assessment Scope is ready for review. How would you like to proceed?"
+- **Options:**
+  - "Edit & re-upload — I'll open the scope file, add my escalation requests, and re-upload it here"
+  - "Confirm — The scope looks correct, proceed with domain assessment"
 
 **What happens:**
-- If the assessor re-uploads an edited CP4 file: read escalation requests, validate each (only escalations are permitted), apply valid ones to `assessment-scope-plan.json`, reject and explain invalid ones, and proceed
-- If the assessor types `confirm`: proceed with no changes
-- If the assessor types escalations as freeform text: apply valid escalations, reject invalid ones with explanation, and proceed
+- If the assessor selects **Edit & re-upload**: wait for the re-uploaded file, read escalation requests, validate each (only escalations allowed — reject reductions with explanation), apply valid ones to `assessment-scope-plan.json`, and proceed
+- If the assessor selects **Confirm**: proceed with no changes
 - All changes logged in session audit trail
 - Proceed to Step 2
 
@@ -268,21 +266,20 @@ Present the summary in chat and provide a download link to the saved file.
 
 **Your instruction to the assessor:**
 
-> A review file has been saved for your reference:
-> **`$WORKSPACE/assessment/assessment/reports/CP5_ReconciledFindings_[YYYY-MM-DD].md`**
->
-> Review the reconciled findings. You may provide overrides or additional context that affects the determination — these will be documented in the session audit trail but **will not change scores already calculated.**
->
-> You have two options:
->
-> **Option A — Edit & re-upload:** Open the file, add your overrides or notes in the `## Your Overrides & Notes` section (e.g., "Override: Product domain risk overstated — founder has direct regulatory experience"), save it, and re-upload it here. All override notes will be applied to the audit trail before proceeding.
->
-> **Option B — Confirm in chat:** If the reconciled findings look correct as presented, type **`confirm`** to lock findings and generate outputs.
+A review file has been saved to: **`$WORKSPACE/assessment/assessment/reports/CP5_ReconciledFindings_[YYYY-MM-DD].md`**
+
+You may provide overrides or additional context — these are documented in the audit trail but **will not change scores already calculated.**
+
+Use the **AskUserQuestion** tool to present the following single-select choice:
+
+- **Question:** "CP5 — Reconciled Findings are ready for review. How would you like to proceed?"
+- **Options:**
+  - "Edit & re-upload — I'll open the review file, add my overrides or notes, and re-upload it here"
+  - "Confirm — Lock findings and generate final assessment outputs"
 
 **What happens:**
-- If the assessor re-uploads an edited CP5 file: read override notes from `## Your Overrides & Notes`, apply each to the session audit trail with timestamp, and proceed
-- If the assessor types `confirm`: proceed with no overrides
-- If the assessor provides freeform overrides in chat: document them in the audit trail and proceed
+- If the assessor selects **Edit & re-upload**: wait for the re-uploaded file, read override notes from `## Your Overrides & Notes`, apply each to the session audit trail with timestamp, and proceed
+- If the assessor selects **Confirm**: proceed with no overrides
 - Session audit trail sealed at this point
 - Proceed to Step 4
 

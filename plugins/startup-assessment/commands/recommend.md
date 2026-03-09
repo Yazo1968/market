@@ -1,6 +1,6 @@
 ---
 description: Generate investment recommendations from assessment and sensitivity outputs
-allowed-tools: Read, Write, Bash(python3:*), Bash(find:*), Agent
+allowed-tools: Read, Write, Bash(python3:*), Bash(find:*), Agent, AskUserQuestion
 model: sonnet
 argument-hint: (no arguments required — reads automatically from workspace folders)
 ---

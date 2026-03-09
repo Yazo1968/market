@@ -1,6 +1,6 @@
 ---
 description: Run pre-assessment on a startup business case document
-allowed-tools: Read, Write, Bash(python3:*), Bash(find:*), Agent
+allowed-tools: Read, Write, Bash(python3:*), Bash(find:*), Agent, AskUserQuestion
 model: sonnet
 argument-hint: (no arguments required — reads from assessment/business-case-docs/)
 ---
@@ -176,19 +176,18 @@ Present the summary in chat and provide a download link to the saved file.
 
 **Your instruction to the assessor:**
 
-> A review file has been saved for your reference:
-> **`$WORKSPACE/assessment/pre-assessment/reports/CP1_ContextProfile_[YYYY-MM-DD].md`**
->
-> You have two options:
->
-> **Option A — Edit & re-upload:** Open the file, make corrections directly in it, save it, and re-upload it here. The updated file will be read and all corrections applied automatically.
->
-> **Option B — Confirm in chat:** If everything looks correct, type **`confirm`** to proceed immediately.
+A review file has been saved to: **`$WORKSPACE/assessment/pre-assessment/reports/CP1_ContextProfile_[YYYY-MM-DD].md`**
+
+Use the **AskUserQuestion** tool to present the following single-select choice:
+
+- **Question:** "CP1 — Context & Assessor Profile is ready for review. How would you like to proceed?"
+- **Options:**
+  - "Edit & re-upload — I'll open the review file, make corrections, and re-upload it here"
+  - "Confirm — Everything looks correct, proceed to framework construction"
 
 **What happens:**
-- If the assessor re-uploads an edited CP1 file: read the file, extract all corrections, apply them to `context-profile.json` and `assessor-profile.json`, confirm what changed, and proceed
-- If the assessor types `confirm`: proceed with no changes
-- If the assessor types corrections as freeform text: apply corrections, confirm what changed, and proceed
+- If the assessor selects **Edit & re-upload**: wait for the re-uploaded file, read it, extract all corrections, apply them to `context-profile.json` and `assessor-profile.json`, confirm what changed, and proceed
+- If the assessor selects **Confirm**: proceed with no changes
 - All corrections are recorded in the session audit trail
 - Proceed to Step 2
 
@@ -235,27 +234,21 @@ Present the summary in chat and provide a download link to the saved file.
 
 **Your instruction to the assessor:**
 
-> A review file has been saved for your reference:
-> **`$WORKSPACE/assessment/pre-assessment/reports/CP2_Framework_[YYYY-MM-DD].md`**
->
-> You may adjust:
-> - Add optional modules within a domain for deeper analysis
-> - Adjust criticality levels within reasonable bounds (must-have ↔ should-have only)
->
-> You may **NOT** adjust:
-> - Remove mandatory modules
-> - Remove hard blockers
->
-> You have two options:
->
-> **Option A — Edit & re-upload:** Open the file, annotate your adjustments in the `## Instructions` section, save it, and re-upload it here. All valid adjustments will be applied automatically; any invalid adjustments (removing mandatory modules or hard blockers) will be flagged and rejected.
->
-> **Option B — Confirm in chat:** If the framework looks correct, type **`confirm`** to proceed immediately.
+A review file has been saved to: **`$WORKSPACE/assessment/pre-assessment/reports/CP2_Framework_[YYYY-MM-DD].md`**
+
+You may adjust: add optional modules, adjust criticality levels (must-have ↔ should-have only).
+You may **NOT** adjust: remove mandatory modules or hard blockers.
+
+Use the **AskUserQuestion** tool to present the following single-select choice:
+
+- **Question:** "CP2 — Assessment Framework is ready for review. How would you like to proceed?"
+- **Options:**
+  - "Edit & re-upload — I'll open the framework file, annotate my adjustments, and re-upload it here"
+  - "Confirm — The framework looks correct, proceed to research"
 
 **What happens:**
-- If the assessor re-uploads an edited CP2 file: read the file, extract all requested adjustments, validate each against the constraints above, apply valid adjustments to `framework.json`, reject and explain any invalid ones, and proceed
-- If the assessor types `confirm`: proceed with no changes
-- If the assessor types adjustments as freeform text: apply valid adjustments, reject invalid ones with explanation, and proceed
+- If the assessor selects **Edit & re-upload**: wait for the re-uploaded file, extract all requested adjustments, validate each (reject removal of mandatory modules or hard blockers with explanation), apply valid adjustments to `framework.json`, and proceed
+- If the assessor selects **Confirm**: proceed with no changes
 - All adjustments are logged in the session audit trail
 - Proceed to Step 3
 
@@ -362,26 +355,20 @@ Present the summary in chat and provide a download link to the saved file.
 
 **Your instruction to the assessor:**
 
-> A review file has been saved for your reference:
-> **`$WORKSPACE/assessment/pre-assessment/reports/CP3_ScoredFindings_[YYYY-MM-DD].md`**
->
-> You may:
-> - Flag any modules for reconsideration
-> - Provide additional context that was not in your submission
-> - Correct any research assumptions
->
-> Note: assessor notes at CP3 are recorded in the audit trail. They do **not** change scores — they provide context that carries forward into the full assessment phase.
->
-> You have two options:
->
-> **Option A — Edit & re-upload:** Open the file, add your notes and flags in the `## Your Notes` section, save it, and re-upload it here. All notes will be read, recorded in the session audit trail, and confirmed back to you before proceeding.
->
-> **Option B — Confirm in chat:** If you have no notes or flags, type **`confirm`** to proceed immediately.
+A review file has been saved to: **`$WORKSPACE/assessment/pre-assessment/reports/CP3_ScoredFindings_[YYYY-MM-DD].md`**
+
+You may flag modules for reconsideration, add context, or correct research assumptions. Notes are recorded in the audit trail — they do **not** change scores but carry forward into the full assessment.
+
+Use the **AskUserQuestion** tool to present the following single-select choice:
+
+- **Question:** "CP3 — Scored Findings are ready for review. How would you like to proceed?"
+- **Options:**
+  - "Edit & re-upload — I'll open the review file, add my notes and flags, and re-upload it here"
+  - "Confirm — No notes or flags, proceed to QA/QC review"
 
 **What happens:**
-- If the assessor re-uploads an edited CP3 file: read the `## Your Notes` section, record all notes verbatim in the session audit trail, confirm what was recorded, and proceed
-- If the assessor types `confirm`: proceed with no notes recorded
-- If the assessor types notes as freeform text: record notes in audit trail, confirm, and proceed
+- If the assessor selects **Edit & re-upload**: wait for the re-uploaded file, read the `## Your Notes` section, record all notes verbatim in the session audit trail, confirm what was recorded, and proceed
+- If the assessor selects **Confirm**: proceed with no notes recorded
 - Proceed to Step 8
 
 ---

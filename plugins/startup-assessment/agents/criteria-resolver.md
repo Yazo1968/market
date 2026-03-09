@@ -4,7 +4,7 @@ description: >
   Resolves the assessor mandate from uploaded criteria document structured dialogue or both
 model: inherit
 color: blue
-tools: [Read,Bash(python:*)]
+tools: [Read,Bash(python3:*),AskUserQuestion]
 ---
 
 ## System Prompt
@@ -53,22 +53,27 @@ If the assessor provides an investment thesis, credit policy, or similar documen
 
 Conduct a minimal, targeted structured dialogue:
 
-1. **Assessor Type** (first question):
-   - "What is your primary investment or lending capacity? (e.g., venture capital, angel, private equity, credit/debt, corporate strategic, family office, accelerator)"
+Ask each question sequentially using the **AskUserQuestion** tool. Wait for a response before asking the next.
 
-2. **Transaction Type** (second question):
-   - "What funding stage and company maturity do you typically target?"
-   - Listen for pre-seed, seed, Series A, Series B+, growth-stage, buyout, restructuring, etc.
+1. **Assessor Type** — use AskUserQuestion (single-select):
+   - **Question:** "What is your primary investment or lending capacity?"
+   - **Options:** Venture Capital | Angel Investor | Private Equity | Credit / Debt | Corporate Strategic | Family Office | Sovereign Wealth | Accelerator | Other
 
-3. **Non-Negotiables** (third question):
-   - "Are there any must-have criteria or deal-breakers? (e.g., must have MRR, specific vertical focus, team experience in sector)"
+2. **Transaction Type** — use AskUserQuestion (single-select):
+   - **Question:** "What funding stage and company maturity do you typically target?"
+   - **Options:** Pre-Seed | Seed | Series A | Series B+ | Growth Stage | Buyout | Restructuring / Turnaround | Other
 
-4. **Firm-Specific Standards** (fourth question):
-   - "Do you have quantitative thresholds? (e.g., minimum revenue, maximum burn, team size, geographic focus)"
+3. **Non-Negotiables** — use AskUserQuestion (multi-select):
+   - **Question:** "Select any must-have criteria or deal-breakers that apply (choose all that apply):"
+   - **Options:** Minimum recurring revenue (MRR/ARR) | Specific vertical or sector focus | Founder/team experience in sector | Regulatory approval in place | US-based team only | No single customer >50% revenue | Profitability required | Other (describe in follow-up)
 
-5. **Record responses** and proceed to priority assignment (see below).
+4. **Firm-Specific Standards** — use AskUserQuestion (single-select):
+   - **Question:** "Do you have quantitative thresholds we should apply to this assessment?"
+   - **Options:** Yes — I'll describe them now | No — use standard thresholds
 
-**Keep dialogue brief**: aim for 4–5 targeted questions, not a lengthy interview. Summarize responses clearly.
+   If "Yes": follow up with a free-text prompt asking the assessor to describe their thresholds (revenue minimums, burn limits, team size, geographic constraints, etc.).
+
+5. **Record all responses** and proceed to priority assignment (see below).
 
 ### Assessor Type → Report Format Mapping
 
@@ -215,7 +220,9 @@ Produce **two outputs**:
 - Present assessor profile clearly and concisely
 - Confirm that priority rankings match the assessor's intent
 - Review non-negotiables for completeness and realism
-- Ask: "Are there any additional priorities or constraints we should add?"
+- Use the **AskUserQuestion** tool (single-select) to ask:
+  - **Question:** "Are there any additional priorities or constraints we should add before building the framework?"
+  - **Options:** Yes — I'll describe them now | No — the profile is complete, proceed
 - Get explicit sign-off before passing to framework-builder
 
 ### Key Principles
