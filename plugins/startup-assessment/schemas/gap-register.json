@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "gap-register",
+  "description": "All identified gaps with type, severity, research resolution status, and remediation guidance. Produced by gap-analyst. Consumed by qaqc-agent, output agents, scope-determinator.",
+  "type": "object",
+  "required": ["company_name", "gaps", "gap_summary"],
+  "properties": {
+    "company_name": {"type": "string"},
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["gap_id", "module_id", "domain_id", "gap_type", "severity", "track", "description"],
+        "properties": {
+          "gap_id": {
+            "type": "string",
+            "description": "Unique gap identifier (e.g., 'GAP-001')."
+          },
+          "module_id": {"type": "string"},
+          "domain_id": {"type": "integer"},
+          "gap_type": {
+            "type": "string",
+            "enum": [
+              "absent-unresolvable",
+              "absent-externally-resolvable",
+              "fragmentary",
+              "unverified",
+              "misaligned",
+              "conflicted",
+              "flagged"
+            ],
+            "description": "Gap type classification: absent-unresolvable=not in submission and cannot be sourced externally; absent-externally-resolvable=not in submission but partially addressable through external research; fragmentary=present but insufficient; unverified=present but not independently corroborated; misaligned=present but wrong for stage/assessor/ask; conflicted=submission and research conflict; flagged=assessor or QA/QC flagged issue."
+          },
+          "track": {
+            "type": "string",
+            "enum": ["readiness", "fit-to-purpose", "both"],
+            "description": "Which scoring track this gap affects."
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["critical", "significant", "moderate", "minor"],
+            "description": "Severity of this gap relative to the confirmed framework and assessor priorities."
+          },
+          "description": {
+            "type": "string",
+            "description": "Clear description of what is missing or misaligned and why it matters."
+          },
+          "research_resolution_status": {
+            "type": "string",
+            "enum": ["not-applicable", "partially-resolved", "unresolved", "flagged-for-assessor"],
+            "description": "Status of external research resolution attempt for this gap."
+          },
+          "resolution_attempt_summary": {
+            "type": "string",
+            "description": "What external research found (or did not find) when attempting to resolve this gap."
+          },
+          "assessor_action_required": {
+            "type": "boolean",
+            "description": "Whether this gap requires explicit assessor judgment before proceeding."
+          },
+          "remediation_guidance": {
+            "type": "string",
+            "description": "What the submitter would need to provide to resolve this gap."
+          },
+          "kept_with_flag": {
+            "type": "boolean",
+            "description": "Whether this issue was kept as-is with a flag at assessor's instruction (QA/QC escalation outcome)."
+          },
+          "assessor_resolution_note": {
+            "type": "string",
+            "description": "Assessor's documented resolution decision if they were escalated to."
+          }
+        }
+      }
+    },
+    "gap_summary": {
+      "type": "object",
+      "description": "Aggregate gap statistics.",
+      "properties": {
+        "total_gaps": {"type": "integer"},
+        "by_severity": {
+          "type": "object",
+          "properties": {
+            "critical": {"type": "integer"},
+            "significant": {"type": "integer"},
+            "moderate": {"type": "integer"},
+            "minor": {"type": "integer"}
+          }
+        },
+        "by_type": {
+          "type": "object",
+          "properties": {
+            "absent_unresolvable": {"type": "integer"},
+            "absent_externally_resolvable": {"type": "integer"},
+            "fragmentary": {"type": "integer"},
+            "unverified": {"type": "integer"},
+            "misaligned": {"type": "integer"},
+            "conflicted": {"type": "integer"},
+            "flagged": {"type": "integer"}
+          }
+        },
+        "domains_with_critical_gaps": {"type": "array", "items": {"type": "integer"}}
+      }
+    }
+  }
+}

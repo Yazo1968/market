@@ -1,10 +1,19 @@
 {
-  "name": "market",
+  "name": "yazo-market",
   "owner": {
-    "name": "Yazo1968"
+    "name": "Yasser",
+    "email": "job.international.company@gmail.com"
   },
-  "metadata": {
-    "description": "Plugin marketplace by Yazo1968"
-  },
-  "plugins": []
+  "plugins": [
+    {
+      "name": "startup-assessment",
+      "source": "./plugins/startup-assessment",
+      "description": "AI-powered startup investment assessment. Structured due diligence across 10 domains with scoring, sensitivity analysis, and investment recommendations.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Yasser"
+      },
+      "keywords": ["startup", "investment", "due-diligence", "venture-capital"]
+    }
+  ]
 }

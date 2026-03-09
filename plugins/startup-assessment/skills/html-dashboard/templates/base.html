@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{COMPANY_NAME}} - {{PHASE_NAME}} Assessment Report</title>
+
+  <!-- CDN Imports -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+  <!-- Inline Styles -->
+  <style>
+    /* Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #1f2937;
+      background: #ffffff;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      color: #0f172a;
+      margin: 16px 0 8px 0;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-top: 24px;
+    }
+
+    h2 {
+      font-size: 20px;
+    }
+
+    h3 {
+      font-size: 16px;
+    }
+
+    p {
+      margin: 8px 0;
+      color: #4b5563;
+    }
+
+    /* Links */
+    a {
+      color: #3b82f6;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: #2563eb;
+      text-decoration: underline;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header */
+    .header {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 20px 0;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .header__content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .header__meta {
+      display: flex;
+      gap: 20px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .header__phase {
+      padding: 4px 12px;
+      background: #f3f4f6;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    /* Tab Navigation */
+    .tab-nav {
+      display: flex;
+      border-bottom: 2px solid #e5e7eb;
+      background: #ffffff;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      position: sticky;
+      top: 65px;
+      z-index: 40;
+    }
+
+    .tab-nav__item {
+      flex: 0 0 auto;
+      min-width: 120px;
+      padding: 16px 20px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: #6b7280;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .tab-nav__item:hover {
+      color: #1f2937;
+      background: #f9fafb;
+    }
+
+    .tab-nav__item[aria-selected="true"],
+    .tab-nav__item.is-active {
+      color: #1f2937;
+      border-bottom-color: #3b82f6;
+      font-weight: 600;
+    }
+
+    .tab-nav__item:focus {
+      outline: 2px solid #3b82f6;
+      outline-offset: -2px;
+    }
+
+    /* Tab Content */
+    .tab-content {
+      background: #ffffff;
+    }
+
+    .tab-panel {
+      display: none;
+      padding: 32px 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .tab-panel.is-active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Determination Badge */
+    .determination-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 40px;
+      border-radius: 12px;
+      border: 3px solid currentColor;
+      gap: 12px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .determination-badge.go {
+      color: #22c55e;
+      background: rgba(34, 197, 94, 0.08);
+    }
+
+    .determination-badge.conditional-go {
+      color: #3b82f6;
+      background: rgba(59, 130, 246, 0.08);
+    }
+
+    .determination-badge.conditional-hold {
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.08);
+    }
+
+    .determination-badge.no-go {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.08);
+    }
+
+    .determination-badge__text {
+      font-size: 32px;
+      font-weight: 700;
+      margin: 8px 0;
+    }
+
+    .determination-badge__subtext {
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    .determination-badge__company {
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .metric-card {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .metric-card__icon {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .metric-card__label {
+      font-size: 12px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .metric-card__value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .metric-card__detail {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 8px;
+    }
+
+    /* Heatmap Grid */
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      padding: 20px;
+      background: #f9fafb;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 768px) {
+      .heatmap-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .heatmap-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        padding: 8px;
+      }
+    }
+
+    .heatmap-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 8px;
+      border-radius: 6px;
+      border: 2px solid rgba(229, 231, 235, 0.8);
+      min-height: 100px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .heatmap-cell:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      border-color: rgba(31, 41, 55, 0.3);
+    }
+
+    .heatmap-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .heatmap-scores {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      width: 100%;
+    }
+
+    .heatmap-score {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .heatmap-score-label {
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 500;
+    }
+
+    /* Chart Container */
+    .chart-container {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+      margin: 24px auto;
+      padding: 0 12px;
+    }
+
+    .chart-container canvas {
+      display: block !important;
+      width: 100% !important;
+      height: auto !important;
+    }
+
+    /* Collapsible Section */
+    .collapsible {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      margin: 12px 0;
+      background: white;
+    }
+
+    .collapsible__trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      border: none;
+      background: white;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2937;
+      transition: background 0.3s ease;
+    }
+
+    .collapsible__trigger:hover {
+      background: #f9fafb;
+    }
+
+    .collapsible__trigger:focus {
+      outline: 2px solid #3b82f6;
+      outline-offset: -2px;
+    }
+
+    .collapsible__icon {
+      color: #6b7280;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+      margin-left: 12px;
+    }
+
+    .collapsible__trigger[aria-expanded="true"] .collapsible__icon {
+      transform: rotate(180deg);
+    }
+
+    .collapsible__content {
+      padding: 16px;
+      border-top: 1px solid #e5e7eb;
+      background: #f9fafb;
+    }
+
+    .collapsible__content[hidden] {
+      display: none;
+    }
+
+    /* Table Styling */
+    .data-table {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      margin: 16px 0;
+    }
+
+    .data-table table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+    }
+
+    .data-table th {
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+      background: #f3f4f6;
+      color: #1f2937;
+      border-bottom: 2px solid #e5e7eb;
+      white-space: nowrap;
+    }
+
+    .data-table td {
+      padding: 12px 16px;
+      color: #1f2937;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .data-table tr:hover {
+      background: #f9fafb;
+    }
+
+    .data-table td.numeric {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Badge Styles */
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: white;
+    }
+
+    .badge.go { background: #22c55e; }
+    .badge.conditional-go { background: #3b82f6; }
+    .badge.conditional-hold { background: #f59e0b; }
+    .badge.no-go { background: #ef4444; }
+    .badge.critical { background: #ef4444; }
+    .badge.high { background: #f97316; }
+    .badge.medium { background: #f59e0b; }
+    .badge.low { background: #eab308; }
+    .badge.complete { background: #22c55e; }
+    .badge.incomplete { background: #f59e0b; }
+
+    /* Alert Banner */
+    .alert {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 6px;
+      border-left: 4px solid;
+      margin: 16px 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .alert.critical {
+      background: #fef2f2;
+      border-left-color: #ef4444;
+      color: #991b1b;
+    }
+
+    .alert.warning {
+      background: #fffbeb;
+      border-left-color: #f59e0b;
+      color: #92400e;
+    }
+
+    .alert.info {
+      background: #eff6ff;
+      border-left-color: #3b82f6;
+      color: #1e40af;
+    }
+
+    .alert__icon {
+      flex-shrink: 0;
+      font-size: 18px;
+    }
+
+    .alert__content {
+      flex: 1;
+    }
+
+    .alert__title {
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .alert__message {
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    /* List Styles */
+    ul, ol {
+      margin: 12px 0;
+      padding-left: 24px;
+    }
+
+    li {
+      margin: 6px 0;
+      color: #4b5563;
+    }
+
+    /* Footer */
+    .footer {
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      padding: 32px 20px;
+      margin-top: 40px;
+      text-align: center;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .footer__content {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .footer__generation-info {
+      margin: 8px 0;
+      font-size: 11px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header__meta {
+        flex-direction: column;
+        gap: 4px;
+        font-size: 12px;
+      }
+
+      .tab-nav__item {
+        min-width: 100px;
+        padding: 12px 16px;
+        font-size: 12px;
+      }
+
+      .determination-badge {
+        padding: 24px 20px;
+      }
+
+      .determination-badge__text {
+        font-size: 24px;
+      }
+
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .tab-panel {
+        padding: 24px 16px;
+      }
+
+      .container {
+        padding: 0 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header__meta {
+        gap: 2px;
+      }
+
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .determination-badge {
+        padding: 20px 16px;
+      }
+
+      .determination-badge__text {
+        font-size: 20px;
+      }
+
+      .data-table {
+        font-size: 12px;
+      }
+
+      .data-table td,
+      .data-table th {
+        padding: 8px 12px;
+      }
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: white;
+      }
+
+      .header,
+      .tab-nav {
+        position: static;
+      }
+
+      .tab-panel {
+        display: block !important;
+        page-break-inside: avoid;
+      }
+
+      .chart-container,
+      canvas {
+        page-break-inside: avoid;
+      }
+
+      a {
+        color: #1e40af;
+        text-decoration: underline;
+      }
+
+      .footer {
+        page-break-before: always;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header__content">
+        <div class="header__title">{{COMPANY_NAME}}</div>
+        <div class="header__meta">
+          <span class="header__phase">{{PHASE_NAME}}</span>
+          <span>Date: {{ASSESSMENT_DATE}}</span>
+          <span>Assessor: {{ASSESSOR_NAME}}</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Tab Navigation -->
+  <nav class="tab-nav" role="tablist">
+    <button class="tab-nav__item" role="tab" aria-selected="true" aria-controls="panel-executive" data-panel="executive">
+      Executive Dashboard
+    </button>
+    <button class="tab-nav__item" role="tab" aria-selected="false" aria-controls="panel-framework" data-panel="framework">
+      Framework
+    </button>
+    <button class="tab-nav__item" role="tab" aria-selected="false" aria-controls="panel-readiness" data-panel="readiness">
+      Readiness Scores
+    </button>
+    <button class="tab-nav__item" role="tab" aria-selected="false" aria-controls="panel-fit" data-panel="fit">
+      Fit-to-Purpose
+    </button>
+    <button class="tab-nav__item" role="tab" aria-selected="false" aria-controls="panel-gaps" data-panel="gaps">
+      Gap Register
+    </button>
+    <button class="tab-nav__item" role="tab" aria-selected="false" aria-controls="panel-research" data-panel="research">
+      Research & Sources
+    </button>
+    <button class="tab-nav__item" role="tab" aria-selected="false" aria-controls="panel-qacc" data-panel="qacc">
+      QA/QC Log
+    </button>
+    <button class="tab-nav__item" role="tab" aria-selected="false" aria-controls="panel-appendix" data-panel="appendix">
+      Appendix
+    </button>
+  </nav>
+
+  <!-- Tab Content -->
+  <div class="tab-content">
+    <!-- Executive Dashboard Panel -->
+    <div id="panel-executive" class="tab-panel is-active" role="tabpanel">
+      <div class="container">
+        <!-- Determination Badge -->
+        <div class="determination-badge {{DETERMINATION_CLASS}}">
+          <div class="determination-badge__text">{{DETERMINATION}}</div>
+          <div class="determination-badge__subtext">Assessment Date: {{ASSESSMENT_DATE}}</div>
+          <div class="determination-badge__company">{{COMPANY_NAME}}</div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-card__icon">📊</div>
+            <div class="metric-card__label">Readiness Score</div>
+            <div class="metric-card__value">{{READINESS_SCORE}}%</div>
+            <div class="metric-card__detail">Overall readiness assessment</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card__icon">🎯</div>
+            <div class="metric-card__label">Fit-to-Purpose Score</div>
+            <div class="metric-card__value">{{FIT_SCORE}}%</div>
+            <div class="metric-card__detail">Strategic alignment</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card__icon">✓</div>
+            <div class="metric-card__label">Active Domains</div>
+            <div class="metric-card__value">{{ACTIVE_DOMAINS}}</div>
+            <div class="metric-card__detail">Of 10 total domains</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card__icon">⚠️</div>
+            <div class="metric-card__label">Critical Gaps</div>
+            <div class="metric-card__value">{{CRITICAL_GAPS}}</div>
+            <div class="metric-card__detail">Requiring immediate attention</div>
+          </div>
+        </div>
+
+        <!-- Domain Heatmap -->
+        <h2>Domain Score Overview</h2>
+        <div id="domainHeatmapContainer" class="heatmap-grid">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Strengths Section -->
+        <h2>Top 3 Strengths</h2>
+        <ul>
+          {{STRENGTHS_LIST}}
+        </ul>
+
+        <!-- Risks Section -->
+        <h2>Top 3 Risks</h2>
+        <ul>
+          {{RISKS_LIST}}
+        </ul>
+
+        <!-- Navigation Buttons -->
+        <div style="text-align: center; margin: 32px 0;">
+          <p>Assessment summary complete. View detailed findings by domain or export data.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Framework Panel -->
+    <div id="panel-framework" class="tab-panel" role="tabpanel">
+      <div class="container">
+        <h1>Assessment Framework</h1>
+        <p>Framework configuration, domain activation, and assessment metadata.</p>
+
+        <div class="alert info">
+          <div class="alert__icon">ℹ️</div>
+          <div class="alert__content">
+            <div class="alert__title">Framework Setup</div>
+            <div class="alert__message">Review the framework activation status and module criticality levels below.</div>
+          </div>
+        </div>
+
+        <h2>Domain Activation</h2>
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Domain</th>
+                <th>Active</th>
+                <th>Module Count</th>
+                <th>Criticality Level</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{FRAMEWORK_TABLE_ROWS}}
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Framework Metadata</h2>
+        <ul>
+          <li><strong>Assessment Phase:</strong> {{PHASE_NAME}}</li>
+          <li><strong>Date Created:</strong> {{FRAMEWORK_DATE}}</li>
+          <li><strong>Framework Version:</strong> 2.0</li>
+          <li><strong>Assessor(s):</strong> {{ASSESSOR_NAME}}</li>
+        </ul>
+
+        <h2>Module Criticality Legend</h2>
+        <ul>
+          <li><strong>Critical:</strong> Module directly impacts overall determination; scoring is mandatory</li>
+          <li><strong>Important:</strong> Module contributes to domain assessment; scoring recommended</li>
+          <li><strong>Contextual:</strong> Module provides context; scoring optional</li>
+        </ul>
+
+        <h2>Domain Weighting Summary</h2>
+        <p>The following weights are applied to domain scores in the overall readiness calculation:</p>
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Domain</th>
+                <th>Weight</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{WEIGHTING_TABLE_ROWS}}
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Framework Notes</h2>
+        <p>{{FRAMEWORK_NOTES}}</p>
+      </div>
+    </div>
+
+    <!-- Readiness Scores Panel -->
+    <div id="panel-readiness" class="tab-panel" role="tabpanel">
+      <div class="container">
+        <h1>Readiness Scores</h1>
+        <p>Domain-by-domain readiness assessment with module-level detail.</p>
+
+        {{READINESS_CONTENT}}
+      </div>
+    </div>
+
+    <!-- Fit-to-Purpose Panel -->
+    <div id="panel-fit" class="tab-panel" role="tabpanel">
+      <div class="container">
+        <h1>Fit-to-Purpose Analysis</h1>
+        <p>Assessment of how well the startup aligns with {{ASSESSOR_TYPE}} investment criteria.</p>
+
+        {{FIT_CONTENT}}
+      </div>
+    </div>
+
+    <!-- Gap Register Panel -->
+    <div id="panel-gaps" class="tab-panel" role="tabpanel">
+      <div class="container">
+        <h1>Gap Register</h1>
+        <p>Complete list of identified gaps and risks, sorted by severity.</p>
+
+        <div class="alert info">
+          <div class="alert__icon">ℹ️</div>
+          <div class="alert__content">
+            <div class="alert__title">{{GAP_COUNT}} Gaps Identified</div>
+            <div class="alert__message">Review and prioritize remediation efforts by severity level.</div>
+          </div>
+        </div>
+
+        <h2>Gap Distribution</h2>
+        <div class="chart-container">
+          <canvas id="gapSeverityChart"></canvas>
+        </div>
+
+        <h2>Gap Details</h2>
+        {{GAPS_CONTENT}}
+      </div>
+    </div>
+
+    <!-- Research & Sources Panel -->
+    <div id="panel-research" class="tab-panel" role="tabpanel">
+      <div class="container">
+        <h1>Research Provenance</h1>
+        <p>Complete source log with confidence levels for all findings.</p>
+
+        <h2>Confidence Distribution</h2>
+        <p>
+          <strong>High Confidence:</strong> {{HIGH_CONFIDENCE_PERCENT}}% |
+          <strong>Medium Confidence:</strong> {{MEDIUM_CONFIDENCE_PERCENT}}% |
+          <strong>Low Confidence:</strong> {{LOW_CONFIDENCE_PERCENT}}%
+        </p>
+
+        <h2>Research Sources</h2>
+        {{SOURCES_CONTENT}}
+      </div>
+    </div>
+
+    <!-- QA/QC Log Panel -->
+    <div id="panel-qacc" class="tab-panel" role="tabpanel">
+      <div class="container">
+        <h1>QA/QC Log</h1>
+        <p>Quality assurance and quality control checklist and findings.</p>
+
+        <div class="alert info">
+          <div class="alert__icon">✓</div>
+          <div class="alert__content">
+            <div class="alert__title">QA/QC Summary</div>
+            <div class="alert__message">
+              <strong>Passed:</strong> {{QACC_PASSED}} |
+              <strong>Failed:</strong> {{QACC_FAILED}} |
+              <strong>Waived:</strong> {{QACC_WAIVED}}
+            </div>
+          </div>
+        </div>
+
+        <h2>QA/QC Entries</h2>
+        {{QACC_CONTENT}}
+      </div>
+    </div>
+
+    <!-- Appendix Panel -->
+    <div id="panel-appendix" class="tab-panel" role="tabpanel">
+      <div class="container">
+        <h1>Appendix</h1>
+
+        <h2>Session Audit Trail</h2>
+        <p>Chronological log of all actions taken during the assessment.</p>
+        {{AUDIT_TRAIL_CONTENT}}
+
+        <h2>Framework Construction Log</h2>
+        <p>{{FRAMEWORK_CONSTRUCTION_NOTES}}</p>
+
+        <h2>Assessor Corrections & Overrides</h2>
+        <p>{{ASSESSOR_CORRECTIONS}}</p>
+
+        <h2>Data Provenance</h2>
+        <p>{{DATA_PROVENANCE_NOTES}}</p>
+
+        <h2>Version History</h2>
+        <p>{{VERSION_HISTORY}}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__content">
+      <p><strong>{{COMPANY_NAME}} — {{PHASE_NAME}} Assessment Report</strong></p>
+      <div class="footer__generation-info">
+        Generated: {{GENERATION_TIMESTAMP}} | Assessment Date: {{ASSESSMENT_DATE}} | Assessor: {{ASSESSOR_NAME}}
+      </div>
+      <p style="margin-top: 16px; font-size: 10px; color: #d1d5db;">
+        This document contains confidential information. Distribution is restricted.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Inline JavaScript -->
+  <script>
+    // Color interpolation function
+    function scoreToColor(score) {
+      score = Math.max(0, Math.min(100, score));
+
+      if (score < 50) {
+        const ratio = score / 50;
+        const r = 239;
+        const g = Math.round(68 + (158 - 68) * ratio);
+        const b = Math.round(68 + (11 - 68) * ratio);
+        return `rgb(${r}, ${g}, ${b})`;
+      } else {
+        const ratio = (score - 50) / 50;
+        const r = Math.round(245 - (245 - 34) * ratio);
+        const g = Math.round(158 + (197 - 158) * ratio);
+        const b = Math.round(11 + (94 - 11) * ratio);
+        return `rgb(${r}, ${g}, ${b})`;
+      }
+    }
+
+    // Tab navigation
+    class TabNavigation {
+      constructor() {
+        this.tabs = document.querySelectorAll('[role="tab"]');
+        this.panels = document.querySelectorAll('[role="tabpanel"]');
+
+        this.tabs.forEach(tab => {
+          tab.addEventListener('click', () => this.selectTab(tab));
+          tab.addEventListener('keydown', (e) => this.handleKeydown(e));
+        });
+      }
+
+      selectTab(selectedTab) {
+        this.panels.forEach(panel => panel.classList.remove('is-active'));
+        this.tabs.forEach(tab => {
+          tab.setAttribute('aria-selected', 'false');
+          tab.classList.remove('is-active');
+        });
+
+        const panelId = selectedTab.getAttribute('aria-controls');
+        document.getElementById(panelId).classList.add('is-active');
+
+        selectedTab.setAttribute('aria-selected', 'true');
+        selectedTab.classList.add('is-active');
+      }
+
+      handleKeydown(e) {
+        let targetTab = null;
+        const tabsArray = Array.from(this.tabs);
+        const currentIndex = tabsArray.indexOf(e.target);
+
+        switch(e.key) {
+          case 'ArrowRight':
+            targetTab = tabsArray[(currentIndex + 1) % tabsArray.length];
+            break;
+          case 'ArrowLeft':
+            targetTab = tabsArray[(currentIndex - 1 + tabsArray.length) % tabsArray.length];
+            break;
+          case 'Home':
+            targetTab = tabsArray[0];
+            break;
+          case 'End':
+            targetTab = tabsArray[tabsArray.length - 1];
+            break;
+          default:
+            return;
+        }
+
+        if (targetTab) {
+          e.preventDefault();
+          targetTab.focus();
+          this.selectTab(targetTab);
+        }
+      }
+    }
+
+    new TabNavigation();
+
+    // Domain heatmap population
+    function initDomainHeatmap() {
+      const domains = [
+        { id: 'market', label: 'M', name: 'Market & TAM', readiness: {{DOMAIN_SCORE_MARKET_R}}, fit: {{DOMAIN_SCORE_MARKET_F}} },
+        { id: 'technology', label: 'T', name: 'Technology', readiness: {{DOMAIN_SCORE_TECH_R}}, fit: {{DOMAIN_SCORE_TECH_F}} },
+        { id: 'financials', label: 'F', name: 'Financials', readiness: {{DOMAIN_SCORE_FIN_R}}, fit: {{DOMAIN_SCORE_FIN_F}} },
+        { id: 'competitive', label: 'C', name: 'Competitive', readiness: {{DOMAIN_SCORE_COMP_R}}, fit: {{DOMAIN_SCORE_COMP_F}} },
+        { id: 'leadership', label: 'L', name: 'Leadership', readiness: {{DOMAIN_SCORE_LEAD_R}}, fit: {{DOMAIN_SCORE_LEAD_F}} },
+        { id: 'channels', label: 'CC', name: 'Channels', readiness: {{DOMAIN_SCORE_CHAN_R}}, fit: {{DOMAIN_SCORE_CHAN_F}} },
+        { id: 'ip', label: 'IP', name: 'IP', readiness: {{DOMAIN_SCORE_IP_R}}, fit: {{DOMAIN_SCORE_IP_F}} },
+        { id: 'operations', label: 'OR', name: 'Operations', readiness: {{DOMAIN_SCORE_OPS_R}}, fit: {{DOMAIN_SCORE_OPS_F}} },
+        { id: 'regulatory', label: 'RH', name: 'Regulatory', readiness: {{DOMAIN_SCORE_REG_R}}, fit: {{DOMAIN_SCORE_REG_F}} },
+        { id: 'partnerships', label: 'BD', name: 'Partnerships', readiness: {{DOMAIN_SCORE_PART_R}}, fit: {{DOMAIN_SCORE_PART_F}} }
+      ];
+
+      const container = document.getElementById('domainHeatmapContainer');
+      container.innerHTML = '';
+
+      domains.forEach(domain => {
+        const cell = document.createElement('div');
+        cell.className = 'heatmap-cell';
+        const avgScore = (domain.readiness + domain.fit) / 2;
+        cell.style.backgroundColor = scoreToColor(avgScore);
+        cell.title = `${domain.name}\nReadiness: ${domain.readiness}%\nFit: ${domain.fit}%`;
+
+        cell.innerHTML = `
+          <div class="heatmap-label">${domain.label}</div>
+          <div class="heatmap-scores">
+            <div class="heatmap-score">${domain.readiness}%</div>
+            <div class="heatmap-score-label">R</div>
+            <div class="heatmap-score">${domain.fit}%</div>
+            <div class="heatmap-score-label">F</div>
+          </div>
+        `;
+
+        container.appendChild(cell);
+      });
+    }
+
+    // Collapsible functionality
+    function initCollapsibles() {
+      document.querySelectorAll('.collapsible__trigger').forEach(trigger => {
+        trigger.addEventListener('click', function() {
+          const collapsible = this.closest('.collapsible');
+          const content = collapsible.querySelector('.collapsible__content');
+          const isExpanded = !content.hidden;
+
+          content.hidden = isExpanded;
+          this.setAttribute('aria-expanded', !isExpanded);
+        });
+      });
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      initDomainHeatmap();
+      initCollapsibles();
+
+      // Placeholder for Chart.js initialization (when gap data exists)
+      // initGapSeverityChart();
+    });
+  </script>
+</body>
+</html>

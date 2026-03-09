@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "dependency-map",
+  "description": "Cross-domain input/output dependencies for this submission. Drives assessment sequencing and parallelism. Produced by gap-analyst. Consumed by pre-assess-output-agent, scope-determinator, domain-assessor.",
+  "type": "object",
+  "required": ["company_name", "independent_domains", "dependent_domains"],
+  "properties": {
+    "company_name": {"type": "string"},
+    "independent_domains": {
+      "type": "array",
+      "items": {"type": "integer"},
+      "description": "Domain IDs that have no upstream dependencies — can be assessed in parallel."
+    },
+    "dependent_domains": {
+      "type": "array",
+      "description": "Domains that depend on one or more upstream domains completing first.",
+      "items": {
+        "type": "object",
+        "required": ["domain_id", "upstream_dependencies"],
+        "properties": {
+          "domain_id": {"type": "integer"},
+          "upstream_dependencies": {
+            "type": "array",
+            "description": "Domain IDs that must complete before this domain can be assessed.",
+            "items": {"type": "integer"}
+          },
+          "dependency_rationale": {
+            "type": "string",
+            "description": "Why this domain depends on the upstream domains."
+          },
+          "dependency_type": {
+            "type": "string",
+            "enum": ["input-required", "context-required", "validation-required"],
+            "description": "Nature of the dependency."
+          }
+        }
+      }
+    },
+    "sequencing_plan": {
+      "type": "array",
+      "description": "Ordered assessment sequence — batches of parallel domains followed by dependent domains.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "batch": {"type": "integer"},
+          "domains": {"type": "array", "items": {"type": "integer"}},
+          "execution_mode": {"type": "string", "enum": ["parallel", "sequential"]}
+        }
+      }
+    },
+    "cross_domain_dependencies": {
+      "type": "array",
+      "description": "Specific module-level cross-domain dependencies within the active framework.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source_module": {"type": "string"},
+          "target_module": {"type": "string"},
+          "dependency_description": {"type": "string"}
+        }
+      }
+    }
+  }
+}

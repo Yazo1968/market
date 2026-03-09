@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "domain-finding",
+  "description": "Module-level findings, evidence classifications, analytical conclusions, and domain-level summary for one domain in the Assessment Phase. Produced by domain-assessor. Consumed by reconciliation-agent.",
+  "type": "object",
+  "required": ["company_name", "domain_id", "domain_name", "assessment_mode", "module_findings", "domain_conclusion"],
+  "properties": {
+    "company_name": {"type": "string"},
+    "domain_id": {"type": "integer"},
+    "domain_name": {"type": "string"},
+    "assessment_mode": {
+      "type": "string",
+      "enum": ["deep-independent-analysis", "verification-analysis", "gap-focused-analysis"],
+      "description": "The assessment mode assigned by scope-determinator for this domain."
+    },
+    "module_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["module_id", "module_name", "finding_classification", "finding_summary"],
+        "properties": {
+          "module_id": {"type": "string"},
+          "module_name": {"type": "string"},
+          "finding_classification": {
+            "type": "string",
+            "enum": ["confirmed", "partially-confirmed", "contradicted", "unresolved", "gap-remains", "gap-resolved"],
+            "description": "How assessment findings relate to pre-assessment signals."
+          },
+          "finding_summary": {
+            "type": "string",
+            "description": "Substantive analytical finding for this module."
+          },
+          "evidence_sources": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Source IDs from research-log supporting this finding."
+          },
+          "submission_claim_assessment": {
+            "type": "string",
+            "description": "Assessment of the submitter's claim in this module — confirmed, overstated, understated, unsupported, etc."
+          },
+          "confidence_level": {
+            "type": "string",
+            "enum": ["high", "medium", "low"],
+            "description": "Confidence in this finding."
+          },
+          "material_risks_identified": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "positive_signals_identified": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      }
+    },
+    "domain_conclusion": {
+      "type": "object",
+      "description": "Domain-level summary conclusion.",
+      "properties": {
+        "overall_assessment": {"type": "string", "description": "Narrative domain-level conclusion."},
+        "dominant_risk": {"type": "string"},
+        "dominant_strength": {"type": "string"},
+        "cross_domain_flags": {
+          "type": "array",
+          "description": "Issues or findings in this domain that are likely to have cross-domain implications.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "flag_type": {"type": "string", "enum": ["compounding-risk", "conflicting-signal", "reinforcing-strength"]},
+              "affects_domain": {"type": "integer"},
+              "description": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "qaqc_status": {
+      "type": "string",
+      "enum": ["passed", "passed-after-fix", "passed-with-flag"],
+      "description": "QA/QC status of this domain finding."
+    },
+    "qaqc_flags": {
+      "type": "array",
+      "description": "Any remaining flags from QA/QC that were kept at assessor instruction.",
+      "items": {"type": "string"}
+    },
+    "assessment_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

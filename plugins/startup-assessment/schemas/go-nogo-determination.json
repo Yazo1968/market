@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "go-nogo-determination",
+  "description": "Three-gate go/no-go determination produced by go_nogo_determinator.py. Gates: hard blocker check, domain floor check, fit-to-purpose threshold. Outcomes: GO / CONDITIONAL GO / CONDITIONAL HOLD / NO-GO.",
+  "type": "object",
+  "required": ["company_name", "determination", "gate_results", "overall_weighted_score"],
+  "properties": {
+    "company_name": {"type": "string"},
+    "determination": {
+      "type": "string",
+      "enum": ["GO", "CONDITIONAL-GO", "CONDITIONAL-HOLD", "NO-GO"],
+      "description": "Final determination outcome."
+    },
+    "determination_rationale": {
+      "type": "string",
+      "description": "Plain-language explanation of the determination."
+    },
+    "overall_weighted_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Overall weighted score (0–100) combining Readiness and Fit-to-Purpose tracks. Calculated by score_calculator.py."
+    },
+    "readiness_track_score": {"type": "number"},
+    "fit_to_purpose_track_score": {"type": "number"},
+    "gate_results": {
+      "type": "object",
+      "description": "Results of each of the three determination gates.",
+      "properties": {
+        "hard_blocker_check": {
+          "type": "object",
+          "properties": {
+            "passed": {"type": "boolean"},
+            "hard_blockers_triggered": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "gap_id": {"type": "string"},
+                  "description": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "domain_floor_check": {
+          "type": "object",
+          "description": "Checks for domains with critically low scores given their framework criticality classification.",
+          "properties": {
+            "passed": {"type": "boolean"},
+            "domains_below_floor": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "domain_id": {"type": "integer"},
+                  "domain_name": {"type": "string"},
+                  "score": {"type": "number"},
+                  "floor_threshold": {"type": "number"},
+                  "criticality": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "fit_to_purpose_threshold": {
+          "type": "object",
+          "properties": {
+            "passed": {"type": "boolean"},
+            "fit_score": {"type": "number"},
+            "threshold": {"type": "number"},
+            "domains_below_threshold": {"type": "array", "items": {"type": "string"}}
+          }
+        }
+      }
+    },
+    "conditions": {
+      "type": "array",
+      "description": "Conditions attached to CONDITIONAL GO or CONDITIONAL HOLD determinations.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "condition_id": {"type": "string"},
+          "condition_description": {"type": "string"},
+          "gap_reference": {"type": "string"},
+          "responsible_party": {"type": "string", "enum": ["submitter", "assessor", "both"]},
+          "resolution_required_before": {"type": "string"}
+        }
+      }
+    },
+    "computation_metadata": {
+      "type": "object",
+      "properties": {
+        "script_version": {"type": "string"},
+        "computation_timestamp": {"type": "string", "format": "date-time"},
+        "framework_reference": {"type": "string"},
+        "readiness_weight_applied": {"type": "number"},
+        "fit_weight_applied": {"type": "number"}
+      }
+    }
+  }
+}

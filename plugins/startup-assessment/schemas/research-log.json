@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "research-log",
+  "description": "Complete log of all external research conducted — sources, accessibility, confidence classification, conflict flags, and retrieval metadata. Produced by research-agent. Consumed by scorer (via confidence_router.py), output agents.",
+  "type": "object",
+  "required": ["company_name", "entries"],
+  "properties": {
+    "company_name": {"type": "string"},
+    "research_summary": {
+      "type": "object",
+      "description": "Aggregate research statistics.",
+      "properties": {
+        "total_sources_consulted": {"type": "integer"},
+        "structured_connector_sources": {"type": "integer"},
+        "web_retrieval_sources": {"type": "integer"},
+        "high_confidence_findings": {"type": "integer"},
+        "medium_confidence_findings": {"type": "integer"},
+        "low_confidence_findings": {"type": "integer"},
+        "unverifiable_findings": {"type": "integer"},
+        "conflicted_findings": {"type": "integer"},
+        "categories_covered": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "entries": {
+      "type": "array",
+      "description": "One entry per source consulted.",
+      "items": {
+        "type": "object",
+        "required": ["source_id", "research_category", "source_type", "retrieval_status", "confidence_level"],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "description": "Unique source reference ID (e.g., 'SRC-001'). Referenced in module-content-map."
+          },
+          "research_category": {
+            "type": "string",
+            "enum": ["market-validation", "competitive-intelligence", "regulatory-environment", "team-credential-verification", "comparable-transactions"],
+            "description": "The five research categories per PRD Section 5.5."
+          },
+          "source_type": {
+            "type": "string",
+            "enum": ["structured-connector", "web-retrieval"],
+            "description": "How this source was accessed."
+          },
+          "source_name": {"type": "string"},
+          "source_url_or_reference": {"type": "string"},
+          "retrieval_date": {"type": "string", "format": "date"},
+          "retrieval_status": {
+            "type": "string",
+            "enum": ["retrieved", "inaccessible", "conflicted", "superseded"],
+            "description": "Whether this source was successfully retrieved."
+          },
+          "confidence_level": {
+            "type": "string",
+            "enum": ["high", "medium", "low", "unverifiable"],
+            "description": "Confidence classification applied at point of retrieval by confidence_router.py."
+          },
+          "confidence_rationale": {
+            "type": "string",
+            "description": "Basis for the confidence classification."
+          },
+          "data_currency": {
+            "type": "object",
+            "description": "Data age and historical values documented (2-year primary window, up to 10 years historical).",
+            "properties": {
+              "primary_value": {"type": "string"},
+              "primary_value_date": {"type": "string"},
+              "historical_values": {
+                "type": "array",
+                "description": "Historical data points (up to 5–10 years back).",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "value": {"type": "string"},
+                    "date": {"type": "string"},
+                    "source": {"type": "string"}
+                  }
+                }
+              }
+            }
+          },
+          "conflict_with": {
+            "type": "array",
+            "description": "IDs of other sources that conflict with this one.",
+            "items": {"type": "string"}
+          },
+          "conflict_description": {"type": "string"},
+          "conflict_resolution": {
+            "type": "string",
+            "description": "How the conflict was handled (e.g., 'Applied most recent within 2 years (conservative value). Both values documented.')."
+          },
+          "modules_applied_to": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Module IDs where this source's data was applied."
+          },
+          "content_summary": {
+            "type": "string",
+            "description": "Brief summary of what this source contributed."
+          }
+        }
+      }
+    }
+  }
+}

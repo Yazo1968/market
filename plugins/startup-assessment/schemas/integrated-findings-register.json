@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "integrated-findings-register",
+  "description": "Reconciled cross-domain findings: conflicted findings resolved, compounding risks identified, reinforcing strengths identified. Produced by reconciliation-agent. Consumed by assess-output-agent.",
+  "type": "object",
+  "required": ["company_name", "reconciled_findings", "compounding_risks", "reinforcing_strengths", "final_determination"],
+  "properties": {
+    "company_name": {"type": "string"},
+    "reconciled_findings": {
+      "type": "array",
+      "description": "All cross-domain conflicts identified and their reconciled position.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "conflict_id": {"type": "string"},
+          "domains_involved": {"type": "array", "items": {"type": "integer"}},
+          "conflict_description": {"type": "string"},
+          "domain_a_position": {"type": "string"},
+          "domain_b_position": {"type": "string"},
+          "reconciled_position": {"type": "string"},
+          "reconciliation_method": {
+            "type": "string",
+            "enum": ["evidence-weight", "assessor-judgment", "kept-as-unresolved-with-flag"],
+            "description": "How the conflict was resolved."
+          },
+          "assessor_override": {"type": "boolean"},
+          "assessor_note": {"type": "string"}
+        }
+      }
+    },
+    "compounding_risks": {
+      "type": "array",
+      "description": "Risks identified across multiple domains that compound each other.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "risk_id": {"type": "string"},
+          "domains_involved": {"type": "array", "items": {"type": "integer"}},
+          "risk_description": {"type": "string"},
+          "compounding_effect": {"type": "string"},
+          "severity": {"type": "string", "enum": ["critical", "significant", "moderate"]}
+        }
+      }
+    },
+    "reinforcing_strengths": {
+      "type": "array",
+      "description": "Positive signals across domains that reinforce each other.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "strength_id": {"type": "string"},
+          "domains_involved": {"type": "array", "items": {"type": "integer"}},
+          "strength_description": {"type": "string"},
+          "reinforcement_effect": {"type": "string"}
+        }
+      }
+    },
+    "final_determination": {
+      "type": "object",
+      "description": "Final assessment determination derived from integrated findings.",
+      "properties": {
+        "determination": {"type": "string", "enum": ["GO", "CONDITIONAL-GO", "CONDITIONAL-HOLD", "NO-GO"]},
+        "determination_rationale": {"type": "string"},
+        "assessment_score": {"type": "number"},
+        "conditions": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "reconciliation_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

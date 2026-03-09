@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "recommendations",
+  "description": "Conditional recommendations output. Path A = submitter improvement roadmap (always available). Path B = deal terms and investment structure alternatives (only when determination is GO or CONDITIONAL-GO and sensitivity confirms robustness). Produced by recommendations-agent.",
+  "type": "object",
+  "required": ["company_name", "path_selected", "path_availability_rationale"],
+  "properties": {
+    "company_name": {"type": "string"},
+    "path_selected": {
+      "type": "string",
+      "enum": ["path-a-only", "path-b-only", "both-paths"],
+      "description": "Which recommendation path was generated."
+    },
+    "path_availability_rationale": {
+      "type": "string",
+      "description": "Explanation of why Path B is or is not available, with reference to the determination and sensitivity robustness."
+    },
+    "path_a_improvement_roadmap": {
+      "type": "object",
+      "description": "Submitter improvement roadmap — gaps to address, priority order, and success criteria.",
+      "properties": {
+        "priority_gaps": {
+          "type": "array",
+          "description": "Gaps ordered by priority for the submitter to address.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "gap_id": {"type": "string"},
+              "gap_description": {"type": "string"},
+              "priority": {"type": "string", "enum": ["critical", "high", "medium", "low"]},
+              "remediation_action": {"type": "string"},
+              "evidence_required": {"type": "string"},
+              "estimated_effort": {"type": "string"},
+              "impact_on_determination": {"type": "string"}
+            }
+          }
+        },
+        "quick_wins": {
+          "type": "array",
+          "description": "Gaps that can be addressed quickly and would improve the assessment most efficiently.",
+          "items": {"type": "string"}
+        },
+        "strategic_recommendations": {
+          "type": "array",
+          "description": "Longer-term strategic positioning recommendations.",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "path_b_deal_terms": {
+      "type": "object",
+      "description": "Deal terms and investment structure alternatives. Only populated when determination is GO or CONDITIONAL-GO and sensitivity is robust.",
+      "properties": {
+        "basis_for_deal_terms": {
+          "type": "string",
+          "description": "Summary of the evidence base for the proposed deal terms."
+        },
+        "investment_structure_alternatives": {
+          "type": "array",
+          "description": "2–4 realistic, implementable investment structure alternatives appropriate to the sector, stage, and ask.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "structure_name": {"type": "string"},
+              "structure_description": {"type": "string"},
+              "instrument": {"type": "string"},
+              "valuation_range": {"type": "string"},
+              "investment_amount_range": {"type": "string"},
+              "key_terms": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "term": {"type": "string"},
+                    "value_or_range": {"type": "string"},
+                    "rationale": {"type": "string"}
+                  }
+                }
+              },
+              "conditions_or_milestones": {
+                "type": "array",
+                "items": {"type": "string"}
+              },
+              "pro_investor": {"type": "string"},
+              "con_investor": {"type": "string"},
+              "suitability_for_this_case": {"type": "string"},
+              "industry_standard_basis": {"type": "string"}
+            }
+          }
+        },
+        "due_diligence_priorities": {
+          "type": "array",
+          "description": "Top items to verify in deep due diligence before committing.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "priority": {"type": "string", "enum": ["critical", "high", "medium"]},
+              "item": {"type": "string"},
+              "rationale": {"type": "string"},
+              "how_to_verify": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "recommendations_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

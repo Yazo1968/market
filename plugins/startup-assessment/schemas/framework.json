@@ -1,0 +1,162 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "framework",
+  "description": "Dynamically constructed assessment framework for this submission. Defines active domains, modules, criticality classifications, and scoring weights for both tracks. Produced by framework-builder, confirmed at Confirmation Point 2.",
+  "type": "object",
+  "required": ["domains", "scoring_weights", "total_modules", "confirmation_status"],
+  "properties": {
+    "domains": {
+      "type": "array",
+      "description": "All 10 domains — active domains are scored, inactive domains are excluded with documented rationale.",
+      "items": {
+        "type": "object",
+        "required": ["domain_id", "domain_name", "active", "modules"],
+        "properties": {
+          "domain_id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "Domain number (1–10) per PRD Appendix A taxonomy."
+          },
+          "domain_name": {
+            "type": "string",
+            "description": "Domain name."
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether this domain is active for this submission."
+          },
+          "activation_rationale": {
+            "type": "string",
+            "description": "Why this domain is active or inactive."
+          },
+          "domain_weight": {
+            "type": "number",
+            "description": "Relative weight of this domain in overall scoring (sum across active domains = 1.0)."
+          },
+          "criticality_classification": {
+            "type": "string",
+            "enum": ["hard-blocker", "critical", "standard", "contextual"],
+            "description": "Domain criticality classification. hard-blocker: absence = NO-GO gate triggered; critical: heavily weighted; standard: default weight; contextual: lower weight given submission context."
+          },
+          "modules": {
+            "type": "array",
+            "description": "Modules within this domain.",
+            "items": {
+              "type": "object",
+              "required": ["module_id", "module_name", "active", "criticality"],
+              "properties": {
+                "module_id": {
+                  "type": "string",
+                  "description": "Module identifier (e.g., 'M1.1', 'M2.3')."
+                },
+                "module_name": {
+                  "type": "string"
+                },
+                "active": {
+                  "type": "boolean"
+                },
+                "activation_rationale": {
+                  "type": "string"
+                },
+                "criticality": {
+                  "type": "string",
+                  "enum": ["mandatory", "important", "optional"],
+                  "description": "Module-level criticality within the domain."
+                },
+                "professional_standard_basis": {
+                  "type": "string",
+                  "description": "If this module is a hard requirement per professional standards, identifies the standard (e.g., 'VC best practice: team credibility is always assessed')."
+                },
+                "assessor_override": {
+                  "type": "boolean",
+                  "description": "Whether the assessor modified the default criticality at Confirmation Point 2."
+                },
+                "readiness_weight": {
+                  "type": "number",
+                  "description": "Weight of this module in the Readiness Track domain score."
+                },
+                "fit_weight": {
+                  "type": "number",
+                  "description": "Weight of this module in the Fit-to-Purpose Track domain score."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "scoring_weights": {
+      "type": "object",
+      "description": "Top-level scoring weight configuration.",
+      "required": ["readiness_track_weight", "fit_to_purpose_track_weight"],
+      "properties": {
+        "readiness_track_weight": {
+          "type": "number",
+          "description": "Weight of Readiness Track in overall score. Default 0.6."
+        },
+        "fit_to_purpose_track_weight": {
+          "type": "number",
+          "description": "Weight of Fit-to-Purpose Track in overall score. Default 0.4."
+        },
+        "go_nogo_thresholds": {
+          "type": "object",
+          "description": "Score thresholds for go/no-go determination outcomes.",
+          "properties": {
+            "go_minimum": {"type": "number"},
+            "conditional_go_range": {
+              "type": "object",
+              "properties": {
+                "min": {"type": "number"},
+                "max": {"type": "number"}
+              }
+            },
+            "conditional_hold_range": {
+              "type": "object",
+              "properties": {
+                "min": {"type": "number"},
+                "max": {"type": "number"}
+              }
+            },
+            "no_go_maximum": {"type": "number"}
+          }
+        }
+      }
+    },
+    "total_modules": {
+      "type": "integer",
+      "description": "Total number of active modules in the framework."
+    },
+    "framework_construction_log": {
+      "type": "object",
+      "description": "Documents how the framework was constructed.",
+      "properties": {
+        "base_taxonomy_applied": {"type": "string"},
+        "stage_calibration_applied": {"type": "string"},
+        "vertical_calibration_applied": {"type": "string"},
+        "assessor_adjustments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "change_type": {"type": "string"},
+              "domain_or_module": {"type": "string"},
+              "original": {},
+              "adjusted": {},
+              "timestamp": {"type": "string", "format": "date-time"}
+            }
+          }
+        }
+      }
+    },
+    "confirmation_status": {
+      "type": "string",
+      "enum": ["pending", "confirmed", "confirmed-with-adjustments"],
+      "description": "Whether this framework has been confirmed at Confirmation Point 2."
+    },
+    "confirmation_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "assessor-profile",
+  "description": "Resolved assessor mandate — type, institutional context, priorities, non-negotiables, and firm-specific standards. Produced by criteria-resolver from uploaded criteria document and/or structured dialogue. Confirmed at Confirmation Point 1.",
+  "type": "object",
+  "required": ["assessor_type", "transaction_type", "primary_priorities", "resolution_method", "confirmation_status"],
+  "properties": {
+    "assessor_type": {
+      "type": "string",
+      "enum": ["venture-capital", "angel-investor", "private-equity", "credit-debt", "corporate-strategic", "family-office", "sovereign-wealth", "accelerator", "other"],
+      "description": "Resolved assessor type — determines report format, scoring calibration, and domain weight adjustments."
+    },
+    "report_format": {
+      "type": "string",
+      "enum": ["investment-memorandum", "credit-memorandum", "strategic-assessment"],
+      "description": "Report format determined from assessor type: VC/Angel/PE → investment-memorandum; Credit/Debt → credit-memorandum; Corporate/Strategic/SWF/Family-office → strategic-assessment."
+    },
+    "transaction_type": {
+      "type": "string",
+      "description": "Specific transaction type (e.g., 'seed equity investment', 'convertible note', 'growth equity acquisition', 'venture debt facility', 'strategic partnership', 'board seat consideration', etc.)"
+    },
+    "institutional_context": {
+      "type": "string",
+      "description": "Assessor's institutional context if provided (e.g., fund thesis, portfolio focus, sector expertise, geographic mandate)."
+    },
+    "primary_priorities": {
+      "type": "array",
+      "description": "Top assessment priorities for this assessor type — ordered by importance.",
+      "items": {
+        "type": "object",
+        "required": ["priority", "weight_modifier"],
+        "properties": {
+          "priority": {"type": "string", "description": "The priority domain or dimension."},
+          "weight_modifier": {"type": "number", "description": "Multiplier applied to base domain weight. 1.0 = no change; >1.0 = elevated; <1.0 = reduced."},
+          "rationale": {"type": "string", "description": "Basis for this priority modifier."}
+        }
+      }
+    },
+    "non_negotiables": {
+      "type": "array",
+      "description": "Assessment criteria that are non-negotiable — items that, if absent, result in an automatic flag.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "criterion": {"type": "string"},
+          "domain": {"type": "string"},
+          "consequence_if_absent": {"type": "string"}
+        }
+      }
+    },
+    "firm_specific_standards": {
+      "type": "array",
+      "description": "Any firm-specific standards or thresholds provided by the assessor.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "standard": {"type": "string"},
+          "applies_to": {"type": "string"},
+          "threshold": {"type": "string"}
+        }
+      }
+    },
+    "stage_priorities": {
+      "type": "object",
+      "description": "Assessor's confirmed adjustments to default stage-based scoring weights.",
+      "properties": {
+        "confirmed_defaults": {"type": "boolean"},
+        "adjustments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "domain": {"type": "string"},
+              "original_weight": {"type": "number"},
+              "adjusted_weight": {"type": "number"},
+              "rationale": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "resolution_method": {
+      "type": "string",
+      "enum": ["criteria-document-provided", "dialogue-resolved", "hybrid"],
+      "description": "How the assessor's mandate was established."
+    },
+    "criteria_document_reference": {
+      "type": "string",
+      "description": "Filename of the uploaded criteria document, if provided."
+    },
+    "dialogue_summary": {
+      "type": "string",
+      "description": "Summary of the structured dialogue conducted to resolve criteria, if applicable."
+    },
+    "confirmation_status": {
+      "type": "string",
+      "enum": ["pending", "confirmed"],
+      "description": "Whether this profile has been confirmed at Confirmation Point 1."
+    },
+    "confirmation_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

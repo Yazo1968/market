@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "readiness-register",
+  "description": "Completeness (0–3) and quality (0–2) scores per module, domain-level aggregates, and overall Readiness Track score. Produced by scorer. Consumed by gap-analyst, qaqc-agent, output agents.",
+  "type": "object",
+  "required": ["company_name", "modules", "domain_scores", "overall_readiness_score"],
+  "properties": {
+    "company_name": {"type": "string"},
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["module_id", "module_name", "domain_id", "completeness_score", "quality_score", "combined_score"],
+        "properties": {
+          "module_id": {"type": "string"},
+          "module_name": {"type": "string"},
+          "domain_id": {"type": "integer"},
+          "completeness_score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3,
+            "description": "0=Absent, 1=Fragmentary, 2=Partial, 3=Complete"
+          },
+          "completeness_rationale": {"type": "string"},
+          "quality_score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2,
+            "description": "0=Not applicable or unverifiable, 1=Credible but unverified, 2=Verified or independently corroborated"
+          },
+          "quality_rationale": {"type": "string"},
+          "combined_score": {
+            "type": "number",
+            "description": "Normalised combined readiness score for this module (0–1.0). Calculated by score_calculator.py."
+          },
+          "research_resolution_applied": {
+            "type": "boolean",
+            "description": "Whether external research was used to partially resolve an absent or fragmentary module."
+          },
+          "scoring_basis": {
+            "type": "string",
+            "enum": ["submission-only", "research-only", "submission-plus-research", "externally-resolved"],
+            "description": "Basis on which this module was scored."
+          }
+        }
+      }
+    },
+    "domain_scores": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["domain_id", "domain_name", "weighted_readiness_score", "active_module_count"],
+        "properties": {
+          "domain_id": {"type": "integer"},
+          "domain_name": {"type": "string"},
+          "weighted_readiness_score": {
+            "type": "number",
+            "description": "Weighted aggregate readiness score for this domain (0–1.0). Calculated by score_calculator.py."
+          },
+          "active_module_count": {"type": "integer"},
+          "scored_module_count": {"type": "integer"}
+        }
+      }
+    },
+    "overall_readiness_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Overall Readiness Track score, normalised to 0–1.0. Weighted by domain importance. Calculated by score_calculator.py."
+    },
+    "readiness_score_percentage": {
+      "type": "number",
+      "description": "Overall readiness score expressed as a percentage (0–100) for display purposes."
+    },
+    "scoring_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

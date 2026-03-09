@@ -1,0 +1,172 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "context-profile",
+  "description": "Extracted and assessor-confirmed submission context. First-order determinants of the assessment framework. Produced by context-extractor, confirmed at Confirmation Point 1.",
+  "type": "object",
+  "required": ["company_name", "funding_stage", "vertical", "commercial_model", "revenue_architecture", "geography", "ask", "regulatory_exposure", "confirmation_status"],
+  "properties": {
+    "company_name": {
+      "type": "string",
+      "description": "Name of the company submitting the business case."
+    },
+    "funding_stage": {
+      "type": "string",
+      "enum": ["pre-seed", "seed", "series-a", "series-b", "series-c-plus", "growth", "debt", "venture-debt", "revenue-based-financing", "unknown"],
+      "description": "Identified funding stage of the submission."
+    },
+    "vertical": {
+      "type": "string",
+      "description": "Industry vertical (e.g., MedTech, FinTech, SaaS, AgriTech, EdTech, CleanTech, DeepTech, Consumer, MarketplaceTech, PropTech, LegalTech, HRTech, etc.)"
+    },
+    "sub_vertical": {
+      "type": "string",
+      "description": "More specific sub-vertical classification if applicable."
+    },
+    "commercial_model": {
+      "type": "string",
+      "enum": ["B2B", "B2C", "B2B2C", "B2G", "marketplace", "platform", "hybrid", "other"],
+      "description": "Primary commercial model."
+    },
+    "revenue_architecture": {
+      "type": "object",
+      "description": "How the business generates or plans to generate revenue.",
+      "properties": {
+        "primary_model": {
+          "type": "string",
+          "description": "Primary revenue model (e.g., SaaS subscription, transaction fee, licensing, usage-based, direct sales, freemium, etc.)"
+        },
+        "secondary_models": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Additional revenue streams if identified."
+        },
+        "recurring_revenue_present": {
+          "type": "boolean",
+          "description": "Whether recurring revenue elements exist or are planned."
+        }
+      }
+    },
+    "geography": {
+      "type": "object",
+      "description": "Geographic context for the submission and assessment.",
+      "required": ["primary_market", "assessor_geographic_frame"],
+      "properties": {
+        "primary_market": {
+          "type": "string",
+          "description": "Primary market the startup operates in or targets."
+        },
+        "secondary_markets": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Additional markets targeted."
+        },
+        "assessor_geographic_frame": {
+          "type": "string",
+          "description": "Geographic calibration frame confirmed by assessor (e.g., GCC/MENA, Global, North America, Europe, Southeast Asia, etc.)"
+        }
+      }
+    },
+    "ask": {
+      "type": "object",
+      "description": "The funding or investment ask as described in the submission.",
+      "required": ["amount", "instrument", "use_of_proceeds_summary"],
+      "properties": {
+        "amount": {
+          "type": "string",
+          "description": "Amount requested (e.g., '$2M', '$500K–$1M'). String to accommodate ranges."
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency of the ask."
+        },
+        "instrument": {
+          "type": "string",
+          "enum": ["equity", "convertible-note", "SAFE", "debt", "venture-debt", "revenue-based-financing", "grant", "mixed", "unspecified"],
+          "description": "Investment instrument type."
+        },
+        "use_of_proceeds_summary": {
+          "type": "string",
+          "description": "Brief summary of stated use of proceeds."
+        }
+      }
+    },
+    "regulatory_exposure": {
+      "type": "object",
+      "description": "Regulatory context assessment — determines whether Regulatory domain is activated.",
+      "required": ["has_regulatory_exposure", "regulatory_domain_active"],
+      "properties": {
+        "has_regulatory_exposure": {
+          "type": "boolean",
+          "description": "Whether the submission's vertical carries material regulatory exposure."
+        },
+        "regulatory_domain_active": {
+          "type": "boolean",
+          "description": "Whether the Regulatory & Compliance domain is activated for this assessment."
+        },
+        "applicable_frameworks": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Regulatory frameworks identified as applicable (e.g., FDA 510(k), EU MDR, SAMA, SFDA, ADGM, DFSA, GDPR, PCI-DSS, etc.)"
+        },
+        "activation_rationale": {
+          "type": "string",
+          "description": "Reasoning for regulatory domain activation or non-activation."
+        }
+      }
+    },
+    "traction_status": {
+      "type": "string",
+      "enum": ["pre-revenue", "pre-product", "revenue-generating", "profitability-approaching", "profitable", "unknown"],
+      "description": "Current traction stage of the company."
+    },
+    "team_structure": {
+      "type": "object",
+      "description": "Basic team structure signals extracted from submission.",
+      "properties": {
+        "founder_count": {"type": "integer"},
+        "has_technical_cofounder": {"type": "boolean"},
+        "team_size_total": {"type": "integer"},
+        "key_hires_identified": {"type": "boolean"}
+      }
+    },
+    "extraction_basis": {
+      "type": "object",
+      "description": "Documents the basis on which each signal was identified.",
+      "properties": {
+        "extracted_from_submission": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Fields extracted directly from the submission document."
+        },
+        "confirmed_by_assessor": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Fields corrected or confirmed by assessor at Confirmation Point 1."
+        },
+        "inferred_with_uncertainty": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Fields inferred with uncertainty — flagged for assessor review."
+        }
+      }
+    },
+    "confirmation_status": {
+      "type": "string",
+      "enum": ["pending", "confirmed", "confirmed-with-corrections"],
+      "description": "Whether this profile has been confirmed at Confirmation Point 1."
+    },
+    "assessor_corrections": {
+      "type": "array",
+      "description": "Corrections applied by the assessor at Confirmation Point 1.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "field": {"type": "string"},
+          "original_value": {},
+          "corrected_value": {},
+          "timestamp": {"type": "string", "format": "date-time"}
+        }
+      }
+    }
+  }
+}

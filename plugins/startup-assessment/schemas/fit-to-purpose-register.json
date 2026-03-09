@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "fit-to-purpose-register",
+  "description": "Stage Appropriateness (0–2), Assessor Alignment (0–2), and Ask Coherence (0–2) scores per module. Produced by scorer. Consumed by gap-analyst, qaqc-agent, output agents.",
+  "type": "object",
+  "required": ["company_name", "modules", "domain_scores", "overall_fit_score"],
+  "properties": {
+    "company_name": {"type": "string"},
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["module_id", "module_name", "domain_id", "stage_appropriateness", "assessor_alignment", "ask_coherence", "combined_fit_score"],
+        "properties": {
+          "module_id": {"type": "string"},
+          "module_name": {"type": "string"},
+          "domain_id": {"type": "integer"},
+          "stage_appropriateness": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2,
+            "description": "0=Misaligned with stage, 1=Partially appropriate, 2=Fully appropriate for identified funding stage"
+          },
+          "stage_appropriateness_rationale": {"type": "string"},
+          "assessor_alignment": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2,
+            "description": "0=Not calibrated for this assessor type, 1=Partially aligned, 2=Well-calibrated for the identified assessor type and priorities"
+          },
+          "assessor_alignment_rationale": {"type": "string"},
+          "ask_coherence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2,
+            "description": "0=Content does not support the ask, 1=Partially supportive, 2=Content coherently supports the stated ask"
+          },
+          "ask_coherence_rationale": {"type": "string"},
+          "combined_fit_score": {
+            "type": "number",
+            "description": "Normalised combined fit-to-purpose score for this module (0–1.0). Calculated by score_calculator.py."
+          },
+          "fit_gap_type": {
+            "type": "string",
+            "enum": ["none", "stage-misaligned", "assessor-misaligned", "ask-incoherent", "multiple"],
+            "description": "Primary fit-to-purpose gap type if score indicates misalignment."
+          }
+        }
+      }
+    },
+    "domain_scores": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["domain_id", "domain_name", "weighted_fit_score"],
+        "properties": {
+          "domain_id": {"type": "integer"},
+          "domain_name": {"type": "string"},
+          "weighted_fit_score": {
+            "type": "number",
+            "description": "Weighted aggregate fit-to-purpose score for this domain (0–1.0). Calculated by score_calculator.py."
+          }
+        }
+      }
+    },
+    "overall_fit_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Overall Fit-to-Purpose Track score, normalised to 0–1.0."
+    },
+    "fit_score_percentage": {
+      "type": "number",
+      "description": "Overall fit-to-purpose score as a percentage (0–100) for display."
+    },
+    "scoring_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

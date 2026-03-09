@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "sensitivity-analysis",
+  "description": "Sensitivity analysis of the assessment determination. Methodology is selected by the plugin based on determination outcome and confirmed by assessor. Produced by sensitivity-agent.",
+  "type": "object",
+  "required": ["company_name", "determination_being_analyzed", "methodology_applied", "analysis_results"],
+  "properties": {
+    "company_name": {"type": "string"},
+    "determination_being_analyzed": {
+      "type": "string",
+      "enum": ["GO", "CONDITIONAL-GO", "CONDITIONAL-HOLD", "NO-GO"],
+      "description": "The assessment determination this sensitivity analysis is evaluating."
+    },
+    "methodology_options_presented": {
+      "type": "array",
+      "description": "The methodology options presented to the assessor.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "methodology": {"type": "string"},
+          "description": {"type": "string"},
+          "rationale_for_recommendation": {"type": "string"}
+        }
+      }
+    },
+    "methodology_applied": {
+      "type": "string",
+      "enum": ["scenario-analysis", "boundary-analysis", "monte-carlo", "combined"],
+      "description": "The methodology applied as chosen by the assessor."
+    },
+    "analysis_results": {
+      "type": "object",
+      "description": "Results of the applied sensitivity methodology.",
+      "properties": {
+        "scenario_analysis": {
+          "type": "array",
+          "description": "Named scenarios with score and determination outcomes.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "scenario_name": {"type": "string"},
+              "scenario_description": {"type": "string"},
+              "assumption_changes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "domain": {"type": "string"},
+                    "original_assumption": {"type": "string"},
+                    "changed_assumption": {"type": "string"}
+                  }
+                }
+              },
+              "resulting_score": {"type": "number"},
+              "resulting_determination": {"type": "string"},
+              "determination_change": {"type": "boolean"}
+            }
+          }
+        },
+        "boundary_analysis": {
+          "type": "array",
+          "description": "For each key domain: the score delta required to flip the determination.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "domain_id": {"type": "integer"},
+              "domain_name": {"type": "string"},
+              "current_score": {"type": "number"},
+              "score_delta_to_upgrade": {"type": "number"},
+              "score_delta_to_downgrade": {"type": "number"},
+              "upgrade_determination": {"type": "string"},
+              "downgrade_determination": {"type": "string"},
+              "sensitivity_rating": {"type": "string", "enum": ["high", "medium", "low"], "description": "How sensitive the determination is to this domain's score."}
+            }
+          }
+        },
+        "monte_carlo": {
+          "type": "object",
+          "description": "Monte Carlo simulation results.",
+          "properties": {
+            "iterations": {"type": "integer"},
+            "probability_go": {"type": "number"},
+            "probability_conditional_go": {"type": "number"},
+            "probability_conditional_hold": {"type": "number"},
+            "probability_no_go": {"type": "number"},
+            "key_uncertainty_drivers": {"type": "array", "items": {"type": "string"}},
+            "confidence_in_determination": {"type": "string", "enum": ["high", "medium", "low"]}
+          }
+        }
+      }
+    },
+    "key_insights": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Most important insights from the sensitivity analysis for the assessor."
+    },
+    "robustness_assessment": {
+      "type": "string",
+      "enum": ["robust", "moderately-robust", "fragile"],
+      "description": "Overall assessment of how robust the determination is to assumption changes."
+    },
+    "analysis_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
