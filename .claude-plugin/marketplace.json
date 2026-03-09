@@ -9,7 +9,7 @@
       "name": "startup-assessment",
       "source": "./plugins/startup-assessment",
       "description": "AI-powered startup investment assessment. Structured due diligence across 10 domains with scoring, sensitivity analysis, and investment recommendations.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "author": {
         "name": "Yasser"
       },
