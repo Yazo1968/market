@@ -157,12 +157,11 @@ A review file has been saved to: **`$WORKSPACE/assessment/assessment/reports/CP4
 
 You may escalate assessment modes (gap-focused → verification → deep-independent). You may **NOT** reduce modes.
 
-Use the **AskUserQuestion** tool to present the following single-select choice:
+> ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
 
-- **Question:** "CP4 — Assessment Scope is ready for review. How would you like to proceed?"
-- **Options:**
-  - "Edit & re-upload — I'll open the scope file, add my escalation requests, and re-upload it here"
-  - "Confirm — The scope looks correct, proceed with domain assessment"
+Invoke AskUserQuestion — type: single-select
+- question: "CP4 — Assessment Scope is ready for review. How would you like to proceed?"
+- options: ["Edit & re-upload — I'll open the scope file, add my escalation requests, and re-upload it here", "Confirm — The scope looks correct, proceed with domain assessment"]
 
 **What happens:**
 - If the assessor selects **Edit & re-upload**: wait for the re-uploaded file, read escalation requests, validate each (only escalations allowed — reject reductions with explanation), apply valid ones to `assessment-scope-plan.json`, and proceed
@@ -270,12 +269,11 @@ A review file has been saved to: **`$WORKSPACE/assessment/assessment/reports/CP5
 
 You may provide overrides or additional context — these are documented in the audit trail but **will not change scores already calculated.**
 
-Use the **AskUserQuestion** tool to present the following single-select choice:
+> ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
 
-- **Question:** "CP5 — Reconciled Findings are ready for review. How would you like to proceed?"
-- **Options:**
-  - "Edit & re-upload — I'll open the review file, add my overrides or notes, and re-upload it here"
-  - "Confirm — Lock findings and generate final assessment outputs"
+Invoke AskUserQuestion — type: single-select
+- question: "CP5 — Reconciled Findings are ready for review. How would you like to proceed?"
+- options: ["Edit & re-upload — I'll open the review file, add my overrides or notes, and re-upload it here", "Confirm — Lock findings and generate final assessment outputs"]
 
 **What happens:**
 - If the assessor selects **Edit & re-upload**: wait for the re-uploaded file, read override notes from `## Your Overrides & Notes`, apply each to the session audit trail with timestamp, and proceed

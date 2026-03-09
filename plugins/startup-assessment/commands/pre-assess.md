@@ -143,31 +143,40 @@ Wait for context-extractor to complete before proceeding.
 
 **Check first:** If a criteria document was uploaded to `$WORKSPACE/assessment/business-case-docs/`, skip this section and pass it directly to criteria-resolver to extract the profile automatically.
 
-**If no criteria document was provided**, collect the assessor profile now using the AskUserQuestion tool. Ask each question one at a time and wait for the response before asking the next.
+**If no criteria document was provided**, collect the assessor profile now using the AskUserQuestion tool. Ask each question one at a time and wait for the response before proceeding to the next.
 
-**Q1 — Use AskUserQuestion (single-select):**
-- Question: "What is your primary investment or lending capacity?"
-- Options: Venture Capital | Angel Investor | Private Equity | Credit / Debt | Corporate Strategic | Family Office | Sovereign Wealth | Accelerator | Other
+> ⚠️ **STRICT RULE — Interactive Questions:**
+> The `AskUserQuestion` tool renders a clickable widget directly in the user interface.
+> **You MUST NOT write the question text in your response — not before, not after the tool call.**
+> **Do NOT output any label like "Q1 —", "Question 1", or the question content as prose.**
+> Simply invoke the tool. The widget appears automatically. Wait silently for the user's selection.
+> Only output a brief neutral transition (e.g. "Got it.") after receiving an answer, before invoking the next question.
 
-**Q2 — Use AskUserQuestion (single-select):**
-- Question: "What funding stage and company maturity do you typically target?"
-- Options: Pre-Seed | Seed | Series A | Series B+ | Growth Stage | Buyout | Restructuring / Turnaround | Other
+Invoke `AskUserQuestion` with the parameters below — one at a time, wait for selection, then proceed:
 
-**Q3 — Use AskUserQuestion (multi-select):**
-- Question: "Select your must-have criteria or deal-breakers (choose all that apply):"
-- Options: Minimum recurring revenue (MRR/ARR) | Specific vertical or sector focus | Founder/team sector experience | Regulatory approval in place | US-based team only | No single customer >50% revenue | Profitability required | None of the above
+**[1 of 5]** Invoke AskUserQuestion — type: single-select
+- question: "What is your primary investment or lending capacity?"
+- options: ["Venture Capital", "Angel Investor", "Private Equity", "Credit / Debt", "Corporate Strategic", "Family Office", "Sovereign Wealth", "Accelerator", "Other"]
 
-**Q4 — Use AskUserQuestion (single-select):**
-- Question: "Do you have quantitative thresholds to apply? (e.g. min revenue, max burn, team size)"
-- Options: Yes — I'll describe them now | No — use standard thresholds
+**[2 of 5]** Invoke AskUserQuestion — type: single-select
+- question: "What funding stage and company maturity do you typically target?"
+- options: ["Pre-Seed", "Seed", "Series A", "Series B+", "Growth Stage", "Buyout", "Restructuring / Turnaround", "Other"]
 
-If "Yes": ask a follow-up as plain text for the assessor to describe their thresholds.
+**[3 of 5]** Invoke AskUserQuestion — type: multi-select
+- question: "Select your must-have criteria or deal-breakers (choose all that apply):"
+- options: ["Minimum recurring revenue (MRR/ARR)", "Specific vertical or sector focus", "Founder/team sector experience", "Regulatory approval in place", "US-based team only", "No single customer >50% revenue", "Profitability required", "None of the above"]
 
-**Q5 — Use AskUserQuestion (single-select):**
-- Question: "Any sector exclusions or geographic constraints?"
-- Options: Yes — I'll describe them now | No constraints
+**[4 of 5]** Invoke AskUserQuestion — type: single-select
+- question: "Do you have quantitative thresholds to apply? (e.g. min revenue, max burn, team size)"
+- options: ["Yes — I'll describe them now", "No — use standard thresholds"]
 
-If "Yes": ask a follow-up as plain text.
+If answer is "Yes — I'll describe them now": output exactly one plain-text follow-up: "Please describe your thresholds:" — record the typed response. Do not add any other text.
+
+**[5 of 5]** Invoke AskUserQuestion — type: single-select
+- question: "Any sector exclusions or geographic constraints?"
+- options: ["Yes — I'll describe them now", "No constraints"]
+
+If answer is "Yes — I'll describe them now": output exactly one plain-text follow-up: "Please describe your constraints:" — record the typed response. Do not add any other text.
 
 Once all answers are collected, pass them to the **criteria-resolver** agent to produce `$WORKSPACE/assessment/pre-assessment/data/assessor-profile.json`. The agent does not ask further questions — it processes the answers you collected and outputs the profile.
 
@@ -200,17 +209,17 @@ Present the summary in chat and provide a download link to the saved file.
 
 A review file has been saved to: **`$WORKSPACE/assessment/pre-assessment/reports/CP1_ContextProfile_[YYYY-MM-DD].md`**
 
-First, use the **AskUserQuestion** tool (single-select):
-- **Question:** "Are there any additional priorities or constraints to add before we build the framework?"
-- **Options:** Yes — I'll describe them now | No — the profile is complete
+> ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
 
-If "Yes": ask as plain text for the assessor to describe the additional constraints, record them, and update `assessor-profile.json`.
+Invoke AskUserQuestion — type: single-select
+- question: "Are there any additional priorities or constraints to add before we build the framework?"
+- options: ["Yes — I'll describe them now", "No — the profile is complete"]
 
-Then use the **AskUserQuestion** tool (single-select):
-- **Question:** "CP1 — Context & Assessor Profile is ready for review. How would you like to proceed?"
-- **Options:**
-  - "Edit & re-upload — I'll open the review file, make corrections, and re-upload it here"
-  - "Confirm — Everything looks correct, proceed to framework construction"
+If answer is "Yes — I'll describe them now": output exactly one plain-text follow-up: "Please describe the additional constraints:" — record the response and update `assessor-profile.json`.
+
+Then invoke AskUserQuestion — type: single-select
+- question: "CP1 — Context & Assessor Profile is ready for review. How would you like to proceed?"
+- options: ["Edit & re-upload — I'll open the review file, make corrections, and re-upload it here", "Confirm — Everything looks correct, proceed to framework construction"]
 
 **What happens:**
 - If the assessor selects **Edit & re-upload**: wait for the re-uploaded file, read it, extract all corrections, apply them to `context-profile.json` and `assessor-profile.json`, confirm what changed, and proceed
@@ -266,12 +275,11 @@ A review file has been saved to: **`$WORKSPACE/assessment/pre-assessment/reports
 You may adjust: add optional modules, adjust criticality levels (must-have ↔ should-have only).
 You may **NOT** adjust: remove mandatory modules or hard blockers.
 
-Use the **AskUserQuestion** tool to present the following single-select choice:
+> ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
 
-- **Question:** "CP2 — Assessment Framework is ready for review. How would you like to proceed?"
-- **Options:**
-  - "Edit & re-upload — I'll open the framework file, annotate my adjustments, and re-upload it here"
-  - "Confirm — The framework looks correct, proceed to research"
+Invoke AskUserQuestion — type: single-select
+- question: "CP2 — Assessment Framework is ready for review. How would you like to proceed?"
+- options: ["Edit & re-upload — I'll open the framework file, annotate my adjustments, and re-upload it here", "Confirm — The framework looks correct, proceed to research"]
 
 **What happens:**
 - If the assessor selects **Edit & re-upload**: wait for the re-uploaded file, extract all requested adjustments, validate each (reject removal of mandatory modules or hard blockers with explanation), apply valid adjustments to `framework.json`, and proceed
@@ -386,12 +394,11 @@ A review file has been saved to: **`$WORKSPACE/assessment/pre-assessment/reports
 
 You may flag modules for reconsideration, add context, or correct research assumptions. Notes are recorded in the audit trail — they do **not** change scores but carry forward into the full assessment.
 
-Use the **AskUserQuestion** tool to present the following single-select choice:
+> ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
 
-- **Question:** "CP3 — Scored Findings are ready for review. How would you like to proceed?"
-- **Options:**
-  - "Edit & re-upload — I'll open the review file, add my notes and flags, and re-upload it here"
-  - "Confirm — No notes or flags, proceed to QA/QC review"
+Invoke AskUserQuestion — type: single-select
+- question: "CP3 — Scored Findings are ready for review. How would you like to proceed?"
+- options: ["Edit & re-upload — I'll open the review file, add my notes and flags, and re-upload it here", "Confirm — No notes or flags, proceed to QA/QC review"]
 
 **What happens:**
 - If the assessor selects **Edit & re-upload**: wait for the re-uploaded file, read the `## Your Notes` section, record all notes verbatim in the session audit trail, confirm what was recorded, and proceed
