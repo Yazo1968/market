@@ -291,18 +291,18 @@ Agent: **assess-output-agent**
   - `$WORKSPACE/assessment/pre-assessment/data/assessor-profile.json`
   - `$WORKSPACE/assessment/pre-assessment/data/framework.json`
   - Session audit trail
+- **Mandatory**: Load the `design-system` skill and the `html-dashboard` skill before generating. Apply the centralized design system's tokens and meet the Quality Contract. Adapt tone to assessor type.
+- **Content freedom**: The agent determines optimal structure, sections, charts, and narrative emphasis for this specific case.
 - Generates 3 deliverable outputs (all saved to `$WORKSPACE/assessment/assessment/reports/`):
 
 1. **[CompanyName]_Assessment_[YYYY-MM-DD].html**
-   - Comprehensive assessment report with all domain findings
-   - Cross-domain analysis section
-   - Conflict resolution narratives
-   - Final determination and rationale
-   - Interactive visualizations (domain radar charts, risk matrices, etc.)
+   - Self-contained interactive HTML report using the `html-dashboard` skill's component library and chart patterns
+   - Content and structure adaptive to the specific business case — agent selects which domain findings to emphasize, which cross-domain patterns to visualize, how to frame the determination narrative
+   - Must meet the design system's quality contract
 
 2. **[CompanyName]_Assessment_[YYYY-MM-DD].pdf**
-   - Agent generates printable HTML version; you can print to PDF via your browser
-   - Complete assessment document ready for investment committee or partners
+   - Print-optimized HTML variant; format adapts to assessor type per `html-dashboard` skill
+   - Complete assessment document ready for investment committee, credit committee, or board
 
 3. **[CompanyName]_Assessment_[YYYY-MM-DD].md**
    - Structured markdown data file with all assessment findings, registers, and determination

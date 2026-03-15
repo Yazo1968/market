@@ -42,47 +42,38 @@ All artifacts use only libraries available in the Cowork artifact sandbox:
 
 ## Shared Design System
 
-### Color Palette
+**All colors, typography, spacing, component proportions, chart palettes, and quality standards are defined in the centralized design system: `skills/design-system/SKILL.md`.**
 
-```
-Determination colors:
-  GO:               #10B981 (emerald-500)
-  CONDITIONAL GO:   #F59E0B (amber-500)
-  CONDITIONAL HOLD: #F97316 (orange-500)
-  NO-GO:            #EF4444 (red-500)
+Read and follow that file for all visual specifications. The key implementation notes for CP artifacts (dark theme context):
 
-Confidence:
-  High:   #3B82F6 (blue-500)
-  Medium: #F59E0B (amber-500)
-  Low:    #94A3B8 (slate-400)
+### Dark Theme Surface Mapping
 
-Severity:
-  Critical:    #EF4444 (red-500)
-  Significant: #F97316 (orange-500)
-  Moderate:    #F59E0B (amber-500)
-  Minor:       #94A3B8 (slate-400)
+CP artifacts render inside Cowork's dark conversation pane. Use the dark theme surface tokens from the design system:
 
-Assessment modes:
-  Gap-Focused:      #3B82F6 (blue-500)
-  Verification:     #F59E0B (amber-500)
-  Deep-Independent: #EF4444 (red-500)
+| Token | Hex | Tailwind |
+|-------|-----|----------|
+| Background | `#0f172a` | `slate-900` |
+| Surface | `#1e293b` | `slate-800` |
+| Elevated | `#334155` | `slate-700` |
+| Border | `#475569` | `slate-600` |
+| Text primary | `#f8fafc` | `slate-50` |
+| Text secondary | `#94a3b8` | `slate-400` |
+| Accent | `#6366f1` | `indigo-500` |
 
-Surfaces (dark professional theme):
-  Background: #0F172A (slate-900)
-  Surface:    #1E293B (slate-800)
-  Elevated:   #334155 (slate-700)
-  Border:     #475569 (slate-600)
-  Text:       #F8FAFC (slate-50)
-  Muted text: #94A3B8 (slate-400)
-  Accent:     #6366F1 (indigo-500)
-```
+### Determination Color Mapping (Tailwind)
+
+| Determination | Tailwind text/bg classes |
+|---------------|-------------------------|
+| GO | `text-green-500 bg-green-500/10 border-green-500/30` |
+| CONDITIONAL GO | `text-blue-500 bg-blue-500/10 border-blue-500/30` |
+| CONDITIONAL HOLD | `text-amber-500 bg-amber-500/10 border-amber-500/30` |
+| NO-GO | `text-red-500 bg-red-500/10 border-red-500/30` |
 
 ### Typography
 
-- Font family: `Inter, system-ui, -apple-system, sans-serif` (available via Google Fonts CDN)
-- Headings: font-weight 600–700, tracking-tight
-- Body: font-weight 400, text-sm (14px) for data-dense layouts
-- Monospace: `JetBrains Mono, monospace` for scores, IDs, and JSON
+- Font family: `Inter, system-ui, -apple-system, sans-serif`
+- Monospace: `JetBrains Mono, monospace` for scores, IDs, JSON
+- See design system for full type scale
 
 ### Layout Pattern
 
@@ -201,9 +192,9 @@ The delta JSON format:
 ```jsx
 function DeterminationBadge({ value, size = 'lg' }) {
   const colors = {
-    'GO': 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
-    'CONDITIONAL-GO': 'bg-amber-500/20 text-amber-400 border-amber-500/30',
-    'CONDITIONAL-HOLD': 'bg-orange-500/20 text-orange-400 border-orange-500/30',
+    'GO': 'bg-green-500/20 text-green-400 border-green-500/30',
+    'CONDITIONAL-GO': 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+    'CONDITIONAL-HOLD': 'bg-amber-500/20 text-amber-400 border-amber-500/30',
     'NO-GO': 'bg-red-500/20 text-red-400 border-red-500/30',
   };
   const sizeClasses = size === 'lg' ? 'text-lg px-4 py-2' : 'text-xs px-2 py-1';
@@ -219,7 +210,7 @@ function DeterminationBadge({ value, size = 'lg' }) {
 ```jsx
 function ScoreBar({ score, max = 100, label }) {
   const pct = (score / max) * 100;
-  const color = pct >= 75 ? 'bg-emerald-500' : pct >= 55 ? 'bg-amber-500' : pct >= 35 ? 'bg-orange-500' : 'bg-red-500';
+  const color = pct >= 75 ? 'bg-green-500' : pct >= 55 ? 'bg-amber-500' : pct >= 35 ? 'bg-orange-500' : 'bg-red-500';
   return (
     <div className="flex items-center gap-3">
       {label && <span className="text-xs text-slate-400 w-16">{label}</span>}

@@ -157,18 +157,18 @@ Agent: **sensitivity-output-agent**
   - `$WORKSPACE/assessment/assessment/data/updated-go-nogo-determination.json`
   - `$WORKSPACE/assessment/pre-assessment/data/context-profile.json`
   - `$WORKSPACE/assessment/pre-assessment/data/assessor-profile.json`
+- **Mandatory**: Load the `design-system` skill and the `html-dashboard` skill before generating. Apply the centralized design system's tokens and meet the Quality Contract. Adapt tone to assessor type.
+- **Content freedom**: The agent determines optimal structure, visualizations, and narrative for this specific sensitivity analysis — which scenarios to highlight, how to present flip-points, how to frame Path B.
 - Generates 3 deliverable outputs (all saved to `$WORKSPACE/assessment/sensitivity/reports/`):
 
 1. **[CompanyName]_Sensitivity_[YYYY-MM-DD].html**
-   - Sensitivity analysis report with scenario tables
-   - Key value driver and key risk factor visualizations
-   - Sensitivity coefficient matrices
-   - Path B eligibility and explanation
-   - Interactive scenario explorer (adjust assumptions to see impact)
+   - Self-contained interactive HTML report using the `html-dashboard` skill's component library and chart patterns
+   - Content adaptive to the methodology selected and determination type — scenario tables, flip-point visualizations, sensitivity matrices, Path B analysis as appropriate
+   - Must meet the design system's quality contract
 
 2. **[CompanyName]_Sensitivity_[YYYY-MM-DD].pdf**
-   - Agent generates printable HTML version; you can print to PDF via your browser
-   - Ready for board or partnership sharing
+   - Print-optimized HTML variant; format adapts to assessor type per `html-dashboard` skill
+   - Ready for board, credit committee, or partnership sharing
 
 3. **[CompanyName]_Sensitivity_[YYYY-MM-DD].md**
    - Structured markdown data file with all sensitivity results and Path B eligibility

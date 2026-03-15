@@ -93,7 +93,7 @@ Render `reinforcing_strengths[]` as strength cards:
 └────────────────────────────────────────────────────────────────────┘
 ```
 
-- Green-tinted background (`bg-emerald-500/5 border-emerald-500/20`)
+- Green-tinted background (`bg-green-500/5 border-green-500/20`)
 
 **Tab 4: Domain-by-Domain Summary**
 

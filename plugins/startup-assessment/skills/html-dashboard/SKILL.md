@@ -21,14 +21,21 @@ The html-dashboard skill provides agents with comprehensive patterns and templat
 
 The skill is designed for professional assessors (venture capital, private equity, credit analysts, corporate strategists, family offices, sovereign wealth funds) who need to evaluate startup business cases and deliver actionable determinations. All reports are self-contained (inline CSS/JS with optional CDN links) and require no external dependencies beyond trusted content delivery networks.
 
+### Design System
+
+**All colors, typography, spacing, component proportions, chart palettes, and quality standards are defined in the centralized design system: `skills/design-system/SKILL.md`.** Read and follow that file for all visual specifications. It is the single source of truth — do not define alternate color values or typography in report outputs.
+
+The design system also contains the **Quality Contract** — the minimum quality bar for all outputs, benchmarked against top-tier management consultancies, leading VC firms, major credit agencies, and certified valuation professionals. Every output must meet that contract.
+
 ### Key Principles
 
 - **Self-Contained HTML**: Single-file reports with all styling and interactivity embedded
-- **Responsive Design**: Mobile-friendly layouts that work across all screen sizes
-- **Accessibility**: Semantic HTML, color-blind friendly palettes, alt text for all visuals
-- **Professional Appearance**: Enterprise-grade typography, spacing, and color schemes
+- **Responsive Design**: Mobile-friendly layouts that work across all screen sizes (1200px+, 768px, 480px breakpoints)
+- **Accessibility**: Semantic HTML, color-blind friendly palettes, alt text for all visuals, ARIA roles, keyboard navigation
+- **Professional Appearance**: Enterprise-grade typography, spacing, and color schemes — indistinguishable from McKinsey/Sequoia/S&P quality
 - **Deterministic Output**: Reproducible formatting with consistent naming conventions
 - **Data Integrity**: JSON exports preserve raw scores and provenance for audit trails
+- **Print Readiness**: Every HTML report must render cleanly when printed to PDF with proper page breaks, margins, and preserved chart colors
 
 ---
 
@@ -83,22 +90,11 @@ All CSS is inline (within `<style>` tags) and all JavaScript is inline (within `
 - **Tablet (768px–1200px)**: Single-column primary content, stacked sidebar panels
 - **Mobile (<768px)**: Full-width single-column, collapsible sections, optimized typography
 
-### Color Coding for Determinations
+### Color Coding
 
-Determination outcomes are consistently color-coded throughout all reports:
+All semantic colors (determinations, severity, confidence, assessment modes, chart series, score-to-color gradient) are defined in `skills/design-system/SKILL.md`. Use the CSS custom properties template from that file in every HTML report's `<style>` block to ensure consistency.
 
-| Outcome | Color | Hex | Usage |
-|---------|-------|-----|-------|
-| GO | Green | `#22c55e` | Proceed with confidence; no material concerns |
-| CONDITIONAL GO | Blue | `#3b82f6` | Proceed with identified conditions; gaps addressable pre-close |
-| CONDITIONAL HOLD | Amber | `#f59e0b` | Hold pending material issue resolution; significant gaps |
-| NO-GO | Red | `#ef4444` | Do not proceed; fundamental concerns preclude investment |
-
-These colors are used in:
-- Determination badge (large, prominent)
-- Domain score indicators
-- Gap severity badges
-- Status indicators throughout the report
+Embed the design system's `:root` CSS custom properties block at the top of every report's `<style>` section, then reference them throughout (e.g., `color: var(--color-go)`, `background: var(--color-critical)`).
 
 ---
 
@@ -648,72 +644,15 @@ function scoreToColor(score) {
 
 ## Styling Standards
 
-### Typography
+All typography, colors, spacing, component proportions, badge specs, score display formats, and table formatting standards are defined in `skills/design-system/SKILL.md`. Reference that file for:
 
-- **Primary Font**: Inter (via Google Fonts CDN)
-  - Body: 16px, line-height 1.5, weight 400
-  - Headings: weight 600–700
-  - Monospace (data/code): SF Mono, Monaco, or system monospace at 13px
-- **Color**: Dark gray (#1f2937) for body text, darker (#0f172a) for headings
+- **Typography**: Inter font, type scale, monospace for data
+- **Light theme surfaces**: Background, card, elevated, border, text colors
+- **Component proportions**: Badges, cards, tables, score bars, score rings, tabs, buttons
+- **Number formatting**: Commas for thousands, 1 decimal for percentages, $M/$K for currencies
+- **Score display**: Percentage bars, SVG rings, scoreToColor() gradient
 
-### Color Palette
-
-| Element | Color | Hex |
-|---------|-------|-----|
-| Primary Text | Dark Gray | #1f2937 |
-| Secondary Text | Medium Gray | #6b7280 |
-| Tertiary Text | Light Gray | #9ca3af |
-| Background | White | #ffffff |
-| Surface (Cards) | Light Gray | #f9fafb |
-| Border | Border Gray | #e5e7eb |
-| Accent (GO) | Green | #22c55e |
-| Accent (CONDITIONAL GO) | Blue | #3b82f6 |
-| Accent (CONDITIONAL HOLD) | Amber | #f59e0b |
-| Accent (NO-GO) | Red | #ef4444 |
-
-### Table Formatting Standards
-
-- Header row: background #f3f4f6, bold text, padding 12px
-- Data rows: alternating white / #f9fafb backgrounds
-- Cell padding: 12px (horizontal), 10px (vertical)
-- Borders: 1px solid #e5e7eb
-- Font: 14px, monospace for numeric data
-- Right-align numeric columns, left-align text
-
-### Badge and Pill Component Standards
-
-- **Determination Badge** (large):
-  - 100+ pixels diameter/height
-  - Centered text, 32px+ font
-  - Icon + text side-by-side
-  - Colored border + background
-
-- **Status Badge** (small):
-  - 40–60px height
-  - Inline padding, 12px text
-  - Colored background, white text
-  - Rounded corners (20px border-radius)
-
-- **Tag/Pill**:
-  - Inline display
-  - Small font (12px), gray background, dark text
-  - Rounded corners (16px border-radius)
-  - Padding 4px 8px
-
-### Score Display Formats
-
-- **Percentage**: "78%" (always with percent sign)
-- **Fraction**: "78/100" (only if raw score requested)
-- **Colored Bar**:
-  - Full width bar, height 8–12px
-  - Background #e5e7eb (light gray)
-  - Foreground color by scoreToColor() function
-  - Label overlay (percentage or score) in center, white text
-- **Ring/Circle**:
-  - SVG circle, stroke-based
-  - Circumference represents 0–100
-  - Colored stroke by scoreToColor()
-  - Center text with percentage
+Do not redefine these values in reports — use the CSS custom properties from the design system.
 
 ---
 
@@ -806,16 +745,16 @@ For specific implementation guidance, consult the appropriate reference file bas
 
 When tasked with generating a report:
 
-1. **Determine the phase**: Pre-Assessment, Assessment, Sensitivity, or Recommendations
-2. **Select the appropriate tab structure** from this skill file
-3. **Use `templates/base.html`** as the starting point
-4. **Populate tabs** using components from `references/component-library.md`
-5. **Add charts** using patterns from `references/chart-patterns.md`
-6. **Substitute template variables** with actual assessment data
-7. **Validate HTML**: Open in browser to verify rendering and interactivity
-8. **Generate PDF**: Use browser "Print to PDF" for archival format
-9. **Export data**: Serialize Scored Register and Research Provenance as JSON
-10. **Deliver all 4 outputs** (HTML, PDF, Scores JSON, Provenance JSON)
+1. **Read `skills/design-system/SKILL.md`** — this is the single source of truth for all visual identity and quality standards
+2. **Determine the phase**: Pre-Assessment, Assessment, Sensitivity, or Recommendations
+3. **Embed the CSS custom properties** from the design system in the report's `<style>` block
+4. **Build components** using patterns from `references/component-library.md` — these must use the design system's colors via CSS custom properties
+5. **Add charts** using patterns from `references/chart-patterns.md` — chart colors must match the design system's chart series palette
+6. **Structure content adaptively** — choose which tabs, sections, charts, and narratives best serve this specific case. The tab structures in this file are reference patterns, not rigid templates
+7. **Apply the quality contract** from the design system — meet every checkbox in the Visual Quality Floor, Interactivity Floor, Print Readiness, and Professional Standards sections
+8. **Adapt tone to assessor type** — use the Assessor-Type Tone Adaptation table from the design system
+9. **Validate**: Open in browser to verify rendering, responsiveness, print preview, and interactivity
+10. **Deliver outputs** (HTML, PDF via print, data JSON exports)
 
 ---
 

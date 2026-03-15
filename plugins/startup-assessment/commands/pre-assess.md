@@ -408,18 +408,21 @@ Agent: **qaqc-agent** (holistic mode)
 
 Agent: **pre-assess-output-agent**
 - Input: all confirmed data structures in `$WORKSPACE/assessment/pre-assessment/data/` + session audit trail
+- **Mandatory**: Load the `design-system` skill (`skills/design-system/SKILL.md`) and the `html-dashboard` skill before generating any outputs. Apply the centralized design system's color tokens, typography, component proportions, and CSS custom properties. Meet every requirement in the Quality Contract (Visual Quality Floor, Interactivity Floor, Print Readiness, Professional Standards). Adapt narrative tone to the assessor type per the Assessor-Type Tone Adaptation table.
+- **Content freedom**: The agent determines the optimal report structure, sections, tabs, charts, and narrative emphasis for this specific case. The tab structures in `html-dashboard` are reference patterns — adapt as needed.
 - Generates 5 deliverable outputs saved to their respective subfolders:
 
 **Reports** → saved to `$WORKSPACE/assessment/pre-assessment/reports/`
 
 1. **[CompanyName]_PreAssessment_[YYYY-MM-DD].html**
-   - Beautiful, interactive HTML report with charts, tables, and collapsible sections
-   - Domain summaries, scored findings, gaps, dependencies
-   - Includes executive summary and methodology notes
+   - Self-contained interactive HTML report using the `html-dashboard` skill's component library and chart patterns
+   - Content, structure, and emphasis are adaptive to the specific business case — the agent selects which visualizations, sections, and narrative framing best serve the assessor
+   - Must meet the design system's quality contract: responsive at all breakpoints, keyboard-accessible tabs, print-ready, professional-grade typography and color consistency
 
 2. **[CompanyName]_PreAssessment_[YYYY-MM-DD].pdf**
-   - Agent generates printable HTML version; assessor can print to PDF via browser
-   - Fully formatted, ready for external sharing or filing
+   - Agent generates a print-optimized HTML variant; assessor prints to PDF via browser
+   - Format adapts to assessor type: Investment Memorandum (VC/PE/Angel), Credit Memorandum (Debt), or Strategic Assessment (Corporate/Family Office/Sovereign Wealth) per `html-dashboard` skill
+   - Fully formatted with proper page breaks, margins, headers/footers, confidentiality notice
 
 3. **[CompanyName]_PreAssessment_[YYYY-MM-DD].md**
    - Structured markdown data file containing all scored findings, registers, and determination
