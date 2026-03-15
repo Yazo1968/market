@@ -99,47 +99,37 @@ Agent: **sensitivity-agent**
   - `$WORKSPACE/assessment/assessment/data/domain-findings-[domain_id].json` (all domain files)
   - `$WORKSPACE/assessment/pre-assessment/data/framework.json`
   - `$WORKSPACE/assessment/pre-assessment/data/context-profile.json`
-- First: presents methodology options to you based on your determination:
+- First: presents methodology options via an interactive selector artifact
 
-**If determination is GO:**
-- **Option A: Robustness Testing**
-  - Stress-tests your financial assumptions (CAC, LTV, burn rate, revenue growth)
-  - Modifies key operating parameters to identify failure modes
-  - Scenario modeling: base case, upside case (2x revenue growth), downside case (50% revenue growth)
-  - Output: robustness classification (Robust / Moderately Robust / Fragile)
-  - Path B Eligibility: All GO companies qualify for Path B
+**Generate the Sensitivity Methodology Selector Artifact:**
 
-**If determination is CONDITIONAL GO:**
-- **Option A: Condition Sensitivity**
-  - Tests whether conditions are achievable with reasonable effort
-  - Models timeline to condition resolution
-  - Evaluates impact of condition resolution on overall thesis
-  - Output: condition attainability assessment (achievable / unclear / at-risk)
-  - Path B Eligibility: Depends on condition attainability; strong Path B candidates if all conditions deemed achievable
+Load the `interactive-review` skill and its `references/sensitivity-selector.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
 
-- **Option B: Alternative Structure Simulation**
-  - Explores alternative deal structures that might address conditional requirements
-  - Models tranched investment, earnout conditions, or governance provisions
-  - Output: structure optionality assessment
-  - Path B Eligibility: Determines if alternative structure addresses conditions
+1. **Embed the actual data** from the following files as constants:
+   - `$WORKSPACE/assessment/assessment/data/updated-go-nogo-determination.json`
+   - `$WORKSPACE/assessment/assessment/data/integrated-findings-register.json`
+2. **Follow the sensitivity-selector specification** in `skills/interactive-review/references/sensitivity-selector.md` exactly — large methodology selection cards (radio-button style), determination-dependent options with recommended badge, description, what-it-tests, what-you-learn, and Path B impact sections
+3. **Use the shared design system** from `skills/interactive-review/SKILL.md`
+4. **Include the simplified footer** showing `Selected: [Methodology Name]` with Copy to Clipboard button
+5. **Render determination-appropriate cards only:**
+   - GO: Boundary/Flip-Point Analysis (recommended) + Scenario Analysis
+   - CONDITIONAL GO: Scenario Analysis (recommended) + Boundary/Flip-Point Analysis + Monte Carlo Simulation
+   - CONDITIONAL HOLD / NO-GO: Gap Closure Feasibility (recommended) + Pivot Sensitivity
 
-**If determination is CONDITIONAL HOLD or NO-GO:**
-- **Option A: Gap Closure Feasibility**
-  - Models timeline and effort required to close critical gaps
-  - Identifies which gaps are closeable vs. fundamental
-  - Evaluates impact of gap closure on overall determination
-  - Output: gap closure feasibility assessment
-  - Path B Eligibility: Eligible only if critical gaps deemed closeable within reasonable timeframe
+The artifact renders inline. The assessor reviews the methodology options and selects one.
 
-- **Option B: Pivot Sensitivity**
-  - Models how pivot(s) to alternative market(s), product focus, or go-to-market strategy would affect assessment
-  - Output: revised thesis under pivot scenarios
-  - Path B Eligibility: Depends on pivot viability
+**After artifact is rendered:**
 
-**You select methodology:**
-- sensitivity-agent displays the applicable options
-- You choose which option(s) to model
-- sensitivity-agent executes your selection
+> ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
+
+Invoke AskUserQuestion — type: single-select
+- question: "Sensitivity — Paste your methodology selection from the artifact."
+- options: ["I've pasted my selection above"]
+
+**What happens:**
+- Parse the pasted selection JSON (e.g., `{ "methodology": "boundary-analysis", "determination": "GO" }`)
+- Validate methodology is valid for the determination type
+- sensitivity-agent executes the selected methodology
 
 **Sensitivity-agent execution:**
 - Runs scenario modeling and assumption stress-testing

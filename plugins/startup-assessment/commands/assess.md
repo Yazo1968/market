@@ -127,10 +127,7 @@ Agent: **scope-determinator**
 
 ## CONFIRMATION POINT 4: Assessment Scope
 
-**What you see:**
-- **Domain Mode Table:** domain name | pre-assessment readiness | pre-assessment fit | assigned mode | wave
-- **Sequencing Plan:** which domains assess in parallel (same wave) vs. sequentially
-- **Estimated Duration:** rough timeline for full assessment
+**What you see:** An interactive review artifact rendered inline in the conversation.
 
 **Before presenting to the assessor, save a review file:**
 
@@ -140,31 +137,34 @@ Save the full CP4 summary as a formatted markdown file:
 assessment/assessment/reports/CP4_AssessmentScope_[YYYY-MM-DD].md
 ```
 
-The file must contain:
-- `# CP4 Review — Assessment Scope`
-- `## Domain Mode Table` section: all domains as a markdown table with columns: Domain | Pre-Assess Readiness | Pre-Assess Fit | Assigned Mode | Wave
-- `## Sequencing Plan` section: which domains run in parallel per wave, as a table (Wave | Domains | Notes)
-- `## Estimated Duration` section: rough timeline
-- `## What You May Adjust` section: stating that modes may only be escalated, not reduced
-- `## Your Escalation Requests` section: blank placeholder for assessor to fill in
-- `## Instructions` section explaining how to submit escalations (see below)
+**Generate the CP4 Interactive Review Artifact:**
 
-Present the summary in chat and provide a download link to the saved file.
+Load the `interactive-review` skill and its `references/cp4-artifact.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
 
-**Your instruction to the assessor:**
+1. **Embed the actual data** from the following files as constants:
+   - `$WORKSPACE/assessment/assessment/data/assessment-scope-plan.json`
+   - `$WORKSPACE/assessment/pre-assessment/data/readiness-register.json` (for pre-assess scores display)
+   - `$WORKSPACE/assessment/pre-assessment/data/fit-to-purpose-register.json` (for pre-assess scores display)
+2. **Follow the CP4 artifact specification** in `skills/interactive-review/references/cp4-artifact.md` exactly — scope table with mode escalation dropdowns, wave timeline visualization, mode distribution pie chart, pre-assessment context card
+3. **Use the shared design system** from `skills/interactive-review/SKILL.md`
+4. **Include the Changes Footer** (collapsed by default) with change counter and Copy to Clipboard button
+5. **Enforce all constraints in the UI:**
+   - Assessment modes can only be escalated, never reduced (dropdown shows current level and above only: gap-focused → verification → deep-independent)
+   - Escalation rationale is required — text input appears when mode is changed, change not recorded until rationale is entered
+   - Wave assignments are display-only (auto-computed from dependencies)
 
-A review file has been saved to: **`$WORKSPACE/assessment/assessment/reports/CP4_AssessmentScope_[YYYY-MM-DD].md`**
+The artifact renders inline. The assessor reviews the scope plan, escalates modes where warranted via dropdowns, provides rationale, and sees their changes tracked in the footer.
 
-You may escalate assessment modes (gap-focused → verification → deep-independent). You may **NOT** reduce modes.
+**After artifact is rendered:**
 
 > ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
 
 Invoke AskUserQuestion — type: single-select
-- question: "CP4 — Assessment Scope is ready for review. How would you like to proceed?"
-- options: ["Edit & re-upload — I'll open the scope file, add my escalation requests, and re-upload it here", "Confirm — The scope looks correct, proceed with domain assessment"]
+- question: "CP4 — Review complete. Paste your changes from the artifact, or confirm no changes needed."
+- options: ["Confirm — The scope looks correct, proceed with domain assessment", "I've pasted my changes above"]
 
 **What happens:**
-- If the assessor selects **Edit & re-upload**: wait for the re-uploaded file, read escalation requests, validate each (only escalations allowed — reject reductions with explanation), apply valid ones to `assessment-scope-plan.json`, and proceed
+- If the assessor pastes a delta JSON: parse the delta, validate each change (only escalations allowed — reject mode reductions with explanation, require rationale for each escalation), apply valid escalations to `assessment-scope-plan.json`, confirm what was applied, and proceed
 - If the assessor selects **Confirm**: proceed with no changes
 - All changes logged in session audit trail
 - Proceed to Step 2
@@ -235,13 +235,7 @@ Agent: **reconciliation-agent**
 
 ## CONFIRMATION POINT 5: Reconciled Findings
 
-**What you see:**
-- **Cross-Domain Conflicts:** for each identified conflict, the domain positions and reconciliation logic
-- **Top Compounding Risks (up to 5):** ordered by severity; shows how risks interact
-- **Top Reinforcing Strengths (up to 5):** ordered by impact; shows why company is well-positioned
-- **Domain-by-Domain Summary:** each domain's final findings (readiness, fit, key strengths, key risks)
-- **Final Determination vs. Pre-Assessment Determination:** current determination; any changes from pre-assessment with explanations
-- **Implementation Path:** if GO or CONDITIONAL GO, brief description of likely investor sequence
+**What you see:** An interactive review artifact rendered inline in the conversation.
 
 **Before presenting to the assessor, save a review file:**
 
@@ -251,32 +245,34 @@ Save the full CP5 summary as a formatted markdown file:
 assessment/assessment/reports/CP5_ReconciledFindings_[YYYY-MM-DD].md
 ```
 
-The file must contain:
-- `# CP5 Review — Reconciled Findings`
-- `## Cross-Domain Conflicts` section: each conflict with domain positions and reconciliation logic
-- `## Top Compounding Risks` section: up to 5 risks ordered by severity, showing interaction effects
-- `## Top Reinforcing Strengths` section: up to 5 strengths ordered by impact
-- `## Domain-by-Domain Summary` section: table with columns Domain | Readiness | Fit | Key Strengths | Key Risks
-- `## Final Determination` section: determination label, rationale, and any changes from pre-assessment
-- `## Implementation Path` section: if GO or CONDITIONAL GO, likely investor sequence
-- `## Your Overrides & Notes` section: blank placeholder for assessor to fill in
+**Generate the CP5 Interactive Review Artifact:**
 
-Present the summary in chat and provide a download link to the saved file.
+Load the `interactive-review` skill and its `references/cp5-artifact.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
 
-**Your instruction to the assessor:**
+1. **Embed the actual data** from the following files as constants:
+   - `$WORKSPACE/assessment/assessment/data/integrated-findings-register.json`
+   - `$WORKSPACE/assessment/assessment/data/domain-findings-*.json` (all domain files)
+   - `$WORKSPACE/assessment/assessment/data/updated-go-nogo-determination.json`
+2. **Follow the CP5 artifact specification** in `skills/interactive-review/references/cp5-artifact.md` exactly — final determination header with pre-assess vs assess comparison, five tabs (Cross-Domain Conflicts, Compounding Risks, Reinforcing Strengths, Domain-by-Domain Summary with expandable detail, Final Determination)
+3. **Use the shared design system** from `skills/interactive-review/SKILL.md`
+4. **Include the Changes Footer** (collapsed by default) with change counter and Copy to Clipboard button
+5. **Scores are NOT editable** — display only. The only interactive elements are:
+   - Override note textarea per conflict card (collapsed by default, expand on click)
+   - Flag checkbox per compounding risk
+   - General assessor notes textarea at the bottom (outside tabs)
 
-A review file has been saved to: **`$WORKSPACE/assessment/assessment/reports/CP5_ReconciledFindings_[YYYY-MM-DD].md`**
+Override notes and flags are recorded in the audit trail — they do **not** change scores but carry forward into the final report.
 
-You may provide overrides or additional context — these are documented in the audit trail but **will not change scores already calculated.**
+**After artifact is rendered:**
 
 > ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
 
 Invoke AskUserQuestion — type: single-select
-- question: "CP5 — Reconciled Findings are ready for review. How would you like to proceed?"
-- options: ["Edit & re-upload — I'll open the review file, add my overrides or notes, and re-upload it here", "Confirm — Lock findings and generate final assessment outputs"]
+- question: "CP5 — Review complete. Paste your overrides/notes from the artifact, or confirm no changes needed."
+- options: ["Confirm — Lock findings and generate final assessment outputs", "I've pasted my overrides/notes above"]
 
 **What happens:**
-- If the assessor selects **Edit & re-upload**: wait for the re-uploaded file, read override notes from `## Your Overrides & Notes`, apply each to the session audit trail with timestamp, and proceed
+- If the assessor pastes a delta JSON: parse all override notes and flags, record each in the session audit trail with timestamps, confirm what was recorded, and proceed
 - If the assessor selects **Confirm**: proceed with no overrides
 - Session audit trail sealed at this point
 - Proceed to Step 4
