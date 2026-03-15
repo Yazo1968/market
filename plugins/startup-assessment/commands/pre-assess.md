@@ -143,42 +143,31 @@ Wait for context-extractor to complete before proceeding.
 
 **Check first:** If a criteria document was uploaded to `$WORKSPACE/assessment/business-case-docs/`, skip this section and pass it directly to criteria-resolver to extract the profile automatically.
 
-**If no criteria document was provided**, collect the assessor profile now using the AskUserQuestion tool. Ask each question one at a time and wait for the response before proceeding to the next.
+**If no criteria document was provided**, collect the assessor profile using an interactive artifact.
 
-> ⚠️ **STRICT RULE — Interactive Questions:**
-> The `AskUserQuestion` tool renders a clickable widget directly in the user interface.
-> **You MUST NOT write the question text in your response — not before, not after the tool call.**
-> **Do NOT output any label like "Q1 —", "Question 1", or the question content as prose.**
-> Simply invoke the tool. The widget appears automatically. Wait silently for the user's selection.
-> Only output a brief neutral transition (e.g. "Got it.") after receiving an answer, before invoking the next question.
+**Generate the Assessor Profile Collector Artifact:**
 
-Invoke `AskUserQuestion` with the parameters below — one at a time, wait for selection, then proceed:
+Load the `interactive-review` skill and its `references/assessor-profile-collector.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
 
-**[1 of 5]** Invoke AskUserQuestion — type: single-select
-- question: "What is your primary investment or lending capacity?"
-- options: ["Venture Capital", "Angel Investor", "Private Equity", "Credit / Debt", "Corporate Strategic", "Family Office", "Sovereign Wealth", "Accelerator", "Other"]
+1. **Follow the assessor-profile-collector specification** in `skills/interactive-review/references/assessor-profile-collector.md` exactly — six sections (Investment Capacity, Target Stage, Must-Have Criteria, Quantitative Thresholds, Exclusions & Constraints, Institutional Context) with selectable card grids, checkbox lists, conditional textareas
+2. **Use the shared design system** from `skills/interactive-review/SKILL.md`
+3. **Include validation** — required fields must be completed before Copy is enabled (Investment Capacity, Target Stage, Must-Have Criteria selection)
+4. **Include the profile footer** with completion progress and Copy to Clipboard button
 
-**[2 of 5]** Invoke AskUserQuestion — type: single-select
-- question: "What funding stage and company maturity do you typically target?"
-- options: ["Pre-Seed", "Seed", "Series A", "Series B+", "Growth Stage", "Buyout", "Restructuring / Turnaround", "Other"]
+The artifact renders inline. The assessor fills out their investment profile in one view using the interactive controls, then copies the completed profile JSON.
 
-**[3 of 5]** Invoke AskUserQuestion — type: multi-select
-- question: "Select your must-have criteria or deal-breakers (choose all that apply):"
-- options: ["Minimum recurring revenue (MRR/ARR)", "Specific vertical or sector focus", "Founder/team sector experience", "Regulatory approval in place", "US-based team only", "No single customer >50% revenue", "Profitability required", "None of the above"]
+**After artifact is rendered:**
 
-**[4 of 5]** Invoke AskUserQuestion — type: single-select
-- question: "Do you have quantitative thresholds to apply? (e.g. min revenue, max burn, team size)"
-- options: ["Yes — I'll describe them now", "No — use standard thresholds"]
+> ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
 
-If answer is "Yes — I'll describe them now": output exactly one plain-text follow-up: "Please describe your thresholds:" — record the typed response. Do not add any other text.
+Invoke AskUserQuestion — type: single-select
+- question: "Assessor Profile — Paste your completed profile from the artifact."
+- options: ["I've pasted my profile above"]
 
-**[5 of 5]** Invoke AskUserQuestion — type: single-select
-- question: "Any sector exclusions or geographic constraints?"
-- options: ["Yes — I'll describe them now", "No constraints"]
-
-If answer is "Yes — I'll describe them now": output exactly one plain-text follow-up: "Please describe your constraints:" — record the typed response. Do not add any other text.
-
-Once all answers are collected, pass them to the **criteria-resolver** agent to produce `$WORKSPACE/assessment/pre-assessment/data/assessor-profile.json`. The agent does not ask further questions — it processes the answers you collected and outputs the profile.
+**What happens:**
+- Parse the pasted profile JSON
+- Validate required fields are present (assessor_type, target_stage, must_haves)
+- Pass the profile data to the **criteria-resolver** agent to produce `$WORKSPACE/assessment/pre-assessment/data/assessor-profile.json`. The agent resolves the raw inputs into the full schema format (priorities, non-negotiables, weight modifiers) and outputs the profile.
 
 ---
 

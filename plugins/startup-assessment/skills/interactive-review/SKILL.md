@@ -13,7 +13,7 @@ version: 0.1.0
 
 ## Overview
 
-Every Confirmation Point (CP1–CP5) and the Sensitivity methodology selection renders an **inline interactive React artifact** directly in the Cowork conversation. The artifact is dynamically generated from the actual pipeline data at that stage — no static templates. The assessor reviews and adjusts within the artifact, then submits changes back to the workflow.
+Every Confirmation Point (CP1–CP5), the Sensitivity methodology selection, and the Assessor Profile collection render **inline interactive React artifacts** directly in the Cowork conversation. Each artifact is dynamically generated from the actual pipeline data at that stage — no static templates. The assessor reviews and adjusts within the artifact, then submits changes back to the workflow.
 
 ## Data Flow
 
