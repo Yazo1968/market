@@ -274,6 +274,7 @@ The HTML report for the Pre-Assessment phase includes the following 8 tabs:
 - **Assessor Corrections**: Any manual overrides or corrections applied to automated scoring
 - **Data Provenance**: Where input data came from, any transformations applied
 - **Version History**: Any previous versions of this assessment (if applicable)
+- **Standards Alignment Appendix**: Mandatory — see "Standards Alignment Appendix" specification in Mandatory Disclosure Sections
 
 ---
 
@@ -326,6 +327,7 @@ The HTML report for the full Assessment phase includes these 6 tabs:
 - All assessor corrections and overrides
 - Data transformations
 - Version history
+- **Standards Alignment Appendix**: Mandatory — see "Standards Alignment Appendix" specification in Mandatory Disclosure Sections
 
 ---
 
@@ -363,6 +365,7 @@ The HTML report for the Sensitivity Analysis phase includes these 4 tabs:
 - Assumptions
 - Data used for sensitivity analysis
 - Any caveats or limitations
+- **Standards Alignment Appendix**: Mandatory — see "Standards Alignment Appendix" specification in Mandatory Disclosure Sections
 
 ---
 
@@ -406,6 +409,7 @@ The HTML report for the Recommendations phase includes these 4 tabs:
 - Benchmark data (if applicable)
 - Industry standards referenced
 - Detailed roadmap templates (if provided)
+- **Standards Alignment Appendix**: Mandatory — see "Standards Alignment Appendix" specification in Mandatory Disclosure Sections
 
 ---
 
@@ -537,6 +541,157 @@ is disclosed in the Assessor Profile section.]
 ```
 
 **Standards basis:** AICPA VS 100 (independence disclosure), ASA BV Standards (conflict disclosure), IVS (ethical principles — non-biased).
+
+#### 4. Standards Alignment Appendix
+
+Must appear as the final appendix section in every report (HTML and PDF). This is a transparency disclosure — it describes which professional principles informed the methodology. It does **not** claim certification, accreditation, or compliance with any standard.
+
+**Section header:**
+
+```
+STANDARDS ALIGNMENT APPENDIX
+Methodology Transparency Disclosure
+```
+
+**Section A — Methodology Disclosure:**
+
+```
+METHODOLOGY
+
+Scoring methodology: [methodology_version] (e.g., "1.0.0 — 2026-03-15")
+Two-track scoring: Readiness (completeness + quality) and Fit-to-Purpose
+  (stage appropriateness + assessor alignment + ask coherence)
+Scoring dimensions: [count] dimensions across [count] modules in [count] domains
+Last methodology review: [date]
+Next scheduled review: [date]
+```
+
+Populate from the scoring-rubric SKILL.md version header. This satisfies IOSCO CRA Code (methodology transparency) and IVS 105 (valuation approaches disclosure).
+
+**Section B — Data Governance Disclosure:**
+
+```
+DATA GOVERNANCE
+
+Evidence classification: Three-tier confidence system (High / Medium / Low)
+  informed by the 3H Principle (Human-verified, Heuristic, Hypothetical)
+Source attribution: Every finding cites source type, confidence level, and
+  retrieval date in the Research Provenance appendix
+Data timeliness: All evidence sources classified by staleness
+  (Current <6mo / Recent 6-12mo / Aging 12-24mo / Stale 24-36mo / Expired >36mo)
+  per IVS 104 data quality requirements
+Conflict handling: Contradictions between submission and research are documented
+  with both versions preserved; assessor resolves at confirmation point
+```
+
+Populate from research-protocol SKILL.md. This satisfies FAIR Data Principles (findability, accessibility) and ISO 8000 (data quality management).
+
+**Section C — Human Oversight Log:**
+
+```
+HUMAN OVERSIGHT
+
+This assessment includes [count] human confirmation points:
+
+  CP1: Framework confirmation — Assessor confirmed domain activation, weighting,
+       and assessment scope [timestamp]
+  CP2: Content mapping confirmation — Assessor confirmed module-content assignments
+       and research completeness [timestamp]
+  CP3: Scoring confirmation — Assessor confirmed all domain scores and gap
+       classifications [timestamp]
+  CP4: Determination confirmation — Assessor confirmed final determination after
+       cross-domain reconciliation and red-team challenge [timestamp]
+  CP5: Report confirmation — Assessor confirmed final report content and approved
+       delivery [timestamp]
+
+All assessor overrides and corrections are logged in the Session Audit Trail
+with timestamps per SOC 2 / ISAE 3402 temporal audit requirements.
+```
+
+Populate from the actual CP timestamps recorded during the session. This satisfies EU AI Act Article 14 (human oversight), NIST AI RMF (human-in-the-loop), and the 3H Principle.
+
+**Section D — Standards Alignment Table:**
+
+Present as a three-column table. Each row maps a principle to how it was applied. Group by demonstrability category.
+
+```
+STANDARDS ALIGNMENT
+
+The following professional principles informed this assessment methodology.
+This disclosure is provided for transparency — it does not constitute
+certification or accreditation under any standard.
+
+┌─────────────────────────────┬──────────────────────────────┬─────────────────┐
+│ Standard / Principle        │ How Applied                  │ Demonstrability │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ AICPA VS 100                │ Assumptions and limiting     │ Output          │
+│ (Valuation Standards)       │ conditions disclosed;        │                 │
+│                             │ independence statement       │                 │
+│                             │ included                     │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ IVS 106 (Reporting)         │ Scope, purpose, limitations, │ Output          │
+│                             │ methodology version          │                 │
+│                             │ disclosed per IVS reporting  │                 │
+│                             │ requirements                 │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ EU AI Act Art 13            │ AI disclosure on cover page; │ Output          │
+│ (Transparency)              │ human oversight logged at    │                 │
+│                             │ 5 confirmation points        │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ IC Memo Conventions         │ Report structured as         │ Output          │
+│ (PE/VC Best Practice)       │ investment / credit /        │                 │
+│                             │ strategic memo per assessor  │                 │
+│                             │ type                         │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ ISO 31000 / COSO ERM        │ Risk scoring uses likelihood │ Methodology     │
+│ (Risk Management)           │ × impact matrix (1-25);      │                 │
+│                             │ residual risk assessed       │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ 3H Principle                │ Evidence classified as       │ Methodology     │
+│ (Evidence Classification)   │ Human-verified, Heuristic,   │                 │
+│                             │ or Hypothetical; confidence  │                 │
+│                             │ levels map to 3H tiers       │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ IVS 104 (Data Quality)      │ Data timeliness tracked per  │ Methodology     │
+│                             │ source; staleness warnings   │                 │
+│                             │ triggered at 12+ months      │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ IOSCO CRA Code              │ Methodology versioned;       │ Methodology     │
+│ (Credit Rating Agencies)    │ 6-month review cycle;        │                 │
+│                             │ scoring criteria disclosed   │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ ILPA DDQ / UN PRI           │ ESG/DEI modules available as │ Methodology     │
+│ (ESG/DEI Integration)       │ cross-cutting assessments;   │                 │
+│                             │ activated by assessor type   │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ NIST AI RMF / EU AI Act     │ AI bias testing protocol     │ Internal        │
+│ Art 14 (AI Governance)      │ applied during QA/QC;        │ Process         │
+│                             │ results in QA/QC log         │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ SOC 2 / ISAE 3402           │ Temporal audit trail with    │ Internal        │
+│ (Audit Controls)            │ timestamps; session-based    │ Process         │
+│                             │ (not persistent)             │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ FAIR Data Principles        │ Source attribution and data   │ Internal        │
+│ (Data Management)           │ provenance documented per    │ Process         │
+│                             │ finding                      │                 │
+└─────────────────────────────┴──────────────────────────────┴─────────────────┘
+
+Demonstrability Key:
+  Output          — Directly verifiable in this report's content
+  Methodology     — Verifiable by examining scoring logic and data governance
+  Internal Process — Requires independent audit; not fully demonstrable per-report
+```
+
+**Standards basis:** IOSCO CRA Code (methodology transparency), IVS 105 (valuation approaches), EU AI Act Art 13 (transparency obligations). The appendix itself fulfills the meta-requirement of making standards application visible to the report consumer.
+
+**Implementation notes:**
+- This section must appear in **every** report output (all phases: Pre-Assessment, Assessment, Sensitivity, Recommendations)
+- In HTML reports, render as the last sub-section of the Appendix tab
+- In PDF reports, render as the final appendix section before the back cover
+- The table must adapt dynamically: only include rows for standards that were actually exercised in this assessment (e.g., omit ILPA DDQ row if no ESG modules were activated)
+- CP timestamps must be actual timestamps from the session, not placeholders
+- Methodology version must match the version declared in scoring-rubric SKILL.md
 
 ---
 
@@ -822,13 +977,14 @@ When tasked with generating a report:
 4. **Build components** using patterns from `references/component-library.md` — these must use the design system's colors via CSS custom properties
 5. **Add charts** using patterns from `references/chart-patterns.md` — chart colors must match the design system's chart series palette
 6. **Structure content adaptively** — choose which tabs, sections, charts, and narratives best serve this specific case. The tab structures in this file are reference patterns, not rigid templates
-7. **Apply the quality contract** from the design system — meet every checkbox in the Visual Quality Floor, Interactivity Floor, Print Readiness, and Professional Standards sections
-8. **Adapt tone to assessor type** — use the Assessor-Type Tone Adaptation table from the design system
-9. **Validate**: Open in browser to verify rendering, responsiveness, print preview, and interactivity
-10. **Deliver outputs** (HTML, PDF via print, data JSON exports)
+7. **Include mandatory disclosures** — AI disclosure, limitations, independence statement, and Standards Alignment Appendix (see Mandatory Disclosure Sections). The Standards Alignment Appendix must appear in every report's Appendix tab
+8. **Apply the quality contract** from the design system — meet every checkbox in the Visual Quality Floor, Interactivity Floor, Print Readiness, and Professional Standards sections
+9. **Adapt tone to assessor type** — use the Assessor-Type Tone Adaptation table from the design system
+10. **Validate**: Open in browser to verify rendering, responsiveness, print preview, and interactivity
+11. **Deliver outputs** (HTML, PDF via print, data JSON exports)
 
 ---
 
-**Last Updated:** 2026-03-08
-**Skill Version:** 0.1.0
+**Last Updated:** 2026-03-15
+**Skill Version:** 0.2.0
 **Status:** Ready for production use
