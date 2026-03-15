@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "qaqc-report",
+  "description": "Quality assurance and quality control report produced by qaqc-agent. Documents all QA/QC checks run, results, escalations, and resolutions.",
+  "type": "object",
+  "required": ["company_name", "phase", "checks", "qaqc_summary"],
+  "properties": {
+    "company_name": {"type": "string"},
+    "phase": {
+      "type": "string",
+      "enum": ["pre-assessment", "assessment"],
+      "description": "Which phase this QA/QC report covers."
+    },
+    "checks": {
+      "type": "array",
+      "description": "Individual QA/QC check results.",
+      "items": {
+        "type": "object",
+        "required": ["check_id", "check_category", "check_name", "status"],
+        "properties": {
+          "check_id": {
+            "type": "string",
+            "description": "Unique check identifier (e.g., 'QA-H1', 'QA-D3')."
+          },
+          "check_category": {
+            "type": "string",
+            "enum": ["holistic", "domain-level", "bias-testing"],
+            "description": "Which QA/QC mode this check belongs to."
+          },
+          "check_name": {"type": "string"},
+          "status": {
+            "type": "string",
+            "enum": ["passed", "failed", "warning", "skipped"],
+            "description": "Check result status."
+          },
+          "finding": {
+            "type": "string",
+            "description": "Description of what was found (especially for failed/warning checks)."
+          },
+          "affected_modules": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Module IDs affected by this finding."
+          },
+          "resolution": {
+            "type": "string",
+            "description": "How the finding was resolved (auto-corrected, escalated, kept-with-flag)."
+          },
+          "escalated_to_assessor": {
+            "type": "boolean",
+            "description": "Whether this finding was escalated to the assessor for decision."
+          },
+          "assessor_decision": {
+            "type": "string",
+            "description": "Assessor's decision if escalated."
+          }
+        }
+      }
+    },
+    "qaqc_summary": {
+      "type": "object",
+      "properties": {
+        "total_checks": {"type": "integer"},
+        "passed": {"type": "integer"},
+        "failed": {"type": "integer"},
+        "warnings": {"type": "integer"},
+        "skipped": {"type": "integer"},
+        "escalated": {"type": "integer"},
+        "auto_corrections_applied": {"type": "integer"}
+      }
+    },
+    "bias_testing": {
+      "type": "object",
+      "description": "AI bias testing results (Mode 3 from qaqc-rubric).",
+      "properties": {
+        "confirmation_bias_check": {"type": "string", "enum": ["passed", "failed"]},
+        "anchoring_bias_check": {"type": "string", "enum": ["passed", "failed"]},
+        "severity_calibration_check": {"type": "string", "enum": ["passed", "failed"]},
+        "demographic_neutrality_check": {"type": "string", "enum": ["passed", "failed"]}
+      }
+    }
+  }
+}

@@ -4,7 +4,7 @@ description: >
   Runs quality assurance checks on all pre-assessment or domain outputs
 model: inherit
 color: red
-tools: [Read,Bash(python:*)]
+tools: [Read,Bash(python3:*)]
 ---
 
 ## System Prompt
@@ -25,8 +25,8 @@ Identify and resolve quality, consistency, and compliance issues in assessment o
 
 You must load from `/skills/`:
 - **qaqc-rubric/SKILL.md**: quality standards and check definitions
-- **qaqc-rubric/pre-assess-qaqc-checks.md**: holistic pre-assessment checks
-- **qaqc-rubric/domain-qaqc-checks.md**: domain-level QA/QC checks
+- **qaqc-rubric/references/pre-assess-qaqc-checks.md**: holistic pre-assessment checks
+- **qaqc-rubric/references/domain-qaqc-checks.md**: domain-level QA/QC checks
 
 ### OPERATING MODES
 

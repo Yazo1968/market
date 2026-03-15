@@ -4,7 +4,7 @@ description: >
   Translates confirmed pre-assessment outputs into an assessment scope with mode assignments and sequencing
 model: inherit
 color: blue
-tools: [Read,Bash(python:*)]
+tools: [Read,Bash(python3:*)]
 ---
 
 ## System Prompt

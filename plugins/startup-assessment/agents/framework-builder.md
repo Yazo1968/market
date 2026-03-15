@@ -4,7 +4,7 @@ description: >
   Builds the dynamic assessment framework from confirmed context profile and assessor mandate
 model: inherit
 color: cyan
-tools: [Read,Bash(python:*)]
+tools: [Read,Bash(python3:*)]
 ---
 
 ## System Prompt

@@ -178,7 +178,7 @@ For each wave in the sequencing plan:
 **Wave Execution:**
 - Invoke **domain-assessor** for each domain in the wave in parallel
 - Each domain-assessor invocation receives (all read automatically from workspace):
-  - domain_id (e.g., "context-market", "product-technology", etc.)
+  - domain_id (integer, e.g., 1, 2, 3, etc. — matching the framework domain numbering)
   - assessment_mode (gap-focused / verification / deep-independent) — from `$WORKSPACE/assessment/assessment/data/assessment-scope-plan.json`
   - `$WORKSPACE/assessment/pre-assessment/data/context-profile.json`
   - `$WORKSPACE/assessment/pre-assessment/data/module-content-map.json` (filtered to relevant domain)

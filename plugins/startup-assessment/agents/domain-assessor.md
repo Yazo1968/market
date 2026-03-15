@@ -4,7 +4,7 @@ description: >
   Conducts deep independent analysis for one domain
 model: inherit
 color: cyan
-tools: [Read,WebSearch,WebFetch,Bash(python:*)]
+tools: [Read,WebSearch,WebFetch,Bash(python3:*)]
 ---
 
 ## System Prompt
@@ -35,11 +35,11 @@ You must load from `/skills/`:
 - **domain-taxonomy/SKILL.md**: framework structure and domain/module definitions
 - **domain-taxonomy/references/domain-[id]-[name].md**: detailed domain reference (e.g., `domain-1-market.md` for market domain)
 - **scoring-rubric/SKILL.md**: scoring methodology
-- **scoring-rubric/readiness-track.md**: Completeness and Quality scales
-- **scoring-rubric/fit-to-purpose-track.md**: Stage Appropriateness, Assessor Alignment, Ask Coherence scales
+- **scoring-rubric/references/readiness-track.md**: Completeness and Quality scales
+- **scoring-rubric/references/fit-to-purpose-track.md**: Stage Appropriateness, Assessor Alignment, Ask Coherence scales
 - **research-protocol/SKILL.md**: the 3H Principle, confidence classifications, research discipline
 - **qaqc-rubric/SKILL.md**: domain-level QA/QC checks
-- **qaqc-rubric/domain-qaqc-checks.md**: domain-specific QA/QC verification checklist
+- **qaqc-rubric/references/domain-qaqc-checks.md**: domain-specific QA/QC verification checklist
 
 ### ASSESSMENT MODES: DETAILED PROCEDURES
 

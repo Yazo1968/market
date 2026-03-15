@@ -35,7 +35,7 @@ Version: 0.2.0
 import json
 import sys
 import argparse
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional
 from pathlib import Path
 from enum import Enum
 
@@ -328,22 +328,22 @@ class JsonValidator:
         Raises:
             SchemaNotFoundError: If schema does not exist
         """
-        if schema_name in SCHEMAS:
+        # External schemas take precedence over built-in (they are more complete)
+        external = load_external_schema(schema_name, schema_dir)
+        if external is not None:
+            self.schema = convert_json_schema_to_inline(external)
+        elif schema_name in SCHEMAS:
             self.schema = SCHEMAS[schema_name]
         else:
-            external = load_external_schema(schema_name, schema_dir)
-            if external is not None:
-                self.schema = convert_json_schema_to_inline(external)
-            else:
-                all_schemas = list(SCHEMAS.keys())
-                # List available external schemas
-                default_dir = Path(__file__).parent.parent / "schemas"
-                if default_dir.exists():
-                    all_schemas += [f.stem for f in default_dir.glob("*.json")]
-                raise SchemaNotFoundError(
-                    f"Schema '{schema_name}' not found. Available schemas: "
-                    f"{', '.join(sorted(set(all_schemas)))}"
-                )
+            all_schemas = list(SCHEMAS.keys())
+            # List available external schemas
+            default_dir = Path(__file__).parent.parent / "schemas"
+            if default_dir.exists():
+                all_schemas += [f.stem for f in default_dir.glob("*.json")]
+            raise SchemaNotFoundError(
+                f"Schema '{schema_name}' not found. Available schemas: "
+                f"{', '.join(sorted(set(all_schemas)))}"
+            )
 
         self.schema_name = schema_name
         self.errors: List[Dict[str, Any]] = []
@@ -464,6 +464,7 @@ class JsonValidator:
 
             value = data[field]
 
+            has_error = False
             if isinstance(value, list):
                 for item in value:
                     if item not in allowed_values:
@@ -472,7 +473,7 @@ class JsonValidator:
                             "field": field,
                             "error": f"Value '{item}' not in allowed values: {allowed_values}"
                         })
-                        return
+                        has_error = True
             else:
                 if value not in allowed_values:
                     self.errors.append({
@@ -480,9 +481,10 @@ class JsonValidator:
                         "field": field,
                         "error": f"Value '{value}' not in allowed values: {allowed_values}"
                     })
-                    return
+                    has_error = True
 
-            self.checks_passed.append(f"Field '{field}' enum values valid")
+            if not has_error:
+                self.checks_passed.append(f"Field '{field}' enum values valid")
 
     def _validate_numeric_ranges(self, data: Dict[str, Any]) -> None:
         """
@@ -545,6 +547,7 @@ class JsonValidator:
             if not isinstance(item_schema, dict):
                 continue
 
+            array_errors = 0
             for i, item in enumerate(value):
                 for key, expected_type in item_schema.items():
                     if key not in item:
@@ -553,6 +556,7 @@ class JsonValidator:
                             "field": f"{field}[{i}]",
                             "error": f"Missing required array item field '{key}'"
                         })
+                        array_errors += 1
                     elif not self._check_type(item[key], expected_type):
                         self.errors.append({
                             "check": ValidationCheck.ARRAY_ITEMS.value,
@@ -560,8 +564,9 @@ class JsonValidator:
                             "error": f"Type mismatch. Expected {expected_type}, "
                                      f"got {type(item[key]).__name__}"
                         })
+                        array_errors += 1
 
-            if not self.errors:
+            if array_errors == 0:
                 self.checks_passed.append(f"Field '{field}' array items valid")
 
 

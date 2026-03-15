@@ -86,7 +86,7 @@ Read these files in order:
 5. `$WORKSPACE/assessment/assessment/data/updated-go-nogo-determination.json`
 6. `$WORKSPACE/assessment/assessment/data/integrated-findings-register.json`
 7. All `$WORKSPACE/assessment/assessment/data/domain-findings-*.json` files — use the `Read` tool on each one found
-8. `$WORKSPACE/assessment/sensitivity/data/sensitivity-results.json`
+8. `$WORKSPACE/assessment/sensitivity/data/sensitivity-analysis.json`
 
 Also read any CP review files in `$WORKSPACE/assessment/assessment/reports/` and `$WORKSPACE/assessment/sensitivity/reports/` for full audit trail context.
 
@@ -101,12 +101,12 @@ Agent: **recommendations-agent**
   - `$WORKSPACE/assessment/assessment/data/integrated-findings-register.json`
   - `$WORKSPACE/assessment/assessment/data/updated-go-nogo-determination.json`
   - `$WORKSPACE/assessment/assessment/data/domain-findings-[domain_id].json` (all domain files)
-  - `$WORKSPACE/assessment/sensitivity/data/sensitivity-results.json`
+  - `$WORKSPACE/assessment/sensitivity/data/sensitivity-analysis.json`
   - `$WORKSPACE/assessment/pre-assessment/data/framework.json`
   - `$WORKSPACE/assessment/pre-assessment/data/context-profile.json`
   - `$WORKSPACE/assessment/pre-assessment/data/assessor-profile.json`
   - `$WORKSPACE/assessment/pre-assessment/data/gap-register.json`
-- Reads Path B eligibility from `sensitivity-results.json`
+- Reads Path B eligibility from `sensitivity-analysis.json`
 - Constructs recommendations:
 
 **Path A (Always Available):**
@@ -163,12 +163,12 @@ Agent: **recommendations-agent**
 
 ## Step 2: Output Generation
 
-Agent: **recommendations-output-agent**
+Agent: **recommendations-agent** (continued, output generation mode)
 - Input (all read automatically from workspace):
   - `$WORKSPACE/assessment/recommendations/data/recommendations.json`
   - `$WORKSPACE/assessment/assessment/data/integrated-findings-register.json`
   - `$WORKSPACE/assessment/assessment/data/updated-go-nogo-determination.json`
-  - `$WORKSPACE/assessment/sensitivity/data/sensitivity-results.json`
+  - `$WORKSPACE/assessment/sensitivity/data/sensitivity-analysis.json`
   - `$WORKSPACE/assessment/pre-assessment/data/context-profile.json`
   - `$WORKSPACE/assessment/pre-assessment/data/assessor-profile.json`
   - Session audit trail (CP1–CP5 confirmations and all adjustments)

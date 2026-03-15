@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "assessment-scope-plan",
+  "description": "Assessment scope and domain evaluation plan produced by scope-determinator. Consumed by domain-assessor. Defines which domains to assess, in what order, and with what mode (standard vs deep).",
+  "type": "object",
+  "required": ["company_name", "assessment_mode", "domain_assignments"],
+  "properties": {
+    "company_name": {"type": "string"},
+    "assessment_mode": {
+      "type": "string",
+      "enum": ["standard", "deep", "targeted"],
+      "description": "Overall assessment mode based on pre-assessment findings."
+    },
+    "assessment_rationale": {
+      "type": "string",
+      "description": "Explanation of why this assessment mode was selected."
+    },
+    "domain_assignments": {
+      "type": "array",
+      "description": "Per-domain assessment plan, ordered by assessment wave.",
+      "items": {
+        "type": "object",
+        "required": ["domain_id", "domain_name", "assessment_mode", "wave"],
+        "properties": {
+          "domain_id": {"type": "integer"},
+          "domain_name": {"type": "string"},
+          "assessment_mode": {
+            "type": "string",
+            "enum": ["standard", "deep-independent", "deep-adversarial", "skip"],
+            "description": "Assessment depth for this domain."
+          },
+          "wave": {
+            "type": "integer",
+            "description": "Assessment wave (1 = first, assessed in parallel within wave)."
+          },
+          "mode_rationale": {
+            "type": "string",
+            "description": "Why this mode was selected for this domain."
+          },
+          "pre_assessment_readiness_score": {"type": "number"},
+          "pre_assessment_fit_score": {"type": "number"},
+          "critical_gaps_count": {"type": "integer"},
+          "dependencies": {
+            "type": "array",
+            "items": {"type": "integer"},
+            "description": "Domain IDs that should be assessed before this one."
+          }
+        }
+      }
+    },
+    "assessment_waves": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "wave": {"type": "integer"},
+          "domains": {"type": "array", "items": {"type": "integer"}},
+          "can_run_parallel": {"type": "boolean"}
+        }
+      }
+    },
+    "scope_metadata": {
+      "type": "object",
+      "properties": {
+        "total_domains": {"type": "integer"},
+        "domains_in_scope": {"type": "integer"},
+        "domains_skipped": {"type": "integer"},
+        "estimated_waves": {"type": "integer"}
+      }
+    }
+  }
+}

@@ -4,7 +4,7 @@ description: >
   Extracts funding stage vertical commercial model revenue architecture geography ask regulatory exposure and traction status from all business case documents in assessment/business-case-docs/
 model: inherit
 color: blue
-tools: [Read,Bash(python:*),Bash(find:*),Bash(ls:*)]
+tools: [Read,Bash(python3:*),Bash(find:*),Bash(ls:*)]
 ---
 
 ## System Prompt

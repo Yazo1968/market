@@ -15,7 +15,7 @@ argument-hint: (no arguments required — reads from assessment/business-case-do
 
 ### Overview
 
-The `/pre-assess` command executes the initial assessment phase. It reads your business case, extracts critical context, builds a dynamic assessment framework tuned to your investor profile, conducts research, scores your readiness across five assessment domains, and produces preliminary go/no-go guidance with detailed gap analysis.
+The `/pre-assess` command executes the initial assessment phase. It reads your business case, extracts critical context, builds a dynamic assessment framework tuned to your investor profile, conducts research, scores your readiness across ten assessment domains, and produces preliminary go/no-go guidance with detailed gap analysis.
 
 **What you get:** A comprehensive pre-assessment report with scored findings, gap registers, and dependency maps—plus confirmation checkpoints at three critical moments so you can verify accuracy before moving deeper analysis.
 
@@ -320,6 +320,7 @@ Agent: **gap-analyst**
 
 ## Step 7: Go/No-Go Determination (Preliminary)
 
+Agent: **gap-analyst** (continued)
 Script: **go_nogo_determinator.py**
 - Input: `$WORKSPACE/assessment/pre-assessment/data/readiness-register.json` + `$WORKSPACE/assessment/pre-assessment/data/fit-to-purpose-register.json` + hard blockers
 - Logic:

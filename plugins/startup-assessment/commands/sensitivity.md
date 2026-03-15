@@ -137,7 +137,7 @@ Invoke AskUserQuestion — type: single-select
 - Identifies key risk factors (variables that create most downside)
 - Calculates sensitivity coefficients (how much 10% change in each assumption affects valuation / determination)
 - Produces robustness classification and Path B eligibility determination
-- Output: `$WORKSPACE/assessment/sensitivity/data/sensitivity-results.json`
+- Output: `$WORKSPACE/assessment/sensitivity/data/sensitivity-analysis.json`
   - key_value_drivers (ranked by impact)
   - key_risk_factors (ranked by downside magnitude)
   - scenario_modeling_results (base / upside / downside outcomes)
@@ -150,9 +150,9 @@ Invoke AskUserQuestion — type: single-select
 
 ## Step 2: Output Generation
 
-Agent: **sensitivity-output-agent**
+Agent: **sensitivity-agent** (continued, output generation mode)
 - Input (all read automatically from workspace):
-  - `$WORKSPACE/assessment/sensitivity/data/sensitivity-results.json`
+  - `$WORKSPACE/assessment/sensitivity/data/sensitivity-analysis.json`
   - `$WORKSPACE/assessment/assessment/data/integrated-findings-register.json`
   - `$WORKSPACE/assessment/assessment/data/updated-go-nogo-determination.json`
   - `$WORKSPACE/assessment/pre-assessment/data/context-profile.json`
@@ -189,7 +189,7 @@ assessment/sensitivity/
 │   ├── [CompanyName]_Sensitivity_[YYYY-MM-DD].pdf
 │   └── [CompanyName]_Sensitivity_[YYYY-MM-DD].md
 └── data/
-    └── sensitivity-results.json
+    └── sensitivity-analysis.json
 ```
 
 **Path B Availability – Prominently Displayed:**

@@ -4,7 +4,7 @@ description: >
   Classifies gaps across both tracks and builds the dependency map
 model: inherit
 color: yellow
-tools: [Read,Bash(python:*)]
+tools: [Read,Bash(python3:*)]
 ---
 
 ## System Prompt
@@ -27,8 +27,8 @@ You receive from the scorer agent:
 
 You must load from `/skills/`:
 - **scoring-rubric/SKILL.md**: gap identification and severity guidance
-- **gap-analyst/gap-classification.md**: gap type definitions and classification rules
-- **gap-analyst/dependency-patterns.md**: common cross-domain dependencies and risk interactions
+- **gap-analyst/references/gap-classification.md**: gap type definitions and classification rules
+- **gap-analyst/references/dependency-patterns.md**: common cross-domain dependencies and risk interactions
 
 ### GAP IDENTIFICATION RULES
 
@@ -42,7 +42,7 @@ A **gap exists** if ANY of the following conditions are met:
 
 ### GAP CLASSIFICATION (TYPES)
 
-Run `python /scripts/gap_classifier.py --module-content-map /inputs/module-content-map.json --readiness /inputs/readiness-register.json` to auto-classify all gaps. Each gap receives a **type** and **severity**:
+Run `python3 /scripts/gap_classifier.py --module-content-map /inputs/module-content-map.json --readiness /inputs/readiness-register.json --framework /inputs/framework.json` to auto-classify all gaps. Each gap receives a **type** and **severity**:
 
 #### Gap Types
 

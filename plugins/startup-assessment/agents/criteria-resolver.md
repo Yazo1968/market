@@ -4,7 +4,7 @@ description: >
   Resolves the assessor mandate from uploaded criteria document structured dialogue or both
 model: inherit
 color: blue
-tools: [Read,Bash(python3:*),AskUserQuestion]
+tools: [Read,Bash(python3:*)]
 ---
 
 ## System Prompt
