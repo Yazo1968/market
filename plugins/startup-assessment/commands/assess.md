@@ -233,6 +233,27 @@ Agent: **reconciliation-agent**
 
 ---
 
+## Step 3b: Red-Team Challenge
+
+Agent: **reconciliation-agent** (continued, adversarial mode)
+
+After reconciliation produces the integrated findings and determination, the same agent conducts a structured devil's advocate review before presenting to the assessor. This follows institutional PE/VC best practice for IC-ready analysis.
+
+**Red-Team Procedure:**
+1. **Challenge the determination**: Construct the strongest possible counter-argument to the proposed determination. If GO, argue for NO-GO; if NO-GO, argue for GO.
+2. **Stress-test key assumptions**: Identify the 3 most consequential assumptions underlying the determination. For each, state what would need to be true for the assumption to fail, and what the impact would be.
+3. **Identify blind spots**: Flag any areas where data coverage is thin (confidence < medium) yet the determination relies heavily on the finding.
+4. **Document the challenge**: Append a `red_team_challenge` section to `integrated-findings-register.json`:
+   - `counter_argument`: the strongest case against the determination (2–3 paragraphs)
+   - `key_assumptions_stressed`: array of 3 assumption objects, each with `assumption`, `failure_condition`, `impact_if_failed`
+   - `blind_spots`: array of areas with thin evidence that carry outsized determination weight
+   - `challenge_survives`: boolean — does the original determination survive the red-team challenge?
+   - `challenge_notes`: any modifications or caveats the red-team review suggests
+
+The red-team challenge is **informational only** — it does not change scores or determination. It is surfaced in CP5 and included in the final report appendix.
+
+---
+
 ## CONFIRMATION POINT 5: Reconciled Findings
 
 **What you see:** An interactive review artifact rendered inline in the conversation.

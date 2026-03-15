@@ -147,19 +147,22 @@ Compact table with one row per domain:
     "field": "conflict_CONF-001.override_note",
     "original": "",
     "to": "I disagree with the reconciled position. The technical differentiation is not sufficient to...",
-    "context": "reconciliation-override"
+    "context": "reconciliation-override",
+    "timestamp": "2026-03-15T14:32:07Z"
   },
   {
     "field": "risk_RISK-002.flagged",
     "original": false,
     "to": true,
-    "context": "risk-flag"
+    "context": "risk-flag",
+    "timestamp": "2026-03-15T14:33:12Z"
   },
   {
     "field": "general_notes",
     "original": "",
     "to": "Overall assessment is sound but I want to note that the regulatory landscape...",
-    "context": "assessor-note"
+    "context": "assessor-note",
+    "timestamp": "2026-03-15T14:34:01Z"
   }
 ]
 ```

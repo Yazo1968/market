@@ -404,6 +404,49 @@ Confidence classification is applied at the moment a research finding is retriev
 
 ---
 
+## Section 3b — Data Timeliness and Staleness (IVS 104 Compliance)
+
+All research data must be assessed for timeliness. Stale data reduces confidence and may invalidate findings.
+
+### Timeliness Classification
+
+| Data Age | Classification | Impact on Scoring |
+|----------|---------------|-------------------|
+| < 6 months | **Current** | Full scoring eligibility |
+| 6–12 months | **Recent** | Full scoring eligibility with age noted |
+| 12–24 months | **Aging** | Eligible but flagged: "Data is [N] months old; verify currency" |
+| 24–36 months | **Stale** | Downgrade to Unverified unless corroborated by a more recent source |
+| > 36 months | **Expired** | **INELIGIBLE** for Quality scoring. Document as historical context only. |
+
+### Timeliness Tracking Requirements
+
+Every research finding must record:
+
+1. **`data_publication_date`** — when the source data was originally published (not when we retrieved it)
+2. **`data_retrieval_date`** — when the source was accessed in this session (already tracked)
+3. **`data_age_months`** — computed: months between publication date and assessment date
+
+### Staleness Flags in Research Log
+
+When a finding is classified as Aging, Stale, or Expired, the research-log entry must include:
+
+```json
+{
+  "staleness_flag": "aging|stale|expired",
+  "data_publication_date": "YYYY-MM-DD",
+  "data_age_months": 18,
+  "staleness_note": "Market sizing data is 18 months old; segment definitions may have shifted"
+}
+```
+
+### Automatic Staleness Warnings
+
+The QA/QC agent must check: if any module's Quality score relies primarily on Aging or Stale data (>50% of evidence sources are 12+ months old), flag the module with a staleness warning in the QA/QC log.
+
+**Standards basis:** IVS 104 (Data must be Timely — reflect conditions at valuation date), ISO 8000 (data quality dimension: timeliness).
+
+---
+
 ## Section 4 — Conflict Resolution Rules (Q&A-Confirmed)
 
 When research sources conflict, specific resolution rules apply.

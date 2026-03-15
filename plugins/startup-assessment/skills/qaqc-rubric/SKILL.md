@@ -331,6 +331,84 @@ If assessment is operating in Verification Analysis mode:
 
 ---
 
+## Mode 3: AI Bias Testing Protocol (EU AI Act / NIST AI RMF Compliance)
+
+Run as part of holistic QA/QC (Mode 1). Detects systematic bias patterns in AI-generated assessment outputs.
+
+### Check B1: Confirmation Bias Detection
+
+Verify the AI has not systematically favored the submission's narrative:
+
+- Count findings classified as "confirmed" vs "contradicted" vs "partially-confirmed"
+- If confirmed:contradicted ratio exceeds 5:1 AND multiple Conflicted research entries exist, flag: "Possible confirmation bias — AI may be systematically favoring submission claims over contradicting evidence"
+- Sample 3 "confirmed" findings and verify each has genuinely independent corroboration (not restating the submission)
+
+**Failure condition:** Confirmed:contradicted ratio >5:1 with Conflicted evidence present but not reflected in findings
+
+**Resolution:** Re-examine contradicted evidence; ensure all Conflicted research entries are surfaced in findings
+
+---
+
+### Check B2: Anchoring Bias Detection
+
+Verify scoring is not anchored to submission framing:
+
+- Compare Readiness scores across domains: if all scores cluster within ±10 points of each other (e.g., all between 60–70), flag: "Possible anchoring — scores are suspiciously uniform across domains with different evidence quality"
+- Check if domains with thin evidence (completeness ≤1) have Quality scores > 0 — this suggests the AI inferred quality without evidence
+
+**Failure condition:** Score uniformity across domains with significantly different evidence quality; or Quality > 0 for modules with completeness ≤ 1
+
+**Resolution:** Re-score flagged modules with fresh evaluation; verify Quality scores are grounded in Verified/Corroborated evidence only
+
+---
+
+### Check B3: Severity Calibration Check
+
+Verify gap severity ratings are not systematically over- or under-calibrated:
+
+- If all gaps are rated MEDIUM or below despite hard-blocker modules having completeness = 0, flag: "Possible downward severity bias"
+- If all gaps are CRITICAL/HIGH despite most modules having completeness ≥ 2, flag: "Possible upward severity bias"
+- Cross-reference: gap severity should correlate with the risk scoring matrix (likelihood x impact)
+
+**Failure condition:** Severity distribution is inconsistent with underlying evidence quality
+
+**Resolution:** Recalibrate severity classifications against gap type definitions and risk matrix
+
+---
+
+### Check B4: Geographic/Demographic Neutrality
+
+Verify the AI has not introduced geographic or demographic bias:
+
+- Check that scoring rationale does not reference founder demographics (age, gender, ethnicity, nationality) as positive or negative signals
+- Check that geographic market is evaluated on its merits (market size, regulatory environment, growth) not on stereotypes
+- Flag any scoring rationale that contains language indicating bias (e.g., "founders from [region] typically..." or "young founders often...")
+
+**Failure condition:** Scoring rationale references protected characteristics or geographic stereotypes
+
+**Resolution:** Remove biased language; re-score affected modules on evidence-based criteria only
+
+---
+
+### Bias Testing Documentation
+
+All bias checks must be documented in the QA/QC log with:
+
+```json
+{
+  "check_id": "B1|B2|B3|B4",
+  "check_name": "confirmation-bias|anchoring-bias|severity-calibration|neutrality",
+  "result": "passed|flagged",
+  "details": "Description of finding if flagged",
+  "resolution": "Action taken if flagged",
+  "timestamp": "ISO-8601"
+}
+```
+
+**Standards basis:** EU AI Act Article 10 (data governance, bias), NIST AI RMF (Measure function — bias detection), IOSCO AI/ML Principles (continuous monitoring).
+
+---
+
 ## Fix Instruction Format
 
 When issuing fix instructions (maximum 2 iterations before user escalation):

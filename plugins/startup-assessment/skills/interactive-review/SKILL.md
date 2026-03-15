@@ -161,6 +161,7 @@ const [changes, setChanges] = useState([]);
 
 const recordChange = useCallback((field, from, to, context = '') => {
   setChanges(prev => {
+    const timestamp = new Date().toISOString();
     // Update existing change for this field, or add new
     const existing = prev.findIndex(c => c.field === field);
     if (existing >= 0) {
@@ -169,10 +170,10 @@ const recordChange = useCallback((field, from, to, context = '') => {
         return prev.filter((_, i) => i !== existing);
       }
       const updated = [...prev];
-      updated[existing] = { ...updated[existing], to };
+      updated[existing] = { ...updated[existing], to, timestamp };
       return updated;
     }
-    return [...prev, { field, original: from, to, context }];
+    return [...prev, { field, original: from, to, context, timestamp }];
   });
 }, []);
 ```
@@ -180,11 +181,13 @@ const recordChange = useCallback((field, from, to, context = '') => {
 The delta JSON format:
 ```json
 [
-  { "field": "funding_stage", "original": "seed", "to": "series-a", "context": "context-profile" },
-  { "field": "domain_3_weight", "original": 0.12, "to": 0.15, "context": "framework" },
-  { "field": "M4.2_criticality", "original": "optional", "to": "important", "context": "framework" }
+  { "field": "funding_stage", "original": "seed", "to": "series-a", "context": "context-profile", "timestamp": "2026-03-15T14:32:07Z" },
+  { "field": "domain_3_weight", "original": 0.12, "to": 0.15, "context": "framework", "timestamp": "2026-03-15T14:33:12Z" },
+  { "field": "M4.2_criticality", "original": "optional", "to": "important", "context": "framework", "timestamp": "2026-03-15T14:34:01Z" }
 ]
 ```
+
+**Timestamp requirement (SOC 2 / ISAE 3402 compliance):** Every change delta must include an ISO 8601 `timestamp` field recording when the change was made. The `recordChange` function automatically captures `new Date().toISOString()` at the moment of change. This ensures the audit trail has per-change temporal granularity for governance and regulatory purposes.
 
 ### Shared UI Components
 

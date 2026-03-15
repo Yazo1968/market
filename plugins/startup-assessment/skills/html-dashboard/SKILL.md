@@ -469,9 +469,80 @@ PDF reports are generated in one of three formats based on assessor type:
 
 **Tone:** Balanced, focused on strategic fit, synergies, and long-term value creation
 
+### Mandatory Disclosure Sections (All Formats)
+
+Every report output — HTML and PDF — must include the following three disclosure sections. These are non-negotiable compliance requirements, not optional content.
+
+#### 1. AI-Generated Assessment Disclosure
+
+Must appear on the cover page or executive summary page of every report. Use this exact language (adapt company/tool name as needed):
+
+```
+AI-ASSISTED ASSESSMENT DISCLOSURE
+
+This assessment was generated with AI assistance using Claude (Anthropic). The AI system
+conducted research, scored modules, identified gaps, and structured findings. All scores,
+determinations, and recommendations were reviewed and confirmed by a human assessor at five
+confirmation points throughout the workflow. The assessor retains final authority over all
+conclusions. AI-generated content should be independently verified before use in investment
+decisions. The AI model's knowledge has a training cutoff and may not reflect the most
+recent developments. All external research was conducted via live retrieval with source
+attribution documented in the Research Provenance appendix.
+```
+
+**Standards basis:** EU AI Act Article 13 (transparency), ASA AI Guidance (disclosure of AI use), SEC 2026 Exam Priorities (accuracy of AI-related disclosures), IOSCO AI/ML Principles (governance and transparency).
+
+#### 2. Limitations and Disclaimers
+
+Must appear as a dedicated section in every report (typically before appendices). Content adapts per phase but must always include:
+
+```
+LIMITATIONS AND DISCLAIMERS
+
+Scope: This assessment evaluates the business case submission and publicly available
+information as of [assessment_date]. It does not constitute a complete due diligence
+investigation, legal opinion, financial advice, or valuation.
+
+Data limitations: Findings are based on information provided by the submitter and
+independently retrieved from public sources. Non-public information, trade secrets,
+and privileged communications were not available. Research confidence levels are
+documented per finding in the Research Provenance appendix.
+
+Methodology: Scoring follows a structured two-track methodology (Readiness and
+Fit-to-Purpose) documented in the Assessment Framework appendix. Methodology version:
+[version]. The methodology has not been validated against investment outcomes.
+
+Forward-looking statements: Projections, scenarios, and recommendations are
+forward-looking and inherently uncertain. Actual outcomes may differ materially.
+
+Not investment advice: This assessment is an analytical tool to support professional
+judgment. It does not replace independent due diligence, legal counsel, or financial
+advisory services. Investment decisions should not be made solely on the basis of
+this assessment.
+```
+
+**Standards basis:** AICPA VS 100 (assumptions and limiting conditions), IVS 106 (reporting requirements), IC memo best practices (limitations section).
+
+#### 3. Independence Disclosure
+
+Must appear on the cover page or in the report metadata section:
+
+```
+INDEPENDENCE STATEMENT
+
+This assessment was conducted using a standardized methodology applied consistently
+to all submissions. The assessment tool has no financial interest in the outcome of
+any assessment. [If applicable: The assessor's relationship to the submitter, if any,
+is disclosed in the Assessor Profile section.]
+```
+
+**Standards basis:** AICPA VS 100 (independence disclosure), ASA BV Standards (conflict disclosure), IVS (ethical principles — non-biased).
+
+---
+
 ### Common PDF Elements (All Formats)
 
-- **Cover Page Design**: Professional letterhead, company name, assessment date, confidentiality footer
+- **Cover Page Design**: Professional letterhead, company name, assessment date, confidentiality footer, AI disclosure badge
 - **Headers/Footers**: Page numbers, date, company name, assessor/fund name, "CONFIDENTIAL - For Internal Use Only"
 - **Typography**:
   - Heading 1 (Section titles): 18pt, bold, color accent (determination color)

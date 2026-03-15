@@ -422,6 +422,20 @@ The same data is framed differently based on the assessor's world:
 
 ---
 
+## 6b. Known Limitations (Documented per AICPA VS 100 / IVS 106)
+
+The following limitations are inherent to the current system and are **documented transparently** rather than remediated. These must be disclosed in every report's Limitations section.
+
+| Limitation | Standard | Status | Mitigation |
+|-----------|----------|--------|-----------|
+| **No outcome validation** — The scoring methodology has not been validated against actual investment outcomes (back-tested). | IOSCO CRA Code (annual methodology validation) | Acknowledged | Methodology is systematically constructed and peer-reviewed against professional standards. Outcome validation requires post-investment tracking data not currently available. |
+| **Audit trail is session-based** — The audit trail is maintained in the Cowork session state and exported to the final PDF. It is not stored in an append-only immutable log during the session. | SOC 2 Type II (processing integrity), ISAE 3402 | Acknowledged | Audit trail is sealed at CP5 and embedded in the final PDF appendix. Within-session integrity depends on the Cowork platform's session management. Post-session, the PDF audit trail is the authoritative record. |
+| **No real-time monitoring** — Assessments are point-in-time snapshots. No continuous monitoring of the assessed company occurs post-assessment. | COSO ERM (monitoring and review) | Out of scope | The tool's scope ends at recommendation delivery. Post-investment monitoring is the assessor's responsibility. Re-assessment is available via `/pre-assess` at any time. |
+| **AI model limitations** — The AI model has a training knowledge cutoff and may not reflect the most recent market developments, regulatory changes, or industry events. | EU AI Act Article 15 (accuracy, robustness) | Acknowledged | All scoring-eligible evidence is obtained via live retrieval (not training knowledge). The 3H Principle and Training-Derived exclusion rule mitigate this risk. |
+| **Single-assessor workflow** — The current workflow supports a single human assessor. Multi-party IC committee review, formal red-team panels, and multi-assessor consensus are not natively supported. | PE IC conventions (committee review) | Partial | The red-team challenge (Step 3b) provides an adversarial perspective. The final PDF is designed for IC circulation and can be reviewed by a committee externally. |
+
+---
+
 ## 7. Implementation Notes
 
 ### For `interactive-review` (CP artifacts)

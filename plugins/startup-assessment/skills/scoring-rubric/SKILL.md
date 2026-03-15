@@ -11,7 +11,21 @@ version: 0.1.0
 
 # Scoring Rubric
 
+**Methodology Version:** 1.0.0 (2026-03-15)
+**Last Review Date:** 2026-03-15
+**Next Scheduled Review:** 2026-09-15
+
 Two parallel, independent scoring tracks. Both tracks use the same domain and module weights. All scoring is executed by score_calculator.py — agents provide the raw scores and rationale; the script computes normalized and aggregated values.
+
+### Methodology Versioning (IOSCO CRA Code Compliance)
+
+This scoring methodology is versioned and subject to periodic review per IOSCO Code of Conduct requirements for systematic and rigorously validated methodologies.
+
+- **Version format:** MAJOR.MINOR.PATCH (semver). MAJOR = scoring dimension changes, MINOR = threshold/weight changes, PATCH = clarifications only.
+- **Review cycle:** At minimum every 6 months. Review assesses whether scoring dimensions, thresholds, and gate logic remain appropriate.
+- **Change log:** All methodology changes must be documented with date, version, description, and rationale. Changes are applied consistently to all subsequent assessments.
+- **Report disclosure:** Every assessment report must state the methodology version used. Reports generated under different methodology versions are not directly comparable without adjustment.
+- **Backward compatibility:** When methodology version changes, prior assessments are NOT retroactively re-scored. The report notes which version was used.
 
 ## Track 1 — Readiness Track
 
