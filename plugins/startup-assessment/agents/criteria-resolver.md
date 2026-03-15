@@ -51,7 +51,7 @@ If the assessor provides an investment thesis, credit policy, or similar documen
 
 #### Mode 2: No Document Provided
 
-The assessor's answers have already been collected by the main command before this agent was launched. You will receive the answers as input — do NOT ask any questions. Process the provided answers directly and produce the assessor-profile.json output.
+The assessor's profile has been collected via an adaptive interactive artifact before this agent was launched. You will receive a structured JSON object as input containing: `assessor_type`, and a `sections` object with type-specific data (stage, thesis, must-haves, financial thresholds, sector/geographic preferences, etc.). The sections vary by assessor type — a VC profile has different fields than a credit lender or corporate strategic buyer. Do NOT ask any questions. Process the provided profile data directly and produce the assessor-profile.json output.
 
 ### Assessor Type → Report Format Mapping
 

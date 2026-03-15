@@ -149,12 +149,12 @@ Wait for context-extractor to complete before proceeding.
 
 Load the `interactive-review` skill and its `references/assessor-profile-collector.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
 
-1. **Follow the assessor-profile-collector specification** in `skills/interactive-review/references/assessor-profile-collector.md` exactly — six sections (Investment Capacity, Target Stage, Must-Have Criteria, Quantitative Thresholds, Exclusions & Constraints, Institutional Context) with selectable card grids, checkbox lists, conditional textareas
+1. **Follow the assessor-profile-collector specification** in `skills/interactive-review/references/assessor-profile-collector.md` exactly — the form is **adaptive**: the assessor first selects their type (VC, Angel, PE, Credit, Corporate Strategic, Family Office, Sovereign Wealth, Accelerator, Other), then type-specific sections animate in with questions tailored to that assessor type (e.g., VC sees stage/thesis/burn-multiple fields; Credit sees facility-type/coverage-ratios/collateral fields; Corporate Strategic sees strategic-fit/integration-risk fields)
 2. **Use the shared design system** from `skills/interactive-review/SKILL.md`
-3. **Include validation** — required fields must be completed before Copy is enabled (Investment Capacity, Target Stage, Must-Have Criteria selection)
+3. **Include validation** — type-specific required fields must be completed before Copy is enabled
 4. **Include the profile footer** with completion progress and Copy to Clipboard button
 
-The artifact renders inline. The assessor fills out their investment profile in one view using the interactive controls, then copies the completed profile JSON.
+The artifact renders inline. The assessor selects their type, sees only the questions relevant to their mandate, fills out their profile using the interactive controls, then copies the completed profile JSON.
 
 **After artifact is rendered:**
 
