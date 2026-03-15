@@ -5,6 +5,11 @@ model: sonnet
 argument-hint: (no arguments required — reads automatically from workspace folders)
 ---
 
+<!-- Checkpoints defined in this command:
+     CP4 — Assessment Scope review (line ~134)
+     CP5 — Reconciled Findings review (line ~263)
+-->
+
 ## /assess Command: Full Domain Assessment & Reconciliation
 
 ### Usage

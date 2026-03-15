@@ -342,3 +342,4 @@ Detailed artifact specifications for each CP are in the `references/` directory:
 | `references/cp4-artifact.md` | CP4: Assessment Scope | assessment-scope-plan.json |
 | `references/cp5-artifact.md` | CP5: Reconciled Findings | integrated-findings-register.json, domain-findings-*.json, updated-go-nogo-determination.json |
 | `references/sensitivity-selector.md` | Sensitivity Methodology | updated-go-nogo-determination.json, integrated-findings-register.json |
+| `references/assessor-profile-collector.md` | Assessor Profile Collection | Raw assessor inputs for criteria-resolver |

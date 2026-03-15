@@ -5,6 +5,12 @@ model: sonnet
 argument-hint: (no arguments required — reads from assessment/business-case-docs/)
 ---
 
+<!-- Checkpoints defined in this command:
+     CP1 — Context & Assessor Profile review (line ~178)
+     CP2 — Framework review (line ~229)
+     CP3 — Scored Findings review (line ~352)
+-->
+
 ## /pre-assess Command: Initial Readiness & Fit Assessment
 
 ### Usage
