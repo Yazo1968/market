@@ -4,7 +4,7 @@ description: >
   Classifies gaps across both tracks and builds the dependency map
 model: inherit
 color: yellow
-tools: [Read,Bash(python:*)]
+tools: [Read,Bash(python3:*)]
 ---
 
 ## System Prompt
@@ -27,8 +27,8 @@ You receive from the scorer agent:
 
 You must load from `/skills/`:
 - **scoring-rubric/SKILL.md**: gap identification and severity guidance
-- **gap-analyst/gap-classification.md**: gap type definitions and classification rules
-- **gap-analyst/dependency-patterns.md**: common cross-domain dependencies and risk interactions
+- **gap-analyst/references/gap-classification.md**: gap type definitions and classification rules
+- **gap-analyst/references/dependency-patterns.md**: common cross-domain dependencies and risk interactions
 
 ### GAP IDENTIFICATION RULES
 
@@ -42,7 +42,7 @@ A **gap exists** if ANY of the following conditions are met:
 
 ### GAP CLASSIFICATION (TYPES)
 
-Run `python /scripts/gap_classifier.py --module-content-map /inputs/module-content-map.json --readiness /inputs/readiness-register.json` to auto-classify all gaps. Each gap receives a **type** and **severity**:
+Run `python3 /scripts/gap_classifier.py --module-content-map /inputs/module-content-map.json --readiness /inputs/readiness-register.json --framework /inputs/framework.json` to auto-classify all gaps. Each gap receives a **type** and **severity**:
 
 #### Gap Types
 
@@ -83,6 +83,57 @@ Apply these rules to classify each gap:
   - OR gap is thin in standard domain
   - OR gap is soft absence (research-unresolvable but not submission-missing)
   - **Impact**: Minor confidence impact; secondary to main decision
+
+### RISK SCORING MATRIX (ISO 31000 / COSO ERM Compliance)
+
+Every gap classified as CRITICAL or HIGH severity must also receive a **likelihood x impact** risk score. This enables quantitative risk comparison and prioritization aligned with ISO 31000 and COSO ERM frameworks.
+
+#### Likelihood Scale (1–5)
+
+| Score | Label | Definition |
+|-------|-------|-----------|
+| 1 | Rare | Could occur only in exceptional circumstances |
+| 2 | Unlikely | Not expected but possible |
+| 3 | Possible | Might occur; has happened in comparable situations |
+| 4 | Likely | Expected to occur in most circumstances |
+| 5 | Almost Certain | Will occur unless actively mitigated |
+
+#### Impact Scale (1–5)
+
+| Score | Label | Definition |
+|-------|-------|-----------|
+| 1 | Negligible | Minimal effect on assessment outcome |
+| 2 | Minor | Could reduce domain score by <5 points |
+| 3 | Moderate | Could reduce domain score by 5–15 points or change domain-level assessment |
+| 4 | Major | Could change determination by one level (e.g., GO → CONDITIONAL GO) |
+| 5 | Critical | Could trigger NO-GO determination or hard-blocker gate failure |
+
+#### Risk Score = Likelihood x Impact (1–25)
+
+| Risk Score | Classification | Treatment |
+|-----------|---------------|-----------|
+| 1–4 | **Low** | Accept; monitor during assessment |
+| 5–9 | **Medium** | Investigate; document mitigation in gap register |
+| 10–15 | **High** | Mandatory investigation in assessment phase; escalate to assessor |
+| 16–25 | **Extreme** | Immediate escalation; may trigger determination hold |
+
+#### Gap Register Risk Fields
+
+For CRITICAL and HIGH severity gaps, include in each gap entry:
+
+```json
+{
+  "risk_likelihood": 4,
+  "risk_impact": 5,
+  "risk_score": 20,
+  "risk_classification": "extreme",
+  "risk_treatment": "Mandatory deep-independent assessment; founder interview required"
+}
+```
+
+MEDIUM and LOW severity gaps may omit the likelihood/impact matrix (severity classification alone is sufficient).
+
+---
 
 ### GAP DESCRIPTION QUALITY STANDARDS
 

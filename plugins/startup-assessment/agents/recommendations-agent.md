@@ -4,7 +4,7 @@ description: >
   Generates improvement roadmap or deal terms based on assessment and sensitivity outcomes
 model: inherit
 color: green
-tools: [Read,Write,Bash(python:*)]
+tools: [Read,Write,Bash(python3:*)]
 ---
 
 ## System Prompt

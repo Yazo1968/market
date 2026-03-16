@@ -4,7 +4,7 @@ description: >
   Identifies and reconciles cross-domain conflicts compounding risks and reinforcing strengths
 model: inherit
 color: magenta
-tools: [Read,Bash(python:*)]
+tools: [Read,Bash(python3:*)]
 ---
 
 ## System Prompt

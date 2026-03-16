@@ -86,7 +86,7 @@ Read these files in order:
 5. `$WORKSPACE/assessment/assessment/data/updated-go-nogo-determination.json`
 6. `$WORKSPACE/assessment/assessment/data/integrated-findings-register.json`
 7. All `$WORKSPACE/assessment/assessment/data/domain-findings-*.json` files — use the `Read` tool on each one found
-8. `$WORKSPACE/assessment/sensitivity/data/sensitivity-results.json`
+8. `$WORKSPACE/assessment/sensitivity/data/sensitivity-analysis.json`
 
 Also read any CP review files in `$WORKSPACE/assessment/assessment/reports/` and `$WORKSPACE/assessment/sensitivity/reports/` for full audit trail context.
 
@@ -101,12 +101,12 @@ Agent: **recommendations-agent**
   - `$WORKSPACE/assessment/assessment/data/integrated-findings-register.json`
   - `$WORKSPACE/assessment/assessment/data/updated-go-nogo-determination.json`
   - `$WORKSPACE/assessment/assessment/data/domain-findings-[domain_id].json` (all domain files)
-  - `$WORKSPACE/assessment/sensitivity/data/sensitivity-results.json`
+  - `$WORKSPACE/assessment/sensitivity/data/sensitivity-analysis.json`
   - `$WORKSPACE/assessment/pre-assessment/data/framework.json`
   - `$WORKSPACE/assessment/pre-assessment/data/context-profile.json`
   - `$WORKSPACE/assessment/pre-assessment/data/assessor-profile.json`
   - `$WORKSPACE/assessment/pre-assessment/data/gap-register.json`
-- Reads Path B eligibility from `sensitivity-results.json`
+- Reads Path B eligibility from `sensitivity-analysis.json`
 - Constructs recommendations:
 
 **Path A (Always Available):**
@@ -163,29 +163,27 @@ Agent: **recommendations-agent**
 
 ## Step 2: Output Generation
 
-Agent: **recommendations-output-agent**
+Agent: **recommendations-agent** (continued, output generation mode)
 - Input (all read automatically from workspace):
   - `$WORKSPACE/assessment/recommendations/data/recommendations.json`
   - `$WORKSPACE/assessment/assessment/data/integrated-findings-register.json`
   - `$WORKSPACE/assessment/assessment/data/updated-go-nogo-determination.json`
-  - `$WORKSPACE/assessment/sensitivity/data/sensitivity-results.json`
+  - `$WORKSPACE/assessment/sensitivity/data/sensitivity-analysis.json`
   - `$WORKSPACE/assessment/pre-assessment/data/context-profile.json`
   - `$WORKSPACE/assessment/pre-assessment/data/assessor-profile.json`
   - Session audit trail (CP1–CP5 confirmations and all adjustments)
+- **Mandatory**: Load the `design-system` skill and the `html-dashboard` skill before generating. Apply the centralized design system's tokens and meet the Quality Contract. Adapt tone to assessor type. This is the **final deliverable** — quality standards are at their highest here.
+- **Content freedom**: The agent determines optimal structure, sections, and narrative for this specific case — which paths to present, how to frame the roadmap, what deal terms to suggest, how to tell the investment story.
 - Generates 3 deliverable outputs (all saved to `$WORKSPACE/assessment/recommendations/reports/`):
 
 1. **[CompanyName]_Recommendations_[YYYY-MM-DD].html**
-   - Beautiful, executive-focused recommendations report
-   - Path A recommendation with full rationale, deal structure, roadmap
-   - Path B recommendation (if applicable) with comparative analysis
-   - Key metrics dashboard (pre-assessment, assessment, sensitivity outcomes)
-   - Implementation roadmap with timeline
-   - Success criteria and risk monitoring framework
-   - Interactive Path comparison tool (if both paths available)
+   - Self-contained interactive HTML report using the `html-dashboard` skill's component library and chart patterns
+   - Content adaptive to determination outcome, assessor type, and specific case findings — path recommendations, deal structures, roadmaps, success criteria as appropriate
+   - Must meet the design system's quality contract at the highest level — this report goes to investment committees, credit committees, boards, and LPs
 
 2. **[CompanyName]_Recommendations_[YYYY-MM-DD].pdf**
-   - Agent generates printable HTML version; you can print to PDF via your browser
-   - **FINAL DELIVERABLE** – includes complete session audit trail in appendix
+   - Print-optimized HTML variant; format adapts to assessor type per `html-dashboard` skill
+   - **FINAL DELIVERABLE** — includes complete session audit trail in appendix
    - Audit trail documents:
      - CP1 (Context & Assessor Profile) confirmation
      - CP2 (Framework) confirmation and any adjustments

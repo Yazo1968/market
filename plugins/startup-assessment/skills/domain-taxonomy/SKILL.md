@@ -32,7 +32,7 @@ The full analytical universe from which the assessment framework is constructed.
 
 **Domain 1 — Market and Opportunity (8 modules):** Problem Definition · Market Sizing · Market Dynamics · Timing Thesis · Competitive Landscape · Competitive Positioning · Customer Segmentation · Demand Validation.
 
-**Domain 2 — Solution and Product (8 modules):** Solution Description · Value Proposition · Development Stage · Technology Architecture · Intellectual Property · Product Roadmap · Defensibility Assessment · Regulatory and Compliance Profile.
+**Domain 2 — Solution and Product (9 modules):** Solution Description · Value Proposition · Development Stage · Technology Architecture · Intellectual Property · Product Roadmap · Defensibility Assessment · Regulatory and Compliance Profile · Environmental and Social Impact.
 
 **Domain 3 — Business Model (8 modules):** Revenue Model · Pricing Strategy · Cost Structure · Unit Economics · Operating Leverage · Revenue Quality · Customer Economics · Monetization Sequencing.
 
@@ -40,15 +40,28 @@ The full analytical universe from which the assessment framework is constructed.
 
 **Domain 5 — Traction (7 modules):** Revenue History · Customer Metrics · Product Engagement · Commercial Milestones · Pilot and PoC Results · Independent Validation · Failure and Adaptation Record.
 
-**Domain 6 — Management (8 modules):** Founder and Leadership Profile · Functional Coverage · Team Depth · Advisory and Board Composition · Organizational Structure · Talent Strategy · Cultural and Execution Evidence · Identified Gaps.
+**Domain 6 — Management (9 modules):** Founder and Leadership Profile · Functional Coverage · Team Depth · Advisory and Board Composition · Organizational Structure · Talent Strategy · Cultural and Execution Evidence · Diversity, Equity, and Inclusion · Identified Gaps.
 
 **Domain 7 — Financial Performance (10 modules):** Historical Financials · Revenue Projections · Cost and Margin Projections · Cash Flow Projections · Balance Sheet Projections · Key Assumptions · Scenario Analysis · Break-Even Analysis · Debt Service Analysis · Return Analysis.
 
-**Domain 8 — Risk Profile (9 modules):** Market Risk · Execution Risk · Technology Risk · Financial Risk · Regulatory and Legal Risk · People Risk · Concentration Risk · Macroeconomic and Systemic Risk · Mitigation Assessment.
+**Domain 8 — Risk Profile (10 modules):** Market Risk · Execution Risk · Technology Risk · Financial Risk · Regulatory and Legal Risk · People Risk · Concentration Risk · Macroeconomic and Systemic Risk · ESG and Sustainability Risk · Mitigation Assessment.
 
 **Domain 9 — Capital Structure and Transaction Terms (8 modules):** Current Capital Structure · Funding Instrument · Use of Proceeds · Valuation Basis · Investor/Lender Protections · Governance Rights · Exit Mechanisms · Dilution and Waterfall Analysis.
 
-**Domain 10 — Legal, Compliance, and Governance (8 modules):** Corporate Structure · Ownership and Cap Table · Material Contracts · Intellectual Property Ownership · Litigation and Contingent Liabilities · Regulatory Compliance Status · Governance Structure · Data Protection and Privacy.
+**Domain 10 — Legal, Compliance, and Governance (9 modules):** Corporate Structure · Ownership and Cap Table · Material Contracts · Intellectual Property Ownership · Litigation and Contingent Liabilities · Regulatory Compliance Status · Governance Structure · Data Protection and Privacy · ESG Governance and Reporting.
+
+### ESG/DEI Integration Note
+
+ESG and DEI considerations are integrated as cross-cutting modules within their most relevant domains rather than as a separate domain. This follows the fit-to-purpose principle — ESG modules are activated based on assessor type (ILPA-compliant LPs, ESG-mandated funds, sovereign wealth funds) and vertical (climate tech, social enterprise, regulated industries). Activation criteria:
+
+| Module | Domain | Activation |
+|--------|--------|-----------|
+| Environmental and Social Impact | Domain 2 (Product) | Always `optional`; escalates to `important` for climate, clean-tech, social enterprise verticals; `mandatory` for impact funds |
+| Diversity, Equity, and Inclusion | Domain 6 (Management) | Always `optional`; escalates to `important` when assessor profile indicates ILPA compliance or DEI mandate |
+| ESG and Sustainability Risk | Domain 8 (Risk) | Always `optional`; escalates to `important` for regulated sectors, ESG-mandated funds, sovereign wealth; `mandatory` for impact investing |
+| ESG Governance and Reporting | Domain 10 (Legal) | Always `optional`; escalates to `important` when assessor requires ILPA DDQ compliance or ESG framework maturity assessment |
+
+**Standards alignment:** ILPA ESG Assessment Framework (four maturity tiers: Not Present, Developing, Intermediate, Advanced), UN PRI integration guidance, SFDR classification (Article 6/8/9 where applicable).
 
 ## Framework Construction Process
 

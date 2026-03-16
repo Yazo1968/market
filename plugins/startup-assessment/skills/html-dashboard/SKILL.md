@@ -21,14 +21,21 @@ The html-dashboard skill provides agents with comprehensive patterns and templat
 
 The skill is designed for professional assessors (venture capital, private equity, credit analysts, corporate strategists, family offices, sovereign wealth funds) who need to evaluate startup business cases and deliver actionable determinations. All reports are self-contained (inline CSS/JS with optional CDN links) and require no external dependencies beyond trusted content delivery networks.
 
+### Design System
+
+**All colors, typography, spacing, component proportions, chart palettes, and quality standards are defined in the centralized design system: `skills/design-system/SKILL.md`.** Read and follow that file for all visual specifications. It is the single source of truth — do not define alternate color values or typography in report outputs.
+
+The design system also contains the **Quality Contract** — the minimum quality bar for all outputs, benchmarked against top-tier management consultancies, leading VC firms, major credit agencies, and certified valuation professionals. Every output must meet that contract.
+
 ### Key Principles
 
 - **Self-Contained HTML**: Single-file reports with all styling and interactivity embedded
-- **Responsive Design**: Mobile-friendly layouts that work across all screen sizes
-- **Accessibility**: Semantic HTML, color-blind friendly palettes, alt text for all visuals
-- **Professional Appearance**: Enterprise-grade typography, spacing, and color schemes
+- **Responsive Design**: Mobile-friendly layouts that work across all screen sizes (1200px+, 768px, 480px breakpoints)
+- **Accessibility**: Semantic HTML, color-blind friendly palettes, alt text for all visuals, ARIA roles, keyboard navigation
+- **Professional Appearance**: Enterprise-grade typography, spacing, and color schemes — indistinguishable from McKinsey/Sequoia/S&P quality
 - **Deterministic Output**: Reproducible formatting with consistent naming conventions
 - **Data Integrity**: JSON exports preserve raw scores and provenance for audit trails
+- **Print Readiness**: Every HTML report must render cleanly when printed to PDF with proper page breaks, margins, and preserved chart colors
 
 ---
 
@@ -83,22 +90,11 @@ All CSS is inline (within `<style>` tags) and all JavaScript is inline (within `
 - **Tablet (768px–1200px)**: Single-column primary content, stacked sidebar panels
 - **Mobile (<768px)**: Full-width single-column, collapsible sections, optimized typography
 
-### Color Coding for Determinations
+### Color Coding
 
-Determination outcomes are consistently color-coded throughout all reports:
+All semantic colors (determinations, severity, confidence, assessment modes, chart series, score-to-color gradient) are defined in `skills/design-system/SKILL.md`. Use the CSS custom properties template from that file in every HTML report's `<style>` block to ensure consistency.
 
-| Outcome | Color | Hex | Usage |
-|---------|-------|-----|-------|
-| GO | Green | `#22c55e` | Proceed with confidence; no material concerns |
-| CONDITIONAL GO | Blue | `#3b82f6` | Proceed with identified conditions; gaps addressable pre-close |
-| CONDITIONAL HOLD | Amber | `#f59e0b` | Hold pending material issue resolution; significant gaps |
-| NO-GO | Red | `#ef4444` | Do not proceed; fundamental concerns preclude investment |
-
-These colors are used in:
-- Determination badge (large, prominent)
-- Domain score indicators
-- Gap severity badges
-- Status indicators throughout the report
+Embed the design system's `:root` CSS custom properties block at the top of every report's `<style>` section, then reference them throughout (e.g., `color: var(--color-go)`, `background: var(--color-critical)`).
 
 ---
 
@@ -278,6 +274,7 @@ The HTML report for the Pre-Assessment phase includes the following 8 tabs:
 - **Assessor Corrections**: Any manual overrides or corrections applied to automated scoring
 - **Data Provenance**: Where input data came from, any transformations applied
 - **Version History**: Any previous versions of this assessment (if applicable)
+- **Standards Alignment Appendix**: Mandatory — see "Standards Alignment Appendix" specification in Mandatory Disclosure Sections
 
 ---
 
@@ -330,6 +327,7 @@ The HTML report for the full Assessment phase includes these 6 tabs:
 - All assessor corrections and overrides
 - Data transformations
 - Version history
+- **Standards Alignment Appendix**: Mandatory — see "Standards Alignment Appendix" specification in Mandatory Disclosure Sections
 
 ---
 
@@ -367,6 +365,7 @@ The HTML report for the Sensitivity Analysis phase includes these 4 tabs:
 - Assumptions
 - Data used for sensitivity analysis
 - Any caveats or limitations
+- **Standards Alignment Appendix**: Mandatory — see "Standards Alignment Appendix" specification in Mandatory Disclosure Sections
 
 ---
 
@@ -410,6 +409,7 @@ The HTML report for the Recommendations phase includes these 4 tabs:
 - Benchmark data (if applicable)
 - Industry standards referenced
 - Detailed roadmap templates (if provided)
+- **Standards Alignment Appendix**: Mandatory — see "Standards Alignment Appendix" specification in Mandatory Disclosure Sections
 
 ---
 
@@ -473,9 +473,231 @@ PDF reports are generated in one of three formats based on assessor type:
 
 **Tone:** Balanced, focused on strategic fit, synergies, and long-term value creation
 
+### Mandatory Disclosure Sections (All Formats)
+
+Every report output — HTML and PDF — must include the following three disclosure sections. These are non-negotiable compliance requirements, not optional content.
+
+#### 1. AI-Generated Assessment Disclosure
+
+Must appear on the cover page or executive summary page of every report. Use this exact language (adapt company/tool name as needed):
+
+```
+AI-ASSISTED ASSESSMENT DISCLOSURE
+
+This assessment was generated with AI assistance using Claude (Anthropic). The AI system
+conducted research, scored modules, identified gaps, and structured findings. All scores,
+determinations, and recommendations were reviewed and confirmed by a human assessor at five
+confirmation points throughout the workflow. The assessor retains final authority over all
+conclusions. AI-generated content should be independently verified before use in investment
+decisions. The AI model's knowledge has a training cutoff and may not reflect the most
+recent developments. All external research was conducted via live retrieval with source
+attribution documented in the Research Provenance appendix.
+```
+
+**Standards basis:** EU AI Act Article 13 (transparency), ASA AI Guidance (disclosure of AI use), SEC 2026 Exam Priorities (accuracy of AI-related disclosures), IOSCO AI/ML Principles (governance and transparency).
+
+#### 2. Limitations and Disclaimers
+
+Must appear as a dedicated section in every report (typically before appendices). Content adapts per phase but must always include:
+
+```
+LIMITATIONS AND DISCLAIMERS
+
+Scope: This assessment evaluates the business case submission and publicly available
+information as of [assessment_date]. It does not constitute a complete due diligence
+investigation, legal opinion, financial advice, or valuation.
+
+Data limitations: Findings are based on information provided by the submitter and
+independently retrieved from public sources. Non-public information, trade secrets,
+and privileged communications were not available. Research confidence levels are
+documented per finding in the Research Provenance appendix.
+
+Methodology: Scoring follows a structured two-track methodology (Readiness and
+Fit-to-Purpose) documented in the Assessment Framework appendix. Methodology version:
+[version]. The methodology has not been validated against investment outcomes.
+
+Forward-looking statements: Projections, scenarios, and recommendations are
+forward-looking and inherently uncertain. Actual outcomes may differ materially.
+
+Not investment advice: This assessment is an analytical tool to support professional
+judgment. It does not replace independent due diligence, legal counsel, or financial
+advisory services. Investment decisions should not be made solely on the basis of
+this assessment.
+```
+
+**Standards basis:** AICPA VS 100 (assumptions and limiting conditions), IVS 106 (reporting requirements), IC memo best practices (limitations section).
+
+#### 3. Independence Disclosure
+
+Must appear on the cover page or in the report metadata section:
+
+```
+INDEPENDENCE STATEMENT
+
+This assessment was conducted using a standardized methodology applied consistently
+to all submissions. The assessment tool has no financial interest in the outcome of
+any assessment. [If applicable: The assessor's relationship to the submitter, if any,
+is disclosed in the Assessor Profile section.]
+```
+
+**Standards basis:** AICPA VS 100 (independence disclosure), ASA BV Standards (conflict disclosure), IVS (ethical principles — non-biased).
+
+#### 4. Standards Alignment Appendix
+
+Must appear as the final appendix section in every report (HTML and PDF). This is a transparency disclosure — it describes which professional principles informed the methodology. It does **not** claim certification, accreditation, or compliance with any standard.
+
+**Section header:**
+
+```
+STANDARDS ALIGNMENT APPENDIX
+Methodology Transparency Disclosure
+```
+
+**Section A — Methodology Disclosure:**
+
+```
+METHODOLOGY
+
+Scoring methodology: [methodology_version] (e.g., "1.0.0 — 2026-03-15")
+Two-track scoring: Readiness (completeness + quality) and Fit-to-Purpose
+  (stage appropriateness + assessor alignment + ask coherence)
+Scoring dimensions: [count] dimensions across [count] modules in [count] domains
+Last methodology review: [date]
+Next scheduled review: [date]
+```
+
+Populate from the scoring-rubric SKILL.md version header. This satisfies IOSCO CRA Code (methodology transparency) and IVS 105 (valuation approaches disclosure).
+
+**Section B — Data Governance Disclosure:**
+
+```
+DATA GOVERNANCE
+
+Evidence classification: Three-tier confidence system (High / Medium / Low)
+  informed by the 3H Principle (Human-verified, Heuristic, Hypothetical)
+Source attribution: Every finding cites source type, confidence level, and
+  retrieval date in the Research Provenance appendix
+Data timeliness: All evidence sources classified by staleness
+  (Current <6mo / Recent 6-12mo / Aging 12-24mo / Stale 24-36mo / Expired >36mo)
+  per IVS 104 data quality requirements
+Conflict handling: Contradictions between submission and research are documented
+  with both versions preserved; assessor resolves at confirmation point
+```
+
+Populate from research-protocol SKILL.md. This satisfies FAIR Data Principles (findability, accessibility) and ISO 8000 (data quality management).
+
+**Section C — Human Oversight Log:**
+
+```
+HUMAN OVERSIGHT
+
+This assessment includes [count] human confirmation points:
+
+  CP1: Framework confirmation — Assessor confirmed domain activation, weighting,
+       and assessment scope [timestamp]
+  CP2: Content mapping confirmation — Assessor confirmed module-content assignments
+       and research completeness [timestamp]
+  CP3: Scoring confirmation — Assessor confirmed all domain scores and gap
+       classifications [timestamp]
+  CP4: Determination confirmation — Assessor confirmed final determination after
+       cross-domain reconciliation and red-team challenge [timestamp]
+  CP5: Report confirmation — Assessor confirmed final report content and approved
+       delivery [timestamp]
+
+All assessor overrides and corrections are logged in the Session Audit Trail
+with timestamps per SOC 2 / ISAE 3402 temporal audit requirements.
+```
+
+Populate from the actual CP timestamps recorded during the session. This satisfies EU AI Act Article 14 (human oversight), NIST AI RMF (human-in-the-loop), and the 3H Principle.
+
+**Section D — Standards Alignment Table:**
+
+Present as a three-column table. Each row maps a principle to how it was applied. Group by demonstrability category.
+
+```
+STANDARDS ALIGNMENT
+
+The following professional principles informed this assessment methodology.
+This disclosure is provided for transparency — it does not constitute
+certification or accreditation under any standard.
+
+┌─────────────────────────────┬──────────────────────────────┬─────────────────┐
+│ Standard / Principle        │ How Applied                  │ Demonstrability │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ AICPA VS 100                │ Assumptions and limiting     │ Output          │
+│ (Valuation Standards)       │ conditions disclosed;        │                 │
+│                             │ independence statement       │                 │
+│                             │ included                     │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ IVS 106 (Reporting)         │ Scope, purpose, limitations, │ Output          │
+│                             │ methodology version          │                 │
+│                             │ disclosed per IVS reporting  │                 │
+│                             │ requirements                 │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ EU AI Act Art 13            │ AI disclosure on cover page; │ Output          │
+│ (Transparency)              │ human oversight logged at    │                 │
+│                             │ 5 confirmation points        │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ IC Memo Conventions         │ Report structured as         │ Output          │
+│ (PE/VC Best Practice)       │ investment / credit /        │                 │
+│                             │ strategic memo per assessor  │                 │
+│                             │ type                         │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ ISO 31000 / COSO ERM        │ Risk scoring uses likelihood │ Methodology     │
+│ (Risk Management)           │ × impact matrix (1-25);      │                 │
+│                             │ residual risk assessed       │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ 3H Principle                │ Evidence classified as       │ Methodology     │
+│ (Evidence Classification)   │ Human-verified, Heuristic,   │                 │
+│                             │ or Hypothetical; confidence  │                 │
+│                             │ levels map to 3H tiers       │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ IVS 104 (Data Quality)      │ Data timeliness tracked per  │ Methodology     │
+│                             │ source; staleness warnings   │                 │
+│                             │ triggered at 12+ months      │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ IOSCO CRA Code              │ Methodology versioned;       │ Methodology     │
+│ (Credit Rating Agencies)    │ 6-month review cycle;        │                 │
+│                             │ scoring criteria disclosed   │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ ILPA DDQ / UN PRI           │ ESG/DEI modules available as │ Methodology     │
+│ (ESG/DEI Integration)       │ cross-cutting assessments;   │                 │
+│                             │ activated by assessor type   │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ NIST AI RMF / EU AI Act     │ AI bias testing protocol     │ Internal        │
+│ Art 14 (AI Governance)      │ applied during QA/QC;        │ Process         │
+│                             │ results in QA/QC log         │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ SOC 2 / ISAE 3402           │ Temporal audit trail with    │ Internal        │
+│ (Audit Controls)            │ timestamps; session-based    │ Process         │
+│                             │ (not persistent)             │                 │
+├─────────────────────────────┼──────────────────────────────┼─────────────────┤
+│ FAIR Data Principles        │ Source attribution and data   │ Internal        │
+│ (Data Management)           │ provenance documented per    │ Process         │
+│                             │ finding                      │                 │
+└─────────────────────────────┴──────────────────────────────┴─────────────────┘
+
+Demonstrability Key:
+  Output          — Directly verifiable in this report's content
+  Methodology     — Verifiable by examining scoring logic and data governance
+  Internal Process — Requires independent audit; not fully demonstrable per-report
+```
+
+**Standards basis:** IOSCO CRA Code (methodology transparency), IVS 105 (valuation approaches), EU AI Act Art 13 (transparency obligations). The appendix itself fulfills the meta-requirement of making standards application visible to the report consumer.
+
+**Implementation notes:**
+- This section must appear in **every** report output (all phases: Pre-Assessment, Assessment, Sensitivity, Recommendations)
+- In HTML reports, render as the last sub-section of the Appendix tab
+- In PDF reports, render as the final appendix section before the back cover
+- The table must adapt dynamically: only include rows for standards that were actually exercised in this assessment (e.g., omit ILPA DDQ row if no ESG modules were activated)
+- CP timestamps must be actual timestamps from the session, not placeholders
+- Methodology version must match the version declared in scoring-rubric SKILL.md
+
+---
+
 ### Common PDF Elements (All Formats)
 
-- **Cover Page Design**: Professional letterhead, company name, assessment date, confidentiality footer
+- **Cover Page Design**: Professional letterhead, company name, assessment date, confidentiality footer, AI disclosure badge
 - **Headers/Footers**: Page numbers, date, company name, assessor/fund name, "CONFIDENTIAL - For Internal Use Only"
 - **Typography**:
   - Heading 1 (Section titles): 18pt, bold, color accent (determination color)
@@ -648,72 +870,15 @@ function scoreToColor(score) {
 
 ## Styling Standards
 
-### Typography
+All typography, colors, spacing, component proportions, badge specs, score display formats, and table formatting standards are defined in `skills/design-system/SKILL.md`. Reference that file for:
 
-- **Primary Font**: Inter (via Google Fonts CDN)
-  - Body: 16px, line-height 1.5, weight 400
-  - Headings: weight 600–700
-  - Monospace (data/code): SF Mono, Monaco, or system monospace at 13px
-- **Color**: Dark gray (#1f2937) for body text, darker (#0f172a) for headings
+- **Typography**: Inter font, type scale, monospace for data
+- **Light theme surfaces**: Background, card, elevated, border, text colors
+- **Component proportions**: Badges, cards, tables, score bars, score rings, tabs, buttons
+- **Number formatting**: Commas for thousands, 1 decimal for percentages, $M/$K for currencies
+- **Score display**: Percentage bars, SVG rings, scoreToColor() gradient
 
-### Color Palette
-
-| Element | Color | Hex |
-|---------|-------|-----|
-| Primary Text | Dark Gray | #1f2937 |
-| Secondary Text | Medium Gray | #6b7280 |
-| Tertiary Text | Light Gray | #9ca3af |
-| Background | White | #ffffff |
-| Surface (Cards) | Light Gray | #f9fafb |
-| Border | Border Gray | #e5e7eb |
-| Accent (GO) | Green | #22c55e |
-| Accent (CONDITIONAL GO) | Blue | #3b82f6 |
-| Accent (CONDITIONAL HOLD) | Amber | #f59e0b |
-| Accent (NO-GO) | Red | #ef4444 |
-
-### Table Formatting Standards
-
-- Header row: background #f3f4f6, bold text, padding 12px
-- Data rows: alternating white / #f9fafb backgrounds
-- Cell padding: 12px (horizontal), 10px (vertical)
-- Borders: 1px solid #e5e7eb
-- Font: 14px, monospace for numeric data
-- Right-align numeric columns, left-align text
-
-### Badge and Pill Component Standards
-
-- **Determination Badge** (large):
-  - 100+ pixels diameter/height
-  - Centered text, 32px+ font
-  - Icon + text side-by-side
-  - Colored border + background
-
-- **Status Badge** (small):
-  - 40–60px height
-  - Inline padding, 12px text
-  - Colored background, white text
-  - Rounded corners (20px border-radius)
-
-- **Tag/Pill**:
-  - Inline display
-  - Small font (12px), gray background, dark text
-  - Rounded corners (16px border-radius)
-  - Padding 4px 8px
-
-### Score Display Formats
-
-- **Percentage**: "78%" (always with percent sign)
-- **Fraction**: "78/100" (only if raw score requested)
-- **Colored Bar**:
-  - Full width bar, height 8–12px
-  - Background #e5e7eb (light gray)
-  - Foreground color by scoreToColor() function
-  - Label overlay (percentage or score) in center, white text
-- **Ring/Circle**:
-  - SVG circle, stroke-based
-  - Circumference represents 0–100
-  - Colored stroke by scoreToColor()
-  - Center text with percentage
+Do not redefine these values in reports — use the CSS custom properties from the design system.
 
 ---
 
@@ -806,19 +971,20 @@ For specific implementation guidance, consult the appropriate reference file bas
 
 When tasked with generating a report:
 
-1. **Determine the phase**: Pre-Assessment, Assessment, Sensitivity, or Recommendations
-2. **Select the appropriate tab structure** from this skill file
-3. **Use `templates/base.html`** as the starting point
-4. **Populate tabs** using components from `references/component-library.md`
-5. **Add charts** using patterns from `references/chart-patterns.md`
-6. **Substitute template variables** with actual assessment data
-7. **Validate HTML**: Open in browser to verify rendering and interactivity
-8. **Generate PDF**: Use browser "Print to PDF" for archival format
-9. **Export data**: Serialize Scored Register and Research Provenance as JSON
-10. **Deliver all 4 outputs** (HTML, PDF, Scores JSON, Provenance JSON)
+1. **Read `skills/design-system/SKILL.md`** — this is the single source of truth for all visual identity and quality standards
+2. **Determine the phase**: Pre-Assessment, Assessment, Sensitivity, or Recommendations
+3. **Embed the CSS custom properties** from the design system in the report's `<style>` block
+4. **Build components** using patterns from `references/component-library.md` — these must use the design system's colors via CSS custom properties
+5. **Add charts** using patterns from `references/chart-patterns.md` — chart colors must match the design system's chart series palette
+6. **Structure content adaptively** — choose which tabs, sections, charts, and narratives best serve this specific case. The tab structures in this file are reference patterns, not rigid templates
+7. **Include mandatory disclosures** — AI disclosure, limitations, independence statement, and Standards Alignment Appendix (see Mandatory Disclosure Sections). The Standards Alignment Appendix must appear in every report's Appendix tab
+8. **Apply the quality contract** from the design system — meet every checkbox in the Visual Quality Floor, Interactivity Floor, Print Readiness, and Professional Standards sections
+9. **Adapt tone to assessor type** — use the Assessor-Type Tone Adaptation table from the design system
+10. **Validate**: Open in browser to verify rendering, responsiveness, print preview, and interactivity
+11. **Deliver outputs** (HTML, PDF via print, data JSON exports)
 
 ---
 
-**Last Updated:** 2026-03-08
-**Skill Version:** 0.1.0
+**Last Updated:** 2026-03-15
+**Skill Version:** 0.2.0
 **Status:** Ready for production use

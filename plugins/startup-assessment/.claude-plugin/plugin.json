@@ -1,6 +1,6 @@
 {
   "name": "startup-assessment",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "AI-powered startup investment assessment. Structured due diligence across 10 domains with scoring, sensitivity analysis, and go/no-go investment recommendations.",
   "author": {
     "name": "Yasser"
@@ -11,5 +11,27 @@
     "due-diligence",
     "venture-capital",
     "pitch-assessment"
+  ],
+  "commands": [
+    {
+      "name": "initiate",
+      "description": "Scaffold the assessment workspace and save business case documents"
+    },
+    {
+      "name": "pre-assess",
+      "description": "Run initial pre-assessment: context extraction, framework building, research, scoring, gap analysis, and preliminary go/no-go"
+    },
+    {
+      "name": "assess",
+      "description": "Run full domain assessment: deep evaluation across all domains, cross-domain reconciliation, and final determination"
+    },
+    {
+      "name": "sensitivity",
+      "description": "Run sensitivity analysis: robustness testing, scenario modeling, flip-point identification, and Path B eligibility"
+    },
+    {
+      "name": "recommend",
+      "description": "Generate recommendations: improvement roadmap (Path A) and alternative deal structures (Path B)"
+    }
   ]
 }

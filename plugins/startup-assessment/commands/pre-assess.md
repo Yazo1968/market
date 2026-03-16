@@ -5,6 +5,12 @@ model: sonnet
 argument-hint: (no arguments required — reads from assessment/business-case-docs/)
 ---
 
+<!-- Checkpoints defined in this command:
+     CP1 — Context & Assessor Profile review (line ~178)
+     CP2 — Framework review (line ~229)
+     CP3 — Scored Findings review (line ~352)
+-->
+
 ## /pre-assess Command: Initial Readiness & Fit Assessment
 
 ### Usage
@@ -15,7 +21,7 @@ argument-hint: (no arguments required — reads from assessment/business-case-do
 
 ### Overview
 
-The `/pre-assess` command executes the initial assessment phase. It reads your business case, extracts critical context, builds a dynamic assessment framework tuned to your investor profile, conducts research, scores your readiness across five assessment domains, and produces preliminary go/no-go guidance with detailed gap analysis.
+The `/pre-assess` command executes the initial assessment phase. It reads your business case, extracts critical context, builds a dynamic assessment framework tuned to your investor profile, conducts research, scores your readiness across ten assessment domains, and produces preliminary go/no-go guidance with detailed gap analysis.
 
 **What you get:** A comprehensive pre-assessment report with scored findings, gap registers, and dependency maps—plus confirmation checkpoints at three critical moments so you can verify accuracy before moving deeper analysis.
 
@@ -143,88 +149,62 @@ Wait for context-extractor to complete before proceeding.
 
 **Check first:** If a criteria document was uploaded to `$WORKSPACE/assessment/business-case-docs/`, skip this section and pass it directly to criteria-resolver to extract the profile automatically.
 
-**If no criteria document was provided**, collect the assessor profile now using the AskUserQuestion tool. Ask each question one at a time and wait for the response before proceeding to the next.
+**If no criteria document was provided**, collect the assessor profile using an interactive artifact.
 
-> ⚠️ **STRICT RULE — Interactive Questions:**
-> The `AskUserQuestion` tool renders a clickable widget directly in the user interface.
-> **You MUST NOT write the question text in your response — not before, not after the tool call.**
-> **Do NOT output any label like "Q1 —", "Question 1", or the question content as prose.**
-> Simply invoke the tool. The widget appears automatically. Wait silently for the user's selection.
-> Only output a brief neutral transition (e.g. "Got it.") after receiving an answer, before invoking the next question.
+**Generate the Assessor Profile Collector Artifact:**
 
-Invoke `AskUserQuestion` with the parameters below — one at a time, wait for selection, then proceed:
+Load the `interactive-review` skill and its `references/assessor-profile-collector.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
 
-**[1 of 5]** Invoke AskUserQuestion — type: single-select
-- question: "What is your primary investment or lending capacity?"
-- options: ["Venture Capital", "Angel Investor", "Private Equity", "Credit / Debt", "Corporate Strategic", "Family Office", "Sovereign Wealth", "Accelerator", "Other"]
+1. **Follow the assessor-profile-collector specification** in `skills/interactive-review/references/assessor-profile-collector.md` exactly — the form is **adaptive**: the assessor first selects their type (VC, Angel, PE, Credit, Corporate Strategic, Family Office, Sovereign Wealth, Accelerator, Other), then type-specific sections animate in with questions tailored to that assessor type (e.g., VC sees stage/thesis/burn-multiple fields; Credit sees facility-type/coverage-ratios/collateral fields; Corporate Strategic sees strategic-fit/integration-risk fields)
+2. **Use the shared design system** from `skills/interactive-review/SKILL.md`
+3. **Include validation** — type-specific required fields must be completed before Copy is enabled
+4. **Include the profile footer** with completion progress and Copy to Clipboard button
 
-**[2 of 5]** Invoke AskUserQuestion — type: single-select
-- question: "What funding stage and company maturity do you typically target?"
-- options: ["Pre-Seed", "Seed", "Series A", "Series B+", "Growth Stage", "Buyout", "Restructuring / Turnaround", "Other"]
+The artifact renders inline. The assessor selects their type, sees only the questions relevant to their mandate, fills out their profile using the interactive controls, then copies the completed profile JSON.
 
-**[3 of 5]** Invoke AskUserQuestion — type: multi-select
-- question: "Select your must-have criteria or deal-breakers (choose all that apply):"
-- options: ["Minimum recurring revenue (MRR/ARR)", "Specific vertical or sector focus", "Founder/team sector experience", "Regulatory approval in place", "US-based team only", "No single customer >50% revenue", "Profitability required", "None of the above"]
+**After artifact is rendered:**
 
-**[4 of 5]** Invoke AskUserQuestion — type: single-select
-- question: "Do you have quantitative thresholds to apply? (e.g. min revenue, max burn, team size)"
-- options: ["Yes — I'll describe them now", "No — use standard thresholds"]
+> ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
 
-If answer is "Yes — I'll describe them now": output exactly one plain-text follow-up: "Please describe your thresholds:" — record the typed response. Do not add any other text.
+Invoke AskUserQuestion — type: single-select
+- question: "Assessor Profile — Paste your completed profile from the artifact."
+- options: ["I've pasted my profile above"]
 
-**[5 of 5]** Invoke AskUserQuestion — type: single-select
-- question: "Any sector exclusions or geographic constraints?"
-- options: ["Yes — I'll describe them now", "No constraints"]
-
-If answer is "Yes — I'll describe them now": output exactly one plain-text follow-up: "Please describe your constraints:" — record the typed response. Do not add any other text.
-
-Once all answers are collected, pass them to the **criteria-resolver** agent to produce `$WORKSPACE/assessment/pre-assessment/data/assessor-profile.json`. The agent does not ask further questions — it processes the answers you collected and outputs the profile.
+**What happens:**
+- Parse the pasted profile JSON
+- Validate required fields are present (assessor_type, target_stage, must_haves)
+- Pass the profile data to the **criteria-resolver** agent to produce `$WORKSPACE/assessment/pre-assessment/data/assessor-profile.json`. The agent resolves the raw inputs into the full schema format (priorities, non-negotiables, weight modifiers) and outputs the profile.
 
 ---
 
 ## CONFIRMATION POINT 1: Context & Assessor Profile
 
-**What you see:**
-- **Context Profile Summary:** company name, stage, vertical, geography, revenue (if disclosed), ask amount, key uncertainties
-- **Assessor Profile Summary:** assessor type, transaction focus, top priorities, non-negotiables, constraints
-- **Extraction Flags:** any low-confidence extractions or ambiguities noted
+**What you see:** An interactive review artifact rendered inline in the conversation.
 
-**Before presenting to the assessor, save a review file:**
+**Generate the CP1 Interactive Review Artifact:**
 
-Save the full CP1 summary as a formatted markdown file to the reports folder:
+Load the `interactive-review` skill and its `references/cp1-artifact.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
 
-```
-$WORKSPACE/assessment/pre-assessment/reports/CP1_ContextProfile_[YYYY-MM-DD].md
-```
+1. **Embed the actual data** from `$WORKSPACE/assessment/pre-assessment/data/context-profile.json` and `$WORKSPACE/assessment/pre-assessment/data/assessor-profile.json` as constants at the top of the React component
+2. **Follow the CP1 artifact specification** in `skills/interactive-review/references/cp1-artifact.md` exactly — three tabs (Company Context, Assessor Profile, Confidence Flags) with all editable fields
+3. **Use the shared design system** from `skills/interactive-review/SKILL.md` — dark theme, color palette, shared components (DeterminationBadge, EditableField, LockedField, ChangesFooter)
+4. **Include the Changes Footer** (collapsed by default) with change counter and Copy to Clipboard button
+5. **Enforce all field constraints** — dropdown enums from the JSON schemas, required fields, data types
 
-The file must contain:
-- `# CP1 Review — Context & Assessor Profile`
-- `## Context Profile` section: all extracted fields as a markdown table, followed by a `## Extraction Flags` section listing any uncertainties or missing data
-- `## Assessor Profile` section: assessor type, ticket size, priorities, deal-breakers, calibration notes as a markdown table
-- `## Instructions` section explaining how to submit corrections (see below)
+The artifact renders inline. The assessor reviews the extracted context and assessor profile, makes any corrections using the interactive controls (dropdowns, text inputs, toggles, sliders), and sees their changes tracked in the footer.
 
-Present the summary in chat and provide a download link to the saved file.
-
-**Your instruction to the assessor:**
-
-A review file has been saved to: **`$WORKSPACE/assessment/pre-assessment/reports/CP1_ContextProfile_[YYYY-MM-DD].md`**
+**After artifact is rendered:**
 
 > ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
 
 Invoke AskUserQuestion — type: single-select
-- question: "Are there any additional priorities or constraints to add before we build the framework?"
-- options: ["Yes — I'll describe them now", "No — the profile is complete"]
-
-If answer is "Yes — I'll describe them now": output exactly one plain-text follow-up: "Please describe the additional constraints:" — record the response and update `assessor-profile.json`.
-
-Then invoke AskUserQuestion — type: single-select
-- question: "CP1 — Context & Assessor Profile is ready for review. How would you like to proceed?"
-- options: ["Edit & re-upload — I'll open the review file, make corrections, and re-upload it here", "Confirm — Everything looks correct, proceed to framework construction"]
+- question: "CP1 — Review complete. Paste your changes from the artifact, or confirm no changes needed."
+- options: ["Confirm — No changes needed, proceed to framework construction", "I've pasted my changes above"]
 
 **What happens:**
-- If the assessor selects **Edit & re-upload**: wait for the re-uploaded file, read it, extract all corrections, apply them to `context-profile.json` and `assessor-profile.json`, confirm what changed, and proceed
+- If the assessor pastes a delta JSON from the artifact's Copy to Clipboard: parse the delta, validate each change against schema constraints, apply valid changes to `context-profile.json` and `assessor-profile.json`, confirm what was applied, and proceed
 - If the assessor selects **Confirm**: proceed with no changes
-- All corrections are recorded in the session audit trail
+- All corrections are recorded in the session audit trail with timestamps
 - Proceed to Step 2
 
 ---
@@ -258,31 +238,34 @@ Save the full CP2 summary as a formatted markdown file to the reports folder:
 $WORKSPACE/assessment/pre-assessment/reports/CP2_Framework_[YYYY-MM-DD].md
 ```
 
-The file must contain:
-- `# CP2 Review — Assessment Framework`
-- `## Domain Activation Table` section: all domains as a markdown table with columns: Domain | Status (mandatory/optional) | Criticality | Weight (%) | Module Count
-- `## Hard Blockers` section: each hard blocker as a bullet point with trigger condition and consequence
-- `## Calibration Notes` section: reasoning behind framework design choices
-- `## What You May Adjust` section: clearly stating what the assessor can and cannot change (see constraints below)
-- `## Instructions` section explaining how to submit adjustments (see below)
+**Generate the CP2 Interactive Review Artifact:**
 
-Present the summary in chat and provide a download link to the saved file.
+Load the `interactive-review` skill and its `references/cp2-artifact.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
 
-**Your instruction to the assessor:**
+1. **Embed the actual data** from `$WORKSPACE/assessment/pre-assessment/data/framework.json` as a constant at the top of the React component
+2. **Follow the CP2 artifact specification** in `skills/interactive-review/references/cp2-artifact.md` exactly — domain cards with weight sliders, criticality dropdowns, module tables, hard blockers panel, live radar chart
+3. **Use the shared design system** from `skills/interactive-review/SKILL.md`
+4. **Include the Changes Footer** (collapsed by default) with change counter and Copy to Clipboard button
+5. **Enforce all constraints in the UI:**
+   - Mandatory domains cannot be deactivated (toggle disabled + Lock icon)
+   - Mandatory modules cannot be deactivated (checkbox disabled + Lock icon)
+   - Criticality can only be escalated, never reduced (dropdown shows current level and above only)
+   - Domain weights must sum to 100% (auto-redistribute proportionally when one changes)
+   - Module weights must sum to 1.0 within each domain (auto-redistribute)
+   - Hard blockers are locked (display only with red Lock icon)
 
-A review file has been saved to: **`$WORKSPACE/assessment/pre-assessment/reports/CP2_Framework_[YYYY-MM-DD].md`**
+The artifact renders inline. The assessor reviews domains, adjusts weights via sliders, escalates criticality, activates optional modules — all with live radar chart updates.
 
-You may adjust: add optional modules, adjust criticality levels (must-have ↔ should-have only).
-You may **NOT** adjust: remove mandatory modules or hard blockers.
+**After artifact is rendered:**
 
 > ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
 
 Invoke AskUserQuestion — type: single-select
-- question: "CP2 — Assessment Framework is ready for review. How would you like to proceed?"
-- options: ["Edit & re-upload — I'll open the framework file, annotate my adjustments, and re-upload it here", "Confirm — The framework looks correct, proceed to research"]
+- question: "CP2 — Review complete. Paste your changes from the artifact, or confirm no changes needed."
+- options: ["Confirm — Framework looks correct, proceed to research", "I've pasted my changes above"]
 
 **What happens:**
-- If the assessor selects **Edit & re-upload**: wait for the re-uploaded file, extract all requested adjustments, validate each (reject removal of mandatory modules or hard blockers with explanation), apply valid adjustments to `framework.json`, and proceed
+- If the assessor pastes a delta JSON: parse the delta, validate each change (reject removal of mandatory modules or hard blockers, reject criticality downgrades — explain why), apply valid adjustments to `framework.json`, confirm what was applied, and proceed
 - If the assessor selects **Confirm**: proceed with no changes
 - All adjustments are logged in the session audit trail
 - Proceed to Step 3
@@ -343,6 +326,7 @@ Agent: **gap-analyst**
 
 ## Step 7: Go/No-Go Determination (Preliminary)
 
+Agent: **gap-analyst** (continued)
 Script: **go_nogo_determinator.py**
 - Input: `$WORKSPACE/assessment/pre-assessment/data/readiness-register.json` + `$WORKSPACE/assessment/pre-assessment/data/fit-to-purpose-register.json` + hard blockers
 - Logic:
@@ -373,36 +357,37 @@ Script: **go_nogo_determinator.py**
 
 Save the full CP3 summary as a formatted markdown file to the reports folder:
 
-```
-assessment/pre-assessment/reports/CP3_ScoredFindings_[YYYY-MM-DD].md
-```
+**Generate the CP3 Interactive Review Artifact:**
 
-The file must contain:
-- `# CP3 Review — Scored Findings`
-- `## Preliminary Determination` section: determination badge (GO / CONDITIONAL GO / CONDITIONAL HOLD / NO-GO), rationale paragraph, any conditions
-- `## Overall Scores` section: overall readiness % and overall fit-to-purpose % as a summary table
-- `## Domain Score Summary` section: full domain table with columns: Domain | Readiness | Fit-to-Purpose | Key Strengths | Key Gaps
-- `## Top 5 Gaps by Severity` section: ordered gap list as a table with columns: Gap ID | Domain | Module | Type | Severity | Remediation Hint
-- `## Your Notes` section: a blank section with a placeholder comment ("Add any flags, corrections, or additional context here") for the assessor to fill in
-- `## Instructions` section explaining how to submit notes (see below)
+Load the `interactive-review` skill and its `references/cp3-artifact.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
 
-Present the summary in chat and provide a download link to the saved file.
+1. **Embed the actual data** from the following files as constants:
+   - `$WORKSPACE/assessment/pre-assessment/data/readiness-register.json`
+   - `$WORKSPACE/assessment/pre-assessment/data/fit-to-purpose-register.json`
+   - `$WORKSPACE/assessment/pre-assessment/data/gap-register.json`
+   - `$WORKSPACE/assessment/pre-assessment/data/dependency-map.json`
+   - `$WORKSPACE/assessment/pre-assessment/data/go-nogo-determination.json`
+2. **Follow the CP3 artifact specification** in `skills/interactive-review/references/cp3-artifact.md` exactly — executive summary header with determination badge and score gauges, four tabs (Domain Scores with dual-series radar chart, Gap Register with filters, Dependency Map flow visualization, Determination Detail with gate results)
+3. **Use the shared design system** from `skills/interactive-review/SKILL.md`
+4. **Include the Changes Footer** (collapsed by default)
+5. **Scores are NOT editable** — display only. The only interactive elements are:
+   - Flag checkboxes per domain and per module (for reconsideration)
+   - Assessor note textareas per domain (expandable)
+   - Assessor note textarea on the determination
 
-**Your instruction to the assessor:**
+Flags and notes are recorded in the audit trail — they do **not** change scores but carry forward into the full assessment.
 
-A review file has been saved to: **`$WORKSPACE/assessment/pre-assessment/reports/CP3_ScoredFindings_[YYYY-MM-DD].md`**
-
-You may flag modules for reconsideration, add context, or correct research assumptions. Notes are recorded in the audit trail — they do **not** change scores but carry forward into the full assessment.
+**After artifact is rendered:**
 
 > ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
 
 Invoke AskUserQuestion — type: single-select
-- question: "CP3 — Scored Findings are ready for review. How would you like to proceed?"
-- options: ["Edit & re-upload — I'll open the review file, add my notes and flags, and re-upload it here", "Confirm — No notes or flags, proceed to QA/QC review"]
+- question: "CP3 — Review complete. Paste your flags/notes from the artifact, or confirm no changes needed."
+- options: ["Confirm — No flags or notes, proceed to QA/QC review", "I've pasted my flags/notes above"]
 
 **What happens:**
-- If the assessor selects **Edit & re-upload**: wait for the re-uploaded file, read the `## Your Notes` section, record all notes verbatim in the session audit trail, confirm what was recorded, and proceed
-- If the assessor selects **Confirm**: proceed with no notes recorded
+- If the assessor pastes a delta JSON: parse all flags and notes, record each in the session audit trail with timestamps, confirm what was recorded, and proceed
+- If the assessor selects **Confirm**: proceed with no flags or notes
 - Proceed to Step 8
 
 ---
@@ -430,18 +415,21 @@ Agent: **qaqc-agent** (holistic mode)
 
 Agent: **pre-assess-output-agent**
 - Input: all confirmed data structures in `$WORKSPACE/assessment/pre-assessment/data/` + session audit trail
+- **Mandatory**: Load the `design-system` skill (`skills/design-system/SKILL.md`) and the `html-dashboard` skill before generating any outputs. Apply the centralized design system's color tokens, typography, component proportions, and CSS custom properties. Meet every requirement in the Quality Contract (Visual Quality Floor, Interactivity Floor, Print Readiness, Professional Standards). Adapt narrative tone to the assessor type per the Assessor-Type Tone Adaptation table.
+- **Content freedom**: The agent determines the optimal report structure, sections, tabs, charts, and narrative emphasis for this specific case. The tab structures in `html-dashboard` are reference patterns — adapt as needed.
 - Generates 5 deliverable outputs saved to their respective subfolders:
 
 **Reports** → saved to `$WORKSPACE/assessment/pre-assessment/reports/`
 
 1. **[CompanyName]_PreAssessment_[YYYY-MM-DD].html**
-   - Beautiful, interactive HTML report with charts, tables, and collapsible sections
-   - Domain summaries, scored findings, gaps, dependencies
-   - Includes executive summary and methodology notes
+   - Self-contained interactive HTML report using the `html-dashboard` skill's component library and chart patterns
+   - Content, structure, and emphasis are adaptive to the specific business case — the agent selects which visualizations, sections, and narrative framing best serve the assessor
+   - Must meet the design system's quality contract: responsive at all breakpoints, keyboard-accessible tabs, print-ready, professional-grade typography and color consistency
 
 2. **[CompanyName]_PreAssessment_[YYYY-MM-DD].pdf**
-   - Agent generates printable HTML version; assessor can print to PDF via browser
-   - Fully formatted, ready for external sharing or filing
+   - Agent generates a print-optimized HTML variant; assessor prints to PDF via browser
+   - Format adapts to assessor type: Investment Memorandum (VC/PE/Angel), Credit Memorandum (Debt), or Strategic Assessment (Corporate/Family Office/Sovereign Wealth) per `html-dashboard` skill
+   - Fully formatted with proper page breaks, margins, headers/footers, confidentiality notice
 
 3. **[CompanyName]_PreAssessment_[YYYY-MM-DD].md**
    - Structured markdown data file containing all scored findings, registers, and determination

@@ -539,6 +539,44 @@ Consult these references when constructing Path A roadmap gaps and Path B struct
 
 ---
 
+## 7b. Residual Risk Assessment and Risk Appetite Linkage (ISO 31000 / COSO ERM)
+
+### Residual Risk Assessment
+
+For each gap in the Path A roadmap and each risk identified in the assessment, the recommendations-agent must assess **residual risk** — the risk that remains after proposed mitigation or remediation.
+
+**Per-gap residual risk fields** (appended to each Path A gap entry):
+
+```json
+{
+  "inherent_risk_score": 20,
+  "proposed_treatment": "Commission independent market study; validate with 3 customer interviews",
+  "residual_risk_score": 8,
+  "residual_risk_classification": "medium",
+  "residual_risk_note": "Market sizing risk reduced from extreme to medium if independent study confirms TAM within 30% of submission claim"
+}
+```
+
+- **Inherent risk score**: the likelihood x impact score from the gap register (before any treatment)
+- **Residual risk score**: estimated likelihood x impact after the proposed treatment is implemented
+- **Residual risk classification**: low (1–4), medium (5–9), high (10–15), extreme (16–25)
+
+### Risk Appetite Linkage
+
+The assessor's risk tolerance (captured in the assessor profile) must be formally linked to determination thresholds and recommendation framing:
+
+| Risk Tolerance | Effect on Determination | Recommendation Framing |
+|---------------|------------------------|----------------------|
+| **Conservative** (credit, debt, capital preservation) | Domain floors raised by +5 points; Fit modifier stricter | Emphasize downside protection; lead with risk mitigation; Path B structures prioritize security |
+| **Moderate** (PE, family office, balanced) | Standard thresholds apply | Balanced risk/return framing; Path B structures balance protections with upside |
+| **Aggressive** (VC, angel, growth-focused) | Domain floors lowered by -5 points; early-stage gaps weighted less | Emphasize upside potential; lead with opportunity; Path B structures prioritize flexibility and optionality |
+
+**Implementation:** The `go_nogo_determinator.py` script accepts a `risk_appetite` parameter that adjusts the readiness score bands and domain floor thresholds per the table above. This is set during framework construction (CP2) based on the assessor profile and cannot be changed after CP2 confirmation.
+
+**Standards basis:** COSO ERM (risk appetite defined and linked to strategy), ISO 31000 (risk evaluation against risk criteria/appetite).
+
+---
+
 ## 8. Key Principles
 
 1. **Adaptive, not prescriptive**: All recommendations are tailored to context (assessor type, stage, vertical, geography). No hardcoded defaults.

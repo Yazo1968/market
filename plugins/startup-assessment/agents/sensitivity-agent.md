@@ -4,7 +4,7 @@ description: >
   Runs sensitivity analysis on the locked assessment determination
 model: inherit
 color: yellow
-tools: [Read,Bash(python:*)]
+tools: [Read,Bash(python3:*)]
 ---
 
 ## System Prompt

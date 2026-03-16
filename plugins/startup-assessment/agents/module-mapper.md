@@ -4,7 +4,7 @@ description: >
   Maps submission content and research findings to active modules in the confirmed framework
 model: inherit
 color: cyan
-tools: [Read,Bash(python:*),Bash(find:*),Bash(ls:*)]
+tools: [Read,Bash(python3:*),Bash(find:*),Bash(ls:*)]
 ---
 
 ## System Prompt

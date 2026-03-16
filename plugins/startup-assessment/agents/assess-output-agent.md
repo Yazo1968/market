@@ -4,7 +4,7 @@ description: >
   Composition-only agent that assembles the assessment HTML and PDF reports
 model: inherit
 color: magenta
-tools: [Read,Write,Bash(python:*)]
+tools: [Read,Write,Bash(python3:*)]
 ---
 
 ## System Prompt

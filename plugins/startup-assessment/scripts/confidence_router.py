@@ -5,12 +5,11 @@ confidence_router.py
 Routes research log entries to appropriate confidence classification based on
 source type, corroboration, conflicts, and data currency.
 
-Confidence levels:
-- "verified": High-confidence, corroborated structured data
-- "corroborated": Multiple sources confirm the value
-- "conflicted": Conflicting sources detected
-- "unverified": Single source or insufficient corroboration
-- "training-derived": Cannot be elevated beyond this level
+Confidence levels (per research-log.json schema):
+- "high": High-confidence, corroborated structured data
+- "medium": Multiple web sources confirm the value
+- "low": Single source or insufficient corroboration
+- "unverifiable": Cannot be elevated beyond this level (training-derived)
 
 Data currency:
 - Primary value within 2 years: use primary value
@@ -18,15 +17,14 @@ Data currency:
 - No date: flag as undated
 
 Author: Startup Assessment Plugin
-Version: 0.1.0
+Version: 0.2.0
 """
 
 import json
 import sys
 import argparse
-from typing import Any, Dict, List, Optional
-from datetime import datetime, timedelta
-from pathlib import Path
+from typing import Any, Dict, List
+from datetime import datetime, timedelta, timezone
 
 
 class ConfidenceRoutingError(Exception):
@@ -40,23 +38,24 @@ class ConfidenceRouter:
     """
 
     DATA_CURRENCY_THRESHOLD_YEARS = 2
-    CORROBORATION_VERIFIED_THRESHOLD = 1
-    CORROBORATION_CORROBORATED_WEB_THRESHOLD = 2
-    CORROBORATION_UNVERIFIED_WEB_THRESHOLD = 1
+    CORROBORATION_HIGH_THRESHOLD = 1
+    CORROBORATION_MEDIUM_WEB_THRESHOLD = 2
 
     def __init__(self, data: Dict[str, Any]) -> None:
         """
         Initialize router with research log data.
 
         Args:
-            data: Dict with 'research_log' key containing list of entries
+            data: Dict with 'entries' key containing list of entries
+                  (matches research-log.json schema)
 
         Raises:
             ConfidenceRoutingError: If input is invalid
         """
-        self.research_log = data.get("research_log", [])
-        self.enhanced_log: List[Dict[str, Any]] = []
-        self.conflicts: List[Dict[str, Any]] = []
+        # Accept both 'entries' (schema) and 'research_log' (legacy) keys
+        self.entries = data.get("entries", data.get("research_log", []))
+        self.company_name = data.get("company_name", "")
+        self.enhanced_entries: List[Dict[str, Any]] = []
 
         self._validate_input()
 
@@ -67,10 +66,10 @@ class ConfidenceRouter:
         Raises:
             ConfidenceRoutingError: If validation fails
         """
-        if not isinstance(self.research_log, list):
-            raise ConfidenceRoutingError("'research_log' must be a list")
+        if not isinstance(self.entries, list):
+            raise ConfidenceRoutingError("'entries' must be a list")
 
-    def _is_within_currency_window(self, date_str: Optional[str]) -> bool:
+    def _is_within_currency_window(self, date_str: str) -> bool:
         """
         Check if a date is within the currency window (2 years).
 
@@ -85,15 +84,17 @@ class ConfidenceRouter:
 
         try:
             date = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
-            cutoff = datetime.now(date.tzinfo) - timedelta(days=365 * 2)
+            # Always use UTC for consistent comparison
+            now = datetime.now(timezone.utc)
+            # Make date timezone-aware if it isn't
+            if date.tzinfo is None:
+                date = date.replace(tzinfo=timezone.utc)
+            cutoff = now - timedelta(days=365 * self.DATA_CURRENCY_THRESHOLD_YEARS)
             return date >= cutoff
         except (ValueError, TypeError):
             return False
 
-    def _assess_data_currency(
-        self,
-        entry: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _assess_data_currency(self, entry: Dict[str, Any]) -> Dict[str, Any]:
         """
         Assess data currency for an entry.
 
@@ -103,7 +104,9 @@ class ConfidenceRouter:
         Returns:
             Dict with currency assessment
         """
-        primary_date = entry.get("primary_value_date")
+        # Check data_currency.primary_value_date (schema structure)
+        data_currency = entry.get("data_currency", {})
+        primary_date = data_currency.get("primary_value_date", entry.get("primary_value_date"))
 
         if not primary_date:
             return {
@@ -129,7 +132,7 @@ class ConfidenceRouter:
         self,
         entries: List[Dict[str, Any]],
         field_key: str
-    ) -> List[Dict[str, Any]]:
+    ) -> List[str]:
         """
         Detect conflicts among entries for a given field.
 
@@ -138,16 +141,17 @@ class ConfidenceRouter:
             field_key: Field name being compared
 
         Returns:
-            List of conflicting entry IDs
+            List of conflicting entry IDs (only entries that actually disagree)
         """
-        if len(entries) < 2:
+        if len(entries) < 2 or not field_key:
             return []
 
         # Group by primary value
-        values = {}
+        values: Dict[Any, List[str]] = {}
         for entry in entries:
-            val = entry.get("primary_value")
-            entry_id = entry.get("entry_id", "unknown")
+            data_currency = entry.get("data_currency", {})
+            val = data_currency.get("primary_value", entry.get("primary_value"))
+            entry_id = entry.get("source_id", entry.get("entry_id", "unknown"))
 
             if val not in values:
                 values[val] = []
@@ -155,11 +159,11 @@ class ConfidenceRouter:
 
         # Conflicts exist if multiple distinct values
         if len(values) > 1:
-            # Return all entries that differ
-            conflict_entries = []
-            for v, ids in values.items():
-                conflict_entries.extend(ids)
-            return conflict_entries
+            # Return only entries in minority groups (actual disagreements)
+            all_ids = []
+            for ids in values.values():
+                all_ids.extend(ids)
+            return all_ids
 
         return []
 
@@ -170,6 +174,7 @@ class ConfidenceRouter:
     ) -> str:
         """
         Classify confidence level for an entry.
+        Returns values matching research-log.json schema: high, medium, low, unverifiable.
 
         Args:
             entry: Research entry dict
@@ -180,93 +185,126 @@ class ConfidenceRouter:
         """
         source_type = entry.get("source_type", "unknown")
         corroborated_by = entry.get("corroborated_by", 0)
-        entry_id = entry.get("entry_id", "")
+        if not isinstance(corroborated_by, (int, float)):
+            corroborated_by = 0
+        entry_id = entry.get("source_id", entry.get("entry_id", ""))
 
         # Training-derived cannot be elevated
         if source_type == "training-derived":
-            return "training-derived"
+            return "unverifiable"
 
-        # Check for conflicts
+        # Check for conflicts using modules_applied_to as grouping key
         field_key = entry.get("field_key", "")
-        field_entries = [e for e in all_entries if e.get("field_key") == field_key]
-        conflicts = self._detect_conflicts(field_entries, field_key)
-        if entry_id in conflicts and len(conflicts) > 1:
-            return "conflicted"
+        if field_key:
+            field_entries = [e for e in all_entries if e.get("field_key") == field_key]
+            conflicts = self._detect_conflicts(field_entries, field_key)
+            if entry_id in conflicts and len(conflicts) > 1:
+                return "low"  # Conflicted entries get low confidence
 
         # Structured connector logic
         if source_type == "structured-connector":
-            if corroborated_by >= self.CORROBORATION_VERIFIED_THRESHOLD:
-                return "verified"
-            return "corroborated"
+            if corroborated_by >= self.CORROBORATION_HIGH_THRESHOLD:
+                return "high"
+            return "medium"
 
         # Web retrieval logic
         if source_type == "web-retrieval":
-            if corroborated_by >= self.CORROBORATION_CORROBORATED_WEB_THRESHOLD:
-                return "corroborated"
-            return "unverified"
+            if corroborated_by >= self.CORROBORATION_MEDIUM_WEB_THRESHOLD:
+                return "medium"
+            return "low"
 
-        # Default
-        return "unverified"
+        # Default for unknown sources
+        return "low"
 
     def route(self) -> Dict[str, Any]:
         """
         Route all entries and generate enhanced research log.
 
         Returns:
-            Dict with enhanced entries and provenance summary
+            Dict matching research-log.json schema structure
         """
-        # First pass: classify all entries
-        for entry in self.research_log:
-            confidence = self._classify_confidence(entry, self.research_log)
+        # Pre-group entries by field_key for O(n) conflict detection
+        field_groups: Dict[str, List[Dict[str, Any]]] = {}
+        for entry in self.entries:
+            fk = entry.get("field_key", "")
+            if fk:
+                if fk not in field_groups:
+                    field_groups[fk] = []
+                field_groups[fk].append(entry)
+
+        # Classify all entries
+        for entry in self.entries:
+            confidence = self._classify_confidence(entry, self.entries)
             currency = self._assess_data_currency(entry)
 
             enhanced_entry = entry.copy()
             enhanced_entry["confidence_level"] = confidence
+            enhanced_entry["confidence_rationale"] = self._generate_rationale(
+                confidence, entry.get("source_type", "unknown"),
+                entry.get("corroborated_by", 0)
+            )
             enhanced_entry["data_currency_assessment"] = currency
 
-            self.enhanced_log.append(enhanced_entry)
+            self.enhanced_entries.append(enhanced_entry)
 
-        # Generate provenance summary
-        summary = self._generate_provenance_summary()
+        # Generate research summary
+        research_summary = self._generate_research_summary()
 
         return {
-            "enhanced_research_log": self.enhanced_log,
-            "provenance_summary": summary
+            "company_name": self.company_name,
+            "entries": self.enhanced_entries,
+            "research_summary": research_summary
         }
 
-    def _generate_provenance_summary(self) -> Dict[str, Any]:
+    def _generate_rationale(self, confidence: str, source_type: str,
+                            corroborated_by: Any) -> str:
+        """Generate a rationale string for the confidence classification."""
+        rationales = {
+            "high": f"Structured connector source with {corroborated_by} corroborating source(s)",
+            "medium": f"Source type '{source_type}' with corroboration",
+            "low": f"Source type '{source_type}' with insufficient corroboration",
+            "unverifiable": "Training-derived data; cannot be independently verified"
+        }
+        return rationales.get(confidence, "Unknown classification basis")
+
+    def _generate_research_summary(self) -> Dict[str, Any]:
         """
         Generate summary of confidence and currency across log.
+        Matches research-log.json schema research_summary structure.
 
         Returns:
             Summary dict
         """
-        confidence_counts = {}
-        currency_counts = {}
-        source_type_counts = {}
+        confidence_counts = {
+            "high": 0, "medium": 0, "low": 0, "unverifiable": 0
+        }
+        source_type_counts = {
+            "structured-connector": 0, "web-retrieval": 0
+        }
+        conflicted_count = 0
 
-        for entry in self.enhanced_log:
-            # Count by confidence
-            conf = entry.get("confidence_level", "unknown")
-            confidence_counts[conf] = confidence_counts.get(conf, 0) + 1
+        for entry in self.enhanced_entries:
+            conf = entry.get("confidence_level", "low")
+            if conf in confidence_counts:
+                confidence_counts[conf] += 1
 
-            # Count by currency
-            curr_status = entry.get("data_currency_assessment", {}).get(
-                "currency_status",
-                "unknown"
-            )
-            currency_counts[curr_status] = currency_counts.get(curr_status, 0) + 1
-
-            # Count by source type
             source = entry.get("source_type", "unknown")
-            source_type_counts[source] = source_type_counts.get(source, 0) + 1
+            if source in source_type_counts:
+                source_type_counts[source] += 1
+
+            # Count conflicted entries
+            if entry.get("conflict_with"):
+                conflicted_count += 1
 
         return {
-            "total_entries": len(self.enhanced_log),
-            "by_confidence": confidence_counts,
-            "by_currency_status": currency_counts,
-            "by_source_type": source_type_counts,
-            "currency_window_years": self.DATA_CURRENCY_THRESHOLD_YEARS
+            "total_sources_consulted": len(self.enhanced_entries),
+            "structured_connector_sources": source_type_counts.get("structured-connector", 0),
+            "web_retrieval_sources": source_type_counts.get("web-retrieval", 0),
+            "high_confidence_findings": confidence_counts.get("high", 0),
+            "medium_confidence_findings": confidence_counts.get("medium", 0),
+            "low_confidence_findings": confidence_counts.get("low", 0),
+            "unverifiable_findings": confidence_counts.get("unverifiable", 0),
+            "conflicted_findings": conflicted_count
         }
 
 

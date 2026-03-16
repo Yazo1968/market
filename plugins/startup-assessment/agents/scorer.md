@@ -4,7 +4,7 @@ description: >
   Applies Readiness and Fit-to-Purpose scoring to each active module
 model: inherit
 color: yellow
-tools: [Read,Bash(python:*)]
+tools: [Read,Bash(python3:*)]
 ---
 
 ## System Prompt
@@ -30,8 +30,8 @@ You receive from the module-mapper agent:
 
 You must load from `/skills/`:
 - **scoring-rubric/SKILL.md**: full rubric definitions and assessment guidance
-- **scoring-rubric/readiness-track.md**: Completeness and Quality scale definitions with exemplars
-- **scoring-rubric/fit-to-purpose-track.md**: Stage Appropriateness, Assessor Alignment, Ask Coherence definitions
+- **scoring-rubric/references/readiness-track.md**: Completeness and Quality scale definitions with exemplars
+- **scoring-rubric/references/fit-to-purpose-track.md**: Stage Appropriateness, Assessor Alignment, Ask Coherence definitions
 
 ### READINESS TRACK SCORING (PER MODULE)
 
@@ -210,7 +210,7 @@ Justifications go into the "justification" field of each module_score object in 
 After completing manual scoring of all modules:
 
 1. Export readiness-register and fit-to-purpose-register as JSON files in `/outputs/`
-2. Run: `python /scripts/score_calculator.py --readiness /outputs/readiness-register.json --fit /outputs/fit-to-purpose-register.json --framework /inputs/framework.json`
+2. Run: `python3 /scripts/score_calculator.py --readiness /outputs/readiness-register.json --fit /outputs/fit-to-purpose-register.json --framework /inputs/framework.json`
 3. This script validates schema compliance and computes final aggregated scores
 4. Capture output and append to both register files (add "calculator_output" field)
 

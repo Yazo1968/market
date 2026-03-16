@@ -2,24 +2,25 @@
 """
 json_validator.py
 
-Validates JSON files against their corresponding schemas. Supports 14 schemas
-for startup assessment data structures.
+Validates JSON files against their corresponding schemas. Supports two schema sources:
+1. Built-in inline schemas (for business case input data)
+2. External JSON schema files from the schemas/ directory (for workflow output data)
 
-Supported schemas:
-1. context-profile
-2. investor-profile
-3. startup-metrics
-4. market-analysis
-5. team-composition
-6. financial-projections
-7. product-roadmap
-8. competitive-landscape
-9. risk-assessment
-10. revenue-model
-11. growth-strategy
-12. exit-plan
-13. governance-structure
-14. sustainability-plan
+Built-in schemas (business case inputs):
+  context-profile, investor-profile, startup-metrics, market-analysis,
+  team-composition, financial-projections, product-roadmap, competitive-landscape,
+  risk-assessment, revenue-model, growth-strategy, exit-plan,
+  governance-structure, sustainability-plan
+
+External schemas (workflow outputs — loaded from schemas/ directory):
+  assessor-profile, framework, readiness-register, fit-to-purpose-register,
+  gap-register, dependency-map, module-content-map, research-log,
+  go-nogo-determination, domain-finding, integrated-findings-register,
+  sensitivity-analysis, recommendations
+
+Usage:
+  python json_validator.py --schema context-profile --input data.json
+  python json_validator.py --schema gap-register --input gap-register.json --schema-dir /path/to/schemas/
 
 Exit codes:
   0 = validation passed
@@ -28,13 +29,13 @@ Exit codes:
   3 = input file not found
 
 Author: Startup Assessment Plugin
-Version: 0.1.0
+Version: 0.2.0
 """
 
 import json
 import sys
 import argparse
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional
 from pathlib import Path
 from enum import Enum
 
@@ -243,29 +244,108 @@ SCHEMAS = {
 }
 
 
+def load_external_schema(schema_name: str, schema_dir: Optional[str] = None) -> Optional[Dict]:
+    """
+    Attempt to load a schema from the external schemas/ directory.
+    Returns the schema dict if found, None otherwise.
+    """
+    if schema_dir is None:
+        # Default: look relative to this script's location
+        schema_dir = str(Path(__file__).parent.parent / "schemas")
+
+    schema_path = Path(schema_dir) / f"{schema_name}.json"
+    if schema_path.exists():
+        with open(schema_path, "r") as f:
+            return json.load(f)
+    return None
+
+
+def convert_json_schema_to_inline(json_schema: Dict) -> Dict:
+    """
+    Convert a standard JSON Schema to the inline format used by SCHEMAS dict.
+    Extracts required fields, property types, enums, and ranges.
+    """
+    inline = {}
+
+    if "required" in json_schema:
+        inline["required"] = json_schema["required"]
+
+    props = json_schema.get("properties", {})
+    if props:
+        inline["properties"] = {}
+        inline["enums"] = {}
+        inline["ranges"] = {}
+
+        for field, spec in props.items():
+            if isinstance(spec, dict):
+                field_type = spec.get("type", "string")
+                if field_type == "array":
+                    inline["properties"][field] = ["string"]
+                elif field_type == "object":
+                    inline["properties"][field] = "object"
+                else:
+                    inline["properties"][field] = field_type
+
+                # Extract enums
+                if "enum" in spec:
+                    inline["enums"][field] = spec["enum"]
+
+                # Extract ranges
+                if "minimum" in spec or "maximum" in spec:
+                    range_spec = {}
+                    if "minimum" in spec:
+                        range_spec["min"] = spec["minimum"]
+                    if "maximum" in spec:
+                        range_spec["max"] = spec["maximum"]
+                    inline["ranges"][field] = range_spec
+
+        # Clean empty dicts
+        if not inline["enums"]:
+            del inline["enums"]
+        if not inline["ranges"]:
+            del inline["ranges"]
+
+    return inline
+
+
 class JsonValidator:
     """
-    Validates JSON against predefined schemas.
+    Validates JSON against predefined or external schemas.
     """
 
-    def __init__(self, schema_name: str) -> None:
+    def __init__(self, schema_name: str, schema_dir: Optional[str] = None) -> None:
         """
         Initialize validator with schema.
 
+        Looks up schema in order:
+        1. Built-in SCHEMAS dict
+        2. External JSON schema file in schemas/ directory
+
         Args:
             schema_name: Name of schema to validate against
+            schema_dir: Optional path to schemas directory
 
         Raises:
             SchemaNotFoundError: If schema does not exist
         """
-        if schema_name not in SCHEMAS:
+        # External schemas take precedence over built-in (they are more complete)
+        external = load_external_schema(schema_name, schema_dir)
+        if external is not None:
+            self.schema = convert_json_schema_to_inline(external)
+        elif schema_name in SCHEMAS:
+            self.schema = SCHEMAS[schema_name]
+        else:
+            all_schemas = list(SCHEMAS.keys())
+            # List available external schemas
+            default_dir = Path(__file__).parent.parent / "schemas"
+            if default_dir.exists():
+                all_schemas += [f.stem for f in default_dir.glob("*.json")]
             raise SchemaNotFoundError(
                 f"Schema '{schema_name}' not found. Available schemas: "
-                f"{', '.join(SCHEMAS.keys())}"
+                f"{', '.join(sorted(set(all_schemas)))}"
             )
 
         self.schema_name = schema_name
-        self.schema = SCHEMAS[schema_name]
         self.errors: List[Dict[str, Any]] = []
         self.checks_passed: List[str] = []
 
@@ -384,6 +464,7 @@ class JsonValidator:
 
             value = data[field]
 
+            has_error = False
             if isinstance(value, list):
                 for item in value:
                     if item not in allowed_values:
@@ -392,7 +473,7 @@ class JsonValidator:
                             "field": field,
                             "error": f"Value '{item}' not in allowed values: {allowed_values}"
                         })
-                        return
+                        has_error = True
             else:
                 if value not in allowed_values:
                     self.errors.append({
@@ -400,9 +481,10 @@ class JsonValidator:
                         "field": field,
                         "error": f"Value '{value}' not in allowed values: {allowed_values}"
                     })
-                    return
+                    has_error = True
 
-            self.checks_passed.append(f"Field '{field}' enum values valid")
+            if not has_error:
+                self.checks_passed.append(f"Field '{field}' enum values valid")
 
     def _validate_numeric_ranges(self, data: Dict[str, Any]) -> None:
         """
@@ -465,6 +547,7 @@ class JsonValidator:
             if not isinstance(item_schema, dict):
                 continue
 
+            array_errors = 0
             for i, item in enumerate(value):
                 for key, expected_type in item_schema.items():
                     if key not in item:
@@ -473,6 +556,7 @@ class JsonValidator:
                             "field": f"{field}[{i}]",
                             "error": f"Missing required array item field '{key}'"
                         })
+                        array_errors += 1
                     elif not self._check_type(item[key], expected_type):
                         self.errors.append({
                             "check": ValidationCheck.ARRAY_ITEMS.value,
@@ -480,8 +564,9 @@ class JsonValidator:
                             "error": f"Type mismatch. Expected {expected_type}, "
                                      f"got {type(item[key]).__name__}"
                         })
+                        array_errors += 1
 
-            if not self.errors:
+            if array_errors == 0:
                 self.checks_passed.append(f"Field '{field}' array items valid")
 
 
@@ -505,13 +590,19 @@ def main() -> int:
         required=True,
         help="Input JSON file to validate"
     )
+    parser.add_argument(
+        "--schema-dir",
+        required=False,
+        default=None,
+        help="Path to external schemas directory (default: ../schemas/ relative to script)"
+    )
 
     args = parser.parse_args()
 
     try:
         # Load schema
         try:
-            validator = JsonValidator(args.schema)
+            validator = JsonValidator(args.schema, schema_dir=args.schema_dir)
         except SchemaNotFoundError as e:
             print(f"Error: {e}", file=sys.stderr)
             return 2

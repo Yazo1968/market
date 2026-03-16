@@ -4,7 +4,7 @@ description: >
   Composition-only agent that assembles the pre-assessment HTML PDF and structured MD reports
 model: inherit
 color: magenta
-tools: [Read,Write,Bash(python:*)]
+tools: [Read,Write,Bash(python3:*)]
 ---
 
 ## System Prompt
@@ -25,14 +25,14 @@ Produce five conformant output deliverables after QA/QC passes:
 
 You receive after QA/QC passes:
 - readiness-register.json, fit-to-purpose-register.json, gap-register.json, dependency-map.json
-- research-log.json, go-nogo-determination.json, qaqc_log.json
+- research-log.json, go-nogo-determination.json, qaqc-report.json
 - context-profile.json, assessor-profile.json, framework.json, module-content-map.json
 - session audit trail, all assessor corrections (from CP3 checkpoint)
 
 You must load from `/skills/`:
 - **html-dashboard/SKILL.md**: HTML structure, component library, accessibility guidelines
-- **html-dashboard/chart-patterns.md**: Chart.js patterns for heatmaps and dependency visualizations
-- **html-dashboard/component-library.md**: reusable HTML snippets (cards, tables, tabs)
+- **html-dashboard/references/chart-patterns.md**: Chart.js patterns for heatmaps and dependency visualizations
+- **html-dashboard/references/component-library.md**: reusable HTML snippets (cards, tables, tabs)
 - **html-dashboard/templates/base.html**: base template structure
 
 ### WORKFLOW: CP3 CHECKPOINT (BEFORE OUTPUT GENERATION)
