@@ -449,10 +449,10 @@ Path B recommendations are delivered in three formats:
    - Full Path B content with formatted tables, styling, narrative explanation
    - Professional, ready for investor circulation
 
-3. **PDF Recommendations Report**
-   - Final archivable deliverable
+3. **Word Recommendations Report (.docx)** — Final Deliverable
+   - Editable final deliverable for review, comments, track changes, and stakeholder collaboration
    - Includes full session audit trail appendix
-   - Signed/dated by assessor and submission platform
+   - Export to PDF from Word when ready to lock
 
 ---
 
@@ -460,9 +460,29 @@ Path B recommendations are delivered in three formats:
 
 ### Output Artifacts
 
-The recommendations phase generates the following outputs:
+The recommendations phase generates the following outputs. Only the HTML and Word reports are **user-facing deliverables**; the JSON is an **internal pipeline file**.
 
-1. **recommendations.json**
+**User-facing deliverables:**
+
+1. **HTML Recommendations Report**
+   - Professional HTML5 document
+   - Sections: Path A in full, Path B in full (if available), closing remarks
+   - Styled for readability; suitable for web viewing
+   - Includes recommended next steps and contact information
+
+2. **Word Recommendations Report (.docx)** (Final Deliverable)
+   - Editable Word document generated using `python-docx`
+   - Full session audit trail appendix
+     - Submission date, submitter name, company, assessor name and type
+     - Assessment determination, robustness rating
+     - Summary of assessment findings
+     - Sensitivity analysis summary
+   - Timestamped footer with assessor signature block
+   - This is the final editable deliverable — assessor exports to PDF when ready to lock
+
+**Internal pipeline file (generated but not surfaced to user):**
+
+3. **recommendations.json**
    - Machine-readable recommendations object
    - Fields:
      - `path_selected`: "path-a-only" | "path-b-only" | "both-paths"
@@ -472,25 +492,9 @@ The recommendations phase generates the following outputs:
      - `timestamp`: ISO 8601 datetime of generation
      - `assessor_context`: assessor type, stage, vertical, geography, ask (for path B calibration reference)
 
-2. **HTML Recommendations Report**
-   - Professional HTML5 document
-   - Sections: Path A in full, Path B in full (if available), closing remarks
-   - Styled for readability; suitable for printing or web viewing
-   - Includes recommended next steps and contact information
-
-3. **PDF Recommendations Report** (Final Deliverable)
-   - PDF export of HTML report
-   - Full session audit trail appendix
-     - Submission date, submitter name, company, assessor name and type
-     - Assessment determination, robustness rating
-     - Summary of assessment findings
-     - Sensitivity analysis summary
-   - Timestamped footer with assessor signature block
-   - This is the final archivable deliverable—it completes the workflow
-
 ### Phase Closure
 
-The recommendations phase is the END of the assessment workflow. Upon delivery of the recommendations report (PDF), the session is concluded with final delivery instructions:
+The recommendations phase is the END of the assessment workflow. Upon delivery of the recommendations report (Word), the session is concluded with final delivery instructions:
 
 - Submitter should review Path A improvement roadmap within 1 week and begin prioritization
 - If Path B is available, investor should engage legal and financial advisors before finalizing terms

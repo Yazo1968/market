@@ -27,7 +27,7 @@ All outputs are written to:
 
 | Output type | Destination |
 |---|---|
-| HTML, PDF, MD reports | `$WORKSPACE/assessment/sensitivity/reports/` |
+| HTML, Word reports | `$WORKSPACE/assessment/sensitivity/reports/` |
 | JSON data files (all) | `$WORKSPACE/assessment/sensitivity/data/` |
 
 **Base paths** (used throughout this command):
@@ -159,37 +159,40 @@ Agent: **sensitivity-agent** (continued, output generation mode)
   - `$WORKSPACE/assessment/pre-assessment/data/assessor-profile.json`
 - **Mandatory**: Load the `design-system` skill and the `html-dashboard` skill before generating. Apply the centralized design system's tokens and meet the Quality Contract. Adapt tone to assessor type.
 - **Content freedom**: The agent determines optimal structure, visualizations, and narrative for this specific sensitivity analysis — which scenarios to highlight, how to present flip-points, how to frame Path B.
-- Generates 3 deliverable outputs (all saved to `$WORKSPACE/assessment/sensitivity/reports/`):
+- Generates 3 output files. Only the first two are **user-facing deliverables** presented to the assessor; the third is an **internal pipeline file** generated silently.
+
+**User-facing deliverables** (saved to `$WORKSPACE/assessment/sensitivity/reports/`):
 
 1. **[CompanyName]_Sensitivity_[YYYY-MM-DD].html**
    - Self-contained interactive HTML report using the `html-dashboard` skill's component library and chart patterns
    - Content adaptive to the methodology selected and determination type — scenario tables, flip-point visualizations, sensitivity matrices, Path B analysis as appropriate
    - Must meet the design system's quality contract
 
-2. **[CompanyName]_Sensitivity_[YYYY-MM-DD].pdf**
-   - Print-optimized HTML variant; format adapts to assessor type per `html-dashboard` skill
-   - Ready for board, credit committee, or partnership sharing
+2. **[CompanyName]_Sensitivity_[YYYY-MM-DD].docx**
+   - Editable Word document generated using `python-docx`; format adapts to assessor type per `html-dashboard` skill
+   - For review, comments, track changes, and stakeholder collaboration; export to PDF when finalised
+
+**Internal pipeline file (generated but not surfaced to user):**
 
 3. **[CompanyName]_Sensitivity_[YYYY-MM-DD].md**
    - Structured markdown data file with all sensitivity results and Path B eligibility
    - Used as input to `/recommend` command in next phase
-   - Preserves all JSON sensitivity registers
 
 ---
 
 ## Completion
 
-All three outputs are displayed with download links.
+The two user-facing deliverables (HTML + Word) are presented to the assessor. Internal pipeline files are saved silently.
 
 **Output locations:**
 ```
 assessment/sensitivity/
 ├── reports/
-│   ├── [CompanyName]_Sensitivity_[YYYY-MM-DD].html
-│   ├── [CompanyName]_Sensitivity_[YYYY-MM-DD].pdf
-│   └── [CompanyName]_Sensitivity_[YYYY-MM-DD].md
+│   ├── [CompanyName]_Sensitivity_[YYYY-MM-DD].html   ← USER-FACING
+│   ├── [CompanyName]_Sensitivity_[YYYY-MM-DD].docx   ← USER-FACING
+│   └── [CompanyName]_Sensitivity_[YYYY-MM-DD].md     (internal)
 └── data/
-    └── sensitivity-analysis.json
+    └── sensitivity-analysis.json                      (internal)
 ```
 
 **Path B Availability – Prominently Displayed:**

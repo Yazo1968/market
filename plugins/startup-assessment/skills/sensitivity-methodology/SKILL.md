@@ -571,7 +571,7 @@ When multiple methodologies are executed:
 3. **Resolve conflicts** by examining determination-specific context:
    - GO determination with Robust boundary-flip distance but Moderately Robust scenario spread → likely Robust (GO is hard to flip upward, and downward flip is moderate concern)
    - CONDITIONAL GO with Moderate boundary-flip distance and <50% Monte Carlo probability → likely Fragile (too many paths to other outcomes)
-4. **Document the reasoning** in the HTML/PDF report
+4. **Document the reasoning** in the HTML/Word report
 
 ---
 
@@ -643,11 +643,11 @@ If Path B is unavailable due to Fragile robustness:
 
 ### File Outputs
 
-The sensitivity-agent delivers three files:
+The sensitivity-agent delivers three files. Only the HTML and Word are user-facing; the JSON is internal.
 
-1. **sensitivity-analysis.json** (machine-readable)
-2. **sensitivity-report.html** (interactive, shareable)
-3. **sensitivity-report.pdf** (archivable)
+1. **sensitivity-report.html** (interactive dashboard — user-facing)
+2. **sensitivity-report.docx** (editable Word report — user-facing)
+3. **sensitivity-analysis.json** (machine-readable — internal pipeline)
 
 ### sensitivity-analysis.json Schema
 

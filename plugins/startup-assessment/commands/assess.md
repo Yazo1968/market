@@ -32,7 +32,7 @@ All outputs are written to:
 
 | Output type | Destination |
 |---|---|
-| HTML, PDF, MD reports | `$WORKSPACE/assessment/assessment/reports/` |
+| HTML, Word reports | `$WORKSPACE/assessment/assessment/reports/` |
 | JSON data files (all) | `$WORKSPACE/assessment/assessment/data/` |
 
 **Base paths** (used throughout this command):
@@ -319,42 +319,46 @@ Agent: **assess-output-agent**
   - Session audit trail
 - **Mandatory**: Load the `design-system` skill and the `html-dashboard` skill before generating. Apply the centralized design system's tokens and meet the Quality Contract. Adapt tone to assessor type.
 - **Content freedom**: The agent determines optimal structure, sections, charts, and narrative emphasis for this specific case.
-- Generates 3 deliverable outputs (all saved to `$WORKSPACE/assessment/assessment/reports/`):
+- Generates 3 output files. Only the first two are **user-facing deliverables** presented to the assessor; the third is an **internal pipeline file** generated silently.
+
+**User-facing deliverables** (saved to `$WORKSPACE/assessment/assessment/reports/`):
 
 1. **[CompanyName]_Assessment_[YYYY-MM-DD].html**
    - Self-contained interactive HTML report using the `html-dashboard` skill's component library and chart patterns
    - Content and structure adaptive to the specific business case — agent selects which domain findings to emphasize, which cross-domain patterns to visualize, how to frame the determination narrative
    - Must meet the design system's quality contract
 
-2. **[CompanyName]_Assessment_[YYYY-MM-DD].pdf**
-   - Print-optimized HTML variant; format adapts to assessor type per `html-dashboard` skill
-   - Complete assessment document ready for investment committee, credit committee, or board
+2. **[CompanyName]_Assessment_[YYYY-MM-DD].docx**
+   - Editable Word document generated using `python-docx`; format adapts to assessor type per `html-dashboard` skill
+   - Complete assessment document for review, comments, track changes, and stakeholder collaboration
+   - Export to PDF from Word when ready to lock
+
+**Internal pipeline file (generated but not surfaced to user):**
 
 3. **[CompanyName]_Assessment_[YYYY-MM-DD].md**
    - Structured markdown data file with all assessment findings, registers, and determination
    - Used as input to `/sensitivity` command in next phase
-   - Preserves all JSON registers and session audit trail
 
 ---
 
 ## Completion
 
-All three outputs are displayed with download links. Final determination is displayed prominently.
+The two user-facing deliverables (HTML + Word) are presented to the assessor with the final determination displayed prominently. Internal pipeline files are saved silently.
 
 **Output locations:**
 ```
 assessment/assessment/
 ├── reports/
-│   ├── ScopeReview_[YYYY-MM-DD].md
-│   ├── FindingsReview_[YYYY-MM-DD].md
-│   ├── [CompanyName]_Assessment_[YYYY-MM-DD].html
-│   ├── [CompanyName]_Assessment_[YYYY-MM-DD].pdf
-│   └── [CompanyName]_Assessment_[YYYY-MM-DD].md
+│   ├── ScopeReview_[YYYY-MM-DD].md                      (internal)
+│   ├── FindingsReview_[YYYY-MM-DD].md                    (internal)
+│   ├── [CompanyName]_Assessment_[YYYY-MM-DD].html        ← USER-FACING
+│   ├── [CompanyName]_Assessment_[YYYY-MM-DD].docx        ← USER-FACING
+│   └── [CompanyName]_Assessment_[YYYY-MM-DD].md          (internal)
 └── data/
-    ├── assessment-scope-plan.json
-    ├── domain-findings-[domain_id].json (one per domain)
-    ├── integrated-findings-register.json
-    └── updated-go-nogo-determination.json
+    ├── assessment-scope-plan.json                         (internal)
+    ├── domain-findings-[domain_id].json (one per domain)  (internal)
+    ├── integrated-findings-register.json                  (internal)
+    └── updated-go-nogo-determination.json                 (internal)
 ```
 
 **Next step:** Run `/sensitivity` — no file upload required. It will read from `$WORKSPACE/assessment/assessment/` automatically.

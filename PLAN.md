@@ -351,7 +351,7 @@ Each domain is a collapsible card:
 - All pipeline logic (agents, scoring, determination)
 - All JSON schemas and data contracts
 - All Python scripts
-- Final HTML/PDF report generation (separate from CP review artifacts)
+- Final HTML/Word report generation (separate from CP review artifacts)
 - The 5 CP checkpoint positions in the workflow
 - The rules (can only escalate, can't remove mandatory, scores locked at Scores Review/Findings Review)
 

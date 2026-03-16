@@ -27,7 +27,7 @@ All outputs are written to:
 
 | Output type | Destination |
 |---|---|
-| HTML, PDF reports | `$WORKSPACE/assessment/recommendations/reports/` |
+| HTML, Word reports | `$WORKSPACE/assessment/recommendations/reports/` |
 | JSON data files | `$WORKSPACE/assessment/recommendations/data/` |
 
 **Base paths** (used throughout this command):
@@ -174,16 +174,19 @@ Agent: **recommendations-agent** (continued, output generation mode)
   - Session audit trail (all review point confirmations and adjustments)
 - **Mandatory**: Load the `design-system` skill and the `html-dashboard` skill before generating. Apply the centralized design system's tokens and meet the Quality Contract. Adapt tone to assessor type. This is the **final deliverable** — quality standards are at their highest here.
 - **Content freedom**: The agent determines optimal structure, sections, and narrative for this specific case — which paths to present, how to frame the roadmap, what deal terms to suggest, how to tell the investment story.
-- Generates 3 deliverable outputs (all saved to `$WORKSPACE/assessment/recommendations/reports/`):
+- Generates 3 output files. Only the first two are **user-facing deliverables** presented to the assessor; the third is an **internal pipeline file** generated silently.
+
+**User-facing deliverables** (saved to `$WORKSPACE/assessment/recommendations/reports/`):
 
 1. **[CompanyName]_Recommendations_[YYYY-MM-DD].html**
    - Self-contained interactive HTML report using the `html-dashboard` skill's component library and chart patterns
    - Content adaptive to determination outcome, assessor type, and specific case findings — path recommendations, deal structures, roadmaps, success criteria as appropriate
    - Must meet the design system's quality contract at the highest level — this report goes to investment committees, credit committees, boards, and LPs
 
-2. **[CompanyName]_Recommendations_[YYYY-MM-DD].pdf**
-   - Print-optimized HTML variant; format adapts to assessor type per `html-dashboard` skill
+2. **[CompanyName]_Recommendations_[YYYY-MM-DD].docx**
+   - Editable Word document generated using `python-docx`; format adapts to assessor type per `html-dashboard` skill
    - **FINAL DELIVERABLE** — includes complete session audit trail in appendix
+   - The assessor can review, annotate with comments, track changes, and circulate drafts before finalising
    - Audit trail documents:
      - Context Review confirmation
      - Framework Review confirmation and any adjustments
@@ -193,12 +196,13 @@ Agent: **recommendations-agent** (continued, output generation mode)
      - All research sources and confidence scores
      - All scoring logic and determination pathways
      - All sensitivity methodology and Path B eligibility logic
-   - Ready for regulatory filing, LP reporting, or deal documentation
+   - Export to PDF from Word when ready for regulatory filing, LP reporting, or deal documentation
+
+**Internal pipeline file (generated but not surfaced to user):**
 
 3. **recommendations.json** → saved to `$WORKSPACE/assessment/recommendations/data/`
    - Machine-readable recommendations export
    - Contains all structured recommendation data, paths, and rationale
-   - Useful for downstream workflow integration
 
 ---
 
@@ -208,43 +212,37 @@ Agent: **recommendations-agent** (continued, output generation mode)
 ```
 assessment/recommendations/
 ├── reports/
-│   ├── [CompanyName]_Recommendations_[YYYY-MM-DD].html
-│   └── [CompanyName]_Recommendations_[YYYY-MM-DD].pdf  ← FINAL DELIVERABLE
+│   ├── [CompanyName]_Recommendations_[YYYY-MM-DD].html   ← USER-FACING
+│   └── [CompanyName]_Recommendations_[YYYY-MM-DD].docx   ← FINAL DELIVERABLE
 └── data/
-    └── recommendations.json
+    └── recommendations.json                                (internal)
 ```
 
-**Summary of All Deliverables:**
+**Summary of Your Deliverables:**
 
-You now have a complete assessment file set across all 4 phases:
+You now have 8 user-facing deliverables across all 4 phases (2 per phase: HTML + Word):
 
-**Pre-Assessment Phase (5 files):**
-1. [CompanyName]_PreAssessment_[YYYY-MM-DD].html
-2. [CompanyName]_PreAssessment_[YYYY-MM-DD].pdf
-3. [CompanyName]_PreAssessment_[YYYY-MM-DD].md
-4. [CompanyName]_ScoredRegister_[YYYY-MM-DD].json
-5. [CompanyName]_ResearchProvenance_[YYYY-MM-DD].json
+**Pre-Assessment Phase:**
+1. [CompanyName]_PreAssessment_[YYYY-MM-DD].html — Interactive dashboard
+2. [CompanyName]_PreAssessment_[YYYY-MM-DD].docx — Editable memo
 
-**Assessment Phase (3 files):**
-6. [CompanyName]_Assessment_[YYYY-MM-DD].html
-7. [CompanyName]_Assessment_[YYYY-MM-DD].pdf
-8. [CompanyName]_Assessment_[YYYY-MM-DD].md
+**Assessment Phase:**
+3. [CompanyName]_Assessment_[YYYY-MM-DD].html — Interactive dashboard
+4. [CompanyName]_Assessment_[YYYY-MM-DD].docx — Editable memorandum
 
-**Sensitivity Phase (3 files):**
-9. [CompanyName]_Sensitivity_[YYYY-MM-DD].html
-10. [CompanyName]_Sensitivity_[YYYY-MM-DD].pdf
-11. [CompanyName]_Sensitivity_[YYYY-MM-DD].md
+**Sensitivity Phase:**
+5. [CompanyName]_Sensitivity_[YYYY-MM-DD].html — Interactive dashboard
+6. [CompanyName]_Sensitivity_[YYYY-MM-DD].docx — Editable summary
 
-**Recommendations Phase (3 files):**
-12. [CompanyName]_Recommendations_[YYYY-MM-DD].html
-13. [CompanyName]_Recommendations_[YYYY-MM-DD].pdf ← FINAL DELIVERABLE with complete audit trail
-14. recommendations.json
+**Recommendations Phase:**
+7. [CompanyName]_Recommendations_[YYYY-MM-DD].html — Interactive dashboard
+8. [CompanyName]_Recommendations_[YYYY-MM-DD].docx ← FINAL DELIVERABLE with complete audit trail
 
-**Total: 14 files across all phases**
+**Total: 8 user-facing files across all phases** (internal pipeline files are saved automatically for workflow continuity)
 
 ---
 
-**Congratulations!** You have completed the full startup assessment workflow. Your Recommendations PDF is your final deliverable—it contains your investment decision, implementation roadmap, and complete session audit trail documenting every confirmation point and adjustment made throughout the process.
+**Congratulations!** You have completed the full startup assessment workflow. Your Recommendations Word document is your final deliverable — it contains your investment decision, implementation roadmap, and complete session audit trail documenting every confirmation point and adjustment made throughout the process. Review it, add your comments, and export to PDF when ready to finalise.
 
 ---
 
@@ -254,4 +252,4 @@ You now have a complete assessment file set across all 4 phases:
 
 - **If you want to explore alternative scenarios:** You can re-run `/sensitivity` with different methodology options, or adjust assessment scope and re-run `/assess` to test alternative assessment hypotheses.
 
-- **For external sharing:** All PDF outputs are ready for investor review, board presentation, or partnership discussions. The Recommendations PDF includes complete audit trail for transparency and compliance.
+- **For external sharing:** All Word outputs are ready for investor review, board presentation, or partnership discussions. Export to PDF from Word when ready to lock. The Recommendations Word document includes complete audit trail for transparency and compliance.

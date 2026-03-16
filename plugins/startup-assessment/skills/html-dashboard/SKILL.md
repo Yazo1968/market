@@ -2,7 +2,7 @@
 name: html-dashboard
 description: >
   This skill should be used when any agent needs to generate the HTML report,
-  PDF report, or structured data exports for any phase of the assessment workflow.
+  Word report (.docx), or structured data exports for any phase of the assessment workflow.
   Trigger phrases: "generate report", "produce output", "create HTML", "build dashboard",
   "format report", "export JSON", "deliver outputs", "write report".
 version: 0.1.0
@@ -14,8 +14,13 @@ version: 0.1.0
 
 The html-dashboard skill provides agents with comprehensive patterns and templates for generating professional reports in the startup assessment workflow. This skill covers four distinct output types that are produced at the conclusion of each assessment phase:
 
+**User-facing deliverables:**
+
 1. **HTML Interactive Report** — Multi-tab executive dashboard and detailed analysis
-2. **PDF Archivable Report** — Adaptive format based on assessor type (investment, credit, or strategic)
+2. **Word Editable Report (.docx)** — Adaptive format based on assessor type (investment, credit, or strategic); for review, comments, track changes, and stakeholder collaboration
+
+**Internal pipeline files (generated but not surfaced to user):**
+
 3. **Scored Module Register** — JSON export containing all readiness and fit-to-purpose scores
 4. **Research Provenance Register** — JSON export containing source citations and confidence levels
 
@@ -35,7 +40,7 @@ The design system also contains the **Quality Contract** — the minimum quality
 - **Professional Appearance**: Enterprise-grade typography, spacing, and color schemes — indistinguishable from McKinsey/Sequoia/S&P quality
 - **Deterministic Output**: Reproducible formatting with consistent naming conventions
 - **Data Integrity**: JSON exports preserve raw scores and provenance for audit trails
-- **Print Readiness**: Every HTML report must render cleanly when printed to PDF with proper page breaks, margins, and preserved chart colors
+- **Print Readiness**: Every HTML report must render cleanly when printed via browser with proper page breaks, margins, and preserved chart colors
 
 ---
 
@@ -48,7 +53,7 @@ All outputs follow a consistent naming convention: `[CompanyName]_[Phase]_[YYYY-
 | Output | Filename | Format | Purpose |
 |--------|----------|--------|---------|
 | HTML Report | `TechVenture-Inc_pre-assessment_2026-03-08.html` | HTML5 (self-contained) | Interactive dashboard, domain analysis, gap register, research log |
-| PDF Report | `TechVenture-Inc_pre-assessment_2026-03-08.pdf` | PDF (format varies) | Archivable document, professional presentation, standardized sections |
+| Word Report | `TechVenture-Inc_pre-assessment_2026-03-08.docx` | Word (.docx) | Editable document for review, comments, track changes; export to PDF when finalised |
 | Scored Register | `TechVenture-Inc_pre-assessment_2026-03-08_scores.json` | JSON | Machine-readable scores, weights, domain details |
 | Provenance Register | `TechVenture-Inc_pre-assessment_2026-03-08_provenance.json` | JSON | Source citations, confidence levels, methodology notes |
 
@@ -75,7 +80,7 @@ All HTML reports are generated as single `.html` files that can be:
 - Opened directly in any modern browser (Chrome, Firefox, Safari, Edge)
 - Emailed without attachment complexity
 - Archived with confidence in long-term readability
-- Printed to PDF for permanent records
+- Exported to PDF from Word for permanent records
 
 External dependencies are limited to:
 - Google Fonts CDN (Inter typeface)
@@ -204,7 +209,7 @@ A small section at the bottom of the dashboard:
 
 ```
 Next Steps:
-[View Detailed Findings] [Download PDF] [Export Data] [Back to Assessment]
+[View Detailed Findings] [Download Word] [Export Data] [Back to Assessment]
 ```
 
 - Buttons styled consistently with determination color
@@ -413,11 +418,15 @@ The HTML report for the Recommendations phase includes these 4 tabs:
 
 ---
 
-## PDF Formatting Standards
+## Word Document (.docx) Formatting Standards
+
+### Generation Method
+
+All Word reports are generated using the `python-docx` library. The Word format allows the assessor to review, annotate with comments, track changes, and circulate drafts before finalising. The assessor can export to PDF from Word when ready to lock the document.
 
 ### Three Report Format Types
 
-PDF reports are generated in one of three formats based on assessor type:
+Word reports are generated in one of three formats based on assessor type:
 
 #### 1. Investment Memorandum Format (for VC / PE / Angel Investors)
 
@@ -475,7 +484,7 @@ PDF reports are generated in one of three formats based on assessor type:
 
 ### Mandatory Disclosure Sections (All Formats)
 
-Every report output — HTML and PDF — must include the following three disclosure sections. These are non-negotiable compliance requirements, not optional content.
+Every report output — HTML and Word (.docx) — must include the following three disclosure sections. These are non-negotiable compliance requirements, not optional content.
 
 #### 1. AI-Generated Assessment Disclosure
 
@@ -544,7 +553,7 @@ is disclosed in the Assessor Profile section.]
 
 #### 4. Standards Alignment Appendix
 
-Must appear as the final appendix section in every report (HTML and PDF). This is a transparency disclosure — it describes which professional principles informed the methodology. It does **not** claim certification, accreditation, or compliance with any standard.
+Must appear as the final appendix section in every report (HTML and Word). This is a transparency disclosure — it describes which professional principles informed the methodology. It does **not** claim certification, accreditation, or compliance with any standard.
 
 **Section header:**
 
@@ -688,28 +697,30 @@ Demonstrability Key:
 **Implementation notes:**
 - This section must appear in **every** report output (all phases: Pre-Assessment, Assessment, Sensitivity, Recommendations)
 - In HTML reports, render as the last sub-section of the Appendix tab
-- In PDF reports, render as the final appendix section before the back cover
+- In Word reports, render as the final appendix section before the back cover
 - The table must adapt dynamically: only include rows for standards that were actually exercised in this assessment (e.g., omit ILPA DDQ row if no ESG modules were activated)
 - CP timestamps must be actual timestamps from the session, not placeholders
 - Methodology version must match the version declared in scoring-rubric SKILL.md
 
 ---
 
-### Common PDF Elements (All Formats)
+### Common Word Document Elements (All Formats)
+
+Generated using `python-docx`. The Word format enables the assessor to review, annotate with comments, track changes, and circulate drafts before finalising. Export to PDF from Word when ready to lock.
 
 - **Cover Page Design**: Professional letterhead, company name, assessment date, confidentiality footer, AI disclosure badge
 - **Headers/Footers**: Page numbers, date, company name, assessor/fund name, "CONFIDENTIAL - For Internal Use Only"
-- **Typography**:
+- **Typography** (set via `python-docx` styles):
   - Heading 1 (Section titles): 18pt, bold, color accent (determination color)
   - Heading 2 (Subsections): 14pt, bold, dark gray
   - Body: 11pt, line spacing 1.5, dark gray/charcoal
   - Monospace: 9pt for tables and data
 - **Tables**:
-  - Gray header row (background #f3f4f6)
+  - Gray header row (shading via `python-docx` cell shading)
   - Alternating white/light-gray row backgrounds for readability
   - Borders: thin, light gray
 - **Color Scheme**: White background, dark text, accent color for headers/highlights based on determination
-- **Page Breaks**: Logical breaks before major sections, orphan/widow control
+- **Page Breaks**: Logical breaks before major sections
 - **Appendix Formatting**: Smaller font for reference material, clear section labeling
 
 ---
@@ -950,7 +961,7 @@ All CSS must be inline. All JavaScript must be inline. The only external resourc
 The generated HTML file must be:
 - Valid HTML5
 - Openable in any modern browser without server-side rendering
-- Printable to PDF without loss of information
+- Printable via browser without loss of information
 - Fully functional when emailed or transferred (no broken links)
 
 ---
@@ -981,7 +992,8 @@ When tasked with generating a report:
 8. **Apply the quality contract** from the design system — meet every checkbox in the Visual Quality Floor, Interactivity Floor, Print Readiness, and Professional Standards sections
 9. **Adapt tone to assessor type** — use the Assessor-Type Tone Adaptation table from the design system
 10. **Validate**: Open in browser to verify rendering, responsiveness, print preview, and interactivity
-11. **Deliver outputs** (HTML, PDF via print, data JSON exports)
+11. **Generate Word report** using `python-docx` — apply the same structure, styles, and design system tokens as the HTML report
+12. **Deliver user-facing outputs** (HTML + Word) — internal pipeline files (JSON, MD) are saved silently
 
 ---
 

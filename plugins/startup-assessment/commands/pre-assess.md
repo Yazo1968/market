@@ -33,7 +33,7 @@ All outputs are written to the workspace folder created by `/initiate`:
 
 | Output type | Destination |
 |---|---|
-| HTML, PDF, MD reports | `$WORKSPACE/assessment/pre-assessment/reports/` |
+| HTML, Word reports | `$WORKSPACE/assessment/pre-assessment/reports/` |
 | JSON data files (all) | `$WORKSPACE/assessment/pre-assessment/data/` |
 
 **Base paths** (used throughout this command — `$WORKSPACE` is resolved in Pre-Flight Step 0):
@@ -54,7 +54,7 @@ All user-readable files written during this workflow MUST be saved as `.md` — 
 | Charts / infographics | Converted to markdown tables | Each table must be followed by an italicised footnote: `*[Original format: <chart-type> — <description>]*` |
 | Agent summaries / narratives | `.md` | Use proper heading hierarchy; no flat plain text blocks. |
 | Machine-readable data | `.json` | JSON data files are exempt — keep as `.json`. |
-| Final reports | `.html`, `.pdf`, `.md` | As specified in the output generation steps below. |
+| Final reports | `.html`, `.docx` | User-facing deliverables as specified in the output generation steps below. Internal data files (`.md`, `.json`) are generated but not surfaced to the user. |
 
 If any agent produces a `.txt` file at any point, that is a bug — the responsible agent must re-save its output as a correctly structured `.md` file before the workflow continues.
 
@@ -417,62 +417,60 @@ Agent: **pre-assess-output-agent**
 - Input: all confirmed data structures in `$WORKSPACE/assessment/pre-assessment/data/` + session audit trail
 - **Mandatory**: Load the `design-system` skill (`skills/design-system/SKILL.md`) and the `html-dashboard` skill before generating any outputs. Apply the centralized design system's color tokens, typography, component proportions, and CSS custom properties. Meet every requirement in the Quality Contract (Visual Quality Floor, Interactivity Floor, Print Readiness, Professional Standards). Adapt narrative tone to the assessor type per the Assessor-Type Tone Adaptation table.
 - **Content freedom**: The agent determines the optimal report structure, sections, tabs, charts, and narrative emphasis for this specific case. The tab structures in `html-dashboard` are reference patterns — adapt as needed.
-- Generates 5 deliverable outputs saved to their respective subfolders:
+- Generates 5 output files saved to their respective subfolders. Only the first two are **user-facing deliverables** presented to the assessor; the remaining three are **internal pipeline files** generated silently.
 
-**Reports** → saved to `$WORKSPACE/assessment/pre-assessment/reports/`
+**User-facing deliverables** → saved to `$WORKSPACE/assessment/pre-assessment/reports/`
 
 1. **[CompanyName]_PreAssessment_[YYYY-MM-DD].html**
    - Self-contained interactive HTML report using the `html-dashboard` skill's component library and chart patterns
    - Content, structure, and emphasis are adaptive to the specific business case — the agent selects which visualizations, sections, and narrative framing best serve the assessor
    - Must meet the design system's quality contract: responsive at all breakpoints, keyboard-accessible tabs, print-ready, professional-grade typography and color consistency
 
-2. **[CompanyName]_PreAssessment_[YYYY-MM-DD].pdf**
-   - Agent generates a print-optimized HTML variant; assessor prints to PDF via browser
+2. **[CompanyName]_PreAssessment_[YYYY-MM-DD].docx**
+   - Editable Word document generated using `python-docx`; assessor can review, comment, track changes, and circulate drafts
    - Format adapts to assessor type: Investment Memorandum (VC/PE/Angel), Credit Memorandum (Debt), or Strategic Assessment (Corporate/Family Office/Sovereign Wealth) per `html-dashboard` skill
-   - Fully formatted with proper page breaks, margins, headers/footers, confidentiality notice
+   - Fully formatted with proper styles, tables, headers/footers, confidentiality notice
+   - Assessor exports to PDF from Word when ready to lock the document
 
-3. **[CompanyName]_PreAssessment_[YYYY-MM-DD].md**
+**Internal pipeline files (generated but not surfaced to the user):**
+
+3. **[CompanyName]_PreAssessment_[YYYY-MM-DD].md** → saved to `$WORKSPACE/assessment/pre-assessment/reports/`
    - Structured markdown data file containing all scored findings, registers, and determination
    - Used as input to `/assess` command in next phase
-   - Preserves all JSON registers in structured format
 
-**Data files** → saved to `$WORKSPACE/assessment/pre-assessment/data/`
-
-4. **[CompanyName]_ScoredRegister_[YYYY-MM-DD].json**
+4. **[CompanyName]_ScoredRegister_[YYYY-MM-DD].json** → saved to `$WORKSPACE/assessment/pre-assessment/data/`
    - Comprehensive JSON export of all scoring data
-   - Useful for external analysis or integration
 
-5. **[CompanyName]_ResearchProvenance_[YYYY-MM-DD].json**
+5. **[CompanyName]_ResearchProvenance_[YYYY-MM-DD].json** → saved to `$WORKSPACE/assessment/pre-assessment/data/`
    - Complete research log with sources and confidence scores
-   - Enables fact-checking and supports deeper dives in `/assess` phase
 
 ---
 
 ## Completion
 
-All five outputs are displayed with download links. The final determination is displayed prominently.
+The two user-facing deliverables (HTML + Word) are presented to the assessor with the final determination displayed prominently. Internal pipeline files are saved silently.
 
 **Output locations:**
 ```
 assessment/pre-assessment/
 ├── reports/
-│   ├── [CompanyName]_PreAssessment_[YYYY-MM-DD].html
-│   ├── [CompanyName]_PreAssessment_[YYYY-MM-DD].pdf
-│   └── [CompanyName]_PreAssessment_[YYYY-MM-DD].md
+│   ├── [CompanyName]_PreAssessment_[YYYY-MM-DD].html    ← USER-FACING
+│   ├── [CompanyName]_PreAssessment_[YYYY-MM-DD].docx    ← USER-FACING
+│   └── [CompanyName]_PreAssessment_[YYYY-MM-DD].md      (internal)
 └── data/
-    ├── context-profile.json
-    ├── assessor-profile.json
-    ├── framework.json
-    ├── research-log.json
-    ├── module-content-map.json
-    ├── readiness-register.json
-    ├── fit-to-purpose-register.json
-    ├── gap-register.json
-    ├── dependency-map.json
-    ├── preliminary-go-nogo-determination.json
-    ├── qaqc-report.json
-    ├── [CompanyName]_ScoredRegister_[YYYY-MM-DD].json
-    └── [CompanyName]_ResearchProvenance_[YYYY-MM-DD].json
+    ├── context-profile.json                              (internal)
+    ├── assessor-profile.json                             (internal)
+    ├── framework.json                                    (internal)
+    ├── research-log.json                                 (internal)
+    ├── module-content-map.json                           (internal)
+    ├── readiness-register.json                           (internal)
+    ├── fit-to-purpose-register.json                      (internal)
+    ├── gap-register.json                                 (internal)
+    ├── dependency-map.json                               (internal)
+    ├── preliminary-go-nogo-determination.json            (internal)
+    ├── qaqc-report.json                                  (internal)
+    ├── [CompanyName]_ScoredRegister_[YYYY-MM-DD].json   (internal)
+    └── [CompanyName]_ResearchProvenance_[YYYY-MM-DD].json (internal)
 ```
 
 **Next step:** When ready to proceed to full assessment, run `/assess`. It will read from `$WORKSPACE/assessment/pre-assessment/` automatically.

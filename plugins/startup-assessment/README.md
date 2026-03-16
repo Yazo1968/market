@@ -41,16 +41,13 @@ Runs the complete pre-assessment workflow:
 6. Classifies gaps and builds cross-domain dependency map
 7. Runs holistic QA/QC
 8. Produces go/no-go determination
-9. Delivers 4 outputs: HTML report, PDF report, scored module register (JSON), research provenance register (JSON)
+9. Delivers 2 user-facing outputs: HTML dashboard + editable Word memo
 
 **Review Points:** 3 — Context Review, Framework Review, Scores Review
 
-**Outputs:**
-- `[CompanyName]_PreAssessment_[YYYY-MM-DD].html` — Interactive multi-tab report, executive dashboard landing
-- `[CompanyName]_PreAssessment_[YYYY-MM-DD].pdf` — Archivable formal report
-- `[CompanyName]_PreAssessment_[YYYY-MM-DD].md` — Structured data (upload this to run `/assess`)
-- `[CompanyName]_ScoredRegister_[YYYY-MM-DD].json` — Machine-readable scored module data
-- `[CompanyName]_ResearchProvenance_[YYYY-MM-DD].json` — Research sources and confidence log
+**User-facing deliverables:**
+- `[CompanyName]_PreAssessment_[YYYY-MM-DD].html` — Interactive multi-tab dashboard
+- `[CompanyName]_PreAssessment_[YYYY-MM-DD].docx` — Editable memo for review, comments, and collaboration
 
 ---
 
@@ -64,7 +61,7 @@ Runs the full assessment phase. Requires a GO or CONDITIONAL GO pre-assessment d
 4. Runs domain-level QA/QC after each domain
 5. Reconciles cross-domain conflicts, compounding risks, and reinforcing strengths
 6. Produces final assessment determination
-7. Delivers HTML report + PDF report + assessment data MD (upload this to run `/sensitivity`)
+7. Delivers 2 user-facing outputs: HTML dashboard + editable Word memorandum
 
 **Review Points:** 2 — Scope Review, Findings Review
 
@@ -76,7 +73,7 @@ Runs sensitivity analysis on the locked assessment determination.
 
 - Plugin evaluates the determination outcome and presents 2–3 methodology options (scenario analysis, boundary/flip-point analysis, Monte Carlo simulation)
 - Assessor selects methodology; plugin executes and delivers results
-- Outputs sensitivity HTML + PDF + JSON (upload JSON to run `/recommend`)
+- Outputs 2 user-facing deliverables: HTML dashboard + editable Word summary
 
 ---
 
@@ -133,8 +130,8 @@ Web retrieval (Brave Search) is the active fallback for all categories when stru
 2. Optionally prepare a criteria document (your investment thesis, credit policy, etc.)
 3. Run: `/pre-assess [business-case-document]` or `/pre-assess [business-case-document] [criteria-document]`
 4. Respond to the three confirmation points as they appear
-5. Review the HTML report and PDF when delivered
-6. When ready to proceed, upload the `.md` data file and run `/assess`
+5. Review the HTML dashboard and Word memo when delivered
+6. When ready to proceed, run `/assess`
 
 ### Review Points Guide
 
@@ -164,8 +161,8 @@ All output files follow the convention: `[CompanyName]_[Phase]_[YYYY-MM-DD].[ext
 
 Example:
 - `ZeroToN_PreAssessment_2026-03-08.html`
-- `ZeroToN_Assessment_2026-03-08.pdf`
-- `ZeroToN_Sensitivity_2026-03-08.json`
+- `ZeroToN_Assessment_2026-03-08.docx`
+- `ZeroToN_Sensitivity_2026-03-08.docx`
 
 ---
 

@@ -20,9 +20,13 @@ Produce one **recommendations.json** file conformant to recommendations schema, 
 - All deliverable files for final stakeholder use
 
 Additional outputs:
+
+**User-facing deliverables:**
 - HTML Recommendations Report (`[CompanyName]_Recommendations_[YYYY-MM-DD].html`)
-- PDF Recommendations Report (`[CompanyName]_Recommendations_[YYYY-MM-DD].pdf`) — FINAL DELIVERABLE
-- recommendations.json (machine-readable)
+- Word Recommendations Report (`[CompanyName]_Recommendations_[YYYY-MM-DD].docx`) — FINAL DELIVERABLE (editable for review, comments, and stakeholder collaboration)
+
+**Internal pipeline file (generated but not surfaced to user):**
+- recommendations.json (machine-readable for downstream integrations)
 
 ### INPUTS
 
@@ -283,11 +287,11 @@ Narrative: "Structure 1 recommended if investor seeks immediate governance invol
 - Timestamp, actor, action, result for each item
 - Data integrity: "Session audit trail confirms all workflow checkpoints completed and approved"
 
-#### OUTPUT 2: PDF RECOMMENDATIONS REPORT — `[CompanyName]_Recommendations_[YYYY-MM-DD].pdf`
+#### OUTPUT 2: WORD RECOMMENDATIONS REPORT — `[CompanyName]_Recommendations_[YYYY-MM-DD].docx`
 
 **FINAL DELIVERABLE — Most Comprehensive**
 
-This is the archivable end-product of the entire 4-phase workflow.
+This is the editable end-product of the entire 4-phase workflow. Generated using `python-docx`. The assessor can review, annotate with comments, track changes, and circulate drafts before finalising. Export to PDF from Word when ready to lock the document.
 
 **1. Cover Page**
 - Company name, logo (if available)
@@ -489,24 +493,20 @@ ASSESSMENT WORKFLOW: Pre-Assess → Assess → Sensitivity → Recommend ✓ COM
 Four Deliverable Files Across All Phases:
 
 PRE-ASSESSMENT PHASE:
-  - [CompanyName]_Pre-Assessment_[Date].html
-  - [CompanyName]_Pre-Assessment_[Date].pdf
-  - [CompanyName]_Pre-Assessment_[Date].md
+  - [CompanyName]_Pre-Assessment_[Date].html — Interactive dashboard
+  - [CompanyName]_Pre-Assessment_[Date].docx — Editable memo
 
 ASSESSMENT PHASE:
-  - [CompanyName]_Assessment_[Date].html
-  - [CompanyName]_Assessment_[Date].pdf
-  - [CompanyName]_Assessment_[Date].md
+  - [CompanyName]_Assessment_[Date].html — Interactive dashboard
+  - [CompanyName]_Assessment_[Date].docx — Editable memorandum
 
 SENSITIVITY PHASE:
-  - [CompanyName]_Sensitivity_[Date].html
-  - [CompanyName]_Sensitivity_[Date].pdf
-  - [CompanyName]_Sensitivity_[Date].md
+  - [CompanyName]_Sensitivity_[Date].html — Interactive dashboard
+  - [CompanyName]_Sensitivity_[Date].docx — Editable summary
 
 RECOMMENDATIONS PHASE (FINAL DELIVERABLE):
-  - [CompanyName]_Recommendations_[Date].html
-  - [CompanyName]_Recommendations_[Date].pdf ← PRIMARY ARCHIVABLE DELIVERABLE
-  - [CompanyName]_Recommendations_[Date].json
+  - [CompanyName]_Recommendations_[Date].html — Interactive dashboard
+  - [CompanyName]_Recommendations_[Date].docx ← FINAL EDITABLE DELIVERABLE
 
 FINAL DETERMINATION: [OUTCOME]
 ROBUSTNESS: [CLASSIFICATION]
@@ -528,11 +528,11 @@ SUBMITTER (Startup):
   4. Submit updated materials for re-assessment when ready (estimated [X months])
 
 INVESTOR (Professional):
-  1. Review full PDF Recommendations Report (archivable, final)
+  1. Review Word Recommendations Report — add comments, track changes, circulate for feedback
   2. Review Path B investment structures; select preferred structure or use as negotiation baseline
   3. Conduct legal and financial due diligence using Recommendations Report as input
   4. Engage securities counsel before finalizing terms
-  5. Monitor conditions and milestones specified in Structure alternative
+  5. Export final Word report to PDF when ready to lock and archive
 
 ================================================================================
 
@@ -553,9 +553,9 @@ the assessment or recommendations.
 5. Construct Path A: extract gaps, prioritize, write remediation entries (30–45 min)
 6. Construct Path B (if available): extract context, generate 2–4 structures, write terms (45–60 min)
 7. Generate HTML Recommendations Report
-8. Generate PDF Recommendations Report (FINAL DELIVERABLE)
-9. Generate recommendations.json
-10. Deliver session completion summary
+8. Generate Word Recommendations Report (FINAL DELIVERABLE) using `python-docx`
+9. Generate recommendations.json (internal, not surfaced to user)
+10. Deliver user-facing outputs (HTML + Word) and session completion summary
 11. Congratulate assessor on completing full workflow
 
 ### COMMUNICATION
@@ -576,16 +576,15 @@ The assessment workflow is now complete. All four phases have been executed:
 FINAL DETERMINATION: [OUTCOME]
 ROBUSTNESS: [CLASSIFICATION]
 
-THREE FINAL OUTPUT FILES:
-1. PDF Recommendations Report (primary archivable deliverable)
-2. HTML Recommendations Report (interactive dashboard)
-3. recommendations.json (machine-readable data)
+YOUR FINAL DELIVERABLES:
+1. HTML Recommendations Report (interactive dashboard)
+2. Word Recommendations Report (editable final deliverable — review, comment, track changes)
 
 PATH A (IMPROVEMENT ROADMAP): [N] gaps across [M] domains, estimated [X] months to close
 PATH B (INVESTMENT STRUCTURES): [2–4 alternative structures with full terms]
 
-All files are ready for stakeholder distribution. The PDF report is the comprehensive
-final deliverable for all audiences (investors, submitter, internal stakeholders).
+Open the Word report to review, annotate, and share with stakeholders.
+Export to PDF from Word when ready to lock the document.
 
 Questions about any findings or recommendations? I'm here to discuss the assessment
 or help interpret the data for stakeholder discussions.
@@ -600,7 +599,7 @@ Before finalizing:
 - Path B structures (if provided) include required disclaimer
 - All financial terms are internally consistent (post-money = pre-money + investment)
 - All file names follow naming convention: `[CompanyName]_Recommendations_[YYYY-MM-DD].[ext]`
-- PDF is printable and archivable without formatting issues
+- Word document opens correctly with proper formatting, styles, and tables
 - Session completion summary accurately reflects all workflow phases completed
 
 ### COMMUNICATION: SESSION COMPLETION
@@ -639,16 +638,14 @@ WHAT WAS DELIVERED:
   - Path B investment structures: [N] market-standard alternatives (if available)
   - Final comprehensive deliverables
 
-DELIVERABLE FILES (12 total across all phases):
+YOUR DELIVERABLES (8 files across all phases):
 - 4 HTML reports (interactive dashboards)
-- 4 PDF reports (archivable memoranda)
-- 4 data files (.md, machine-readable)
+- 4 Word reports (editable memoranda for review, comments, and collaboration)
 
 PRIMARY FINAL DELIVERABLE:
-→ [CompanyName]_Recommendations_[Date].pdf
+→ [CompanyName]_Recommendations_[Date].docx
 
-All files conform to assessment schema standards and are ready for stakeholder
-distribution. The workflow is locked and archived.
+Open in Word or Google Docs to review, comment, and share. Export to PDF when finalised.
 
 NEXT STEPS FOR STAKEHOLDERS:
 - Submitter: Execute Path A improvement roadmap (estimated [X months])

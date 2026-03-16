@@ -21,8 +21,12 @@ Produce one **sensitivity-analysis.json** file conformant to the sensitivity sch
 - Structured data for recommendations phase
 
 Additional outputs:
+
+**User-facing deliverables:**
 - HTML Sensitivity Report (`[CompanyName]_Sensitivity_[YYYY-MM-DD].html`)
-- PDF Sensitivity Report (`[CompanyName]_Sensitivity_[YYYY-MM-DD].pdf`)
+- Word Sensitivity Report (`[CompanyName]_Sensitivity_[YYYY-MM-DD].docx`)
+
+**Internal pipeline files (generated but not surfaced to user):**
 - Sensitivity Data MD (`[CompanyName]_Sensitivity_[YYYY-MM-DD].md`) for recommendations phase
 
 ### INPUTS
@@ -439,11 +443,13 @@ Document in output:
 - Scenario narratives (if Scenario Analysis)
 - Confidence limitations and caveats
 
-### OUTPUT 2: PDF SENSITIVITY REPORT — `[CompanyName]_Sensitivity_[YYYY-MM-DD].pdf`
+### OUTPUT 2: WORD SENSITIVITY REPORT — `[CompanyName]_Sensitivity_[YYYY-MM-DD].docx`
 
-Professional document format (2–4 pages):
+Editable professional document (2–4 pages) generated using `python-docx`. The assessor can review, annotate, track changes, and circulate before finalising. Export to PDF from Word when ready.
+
+Contents:
 - Methodology summary
-- Analysis results with charts/tables
+- Analysis results with tables
 - Robustness assessment narrative
 - Path B availability determination
 - Recommendation for next phase
@@ -488,8 +494,8 @@ Machine-readable structured data for recommendations-agent:
 7. Classify robustness (Robust / Moderately-Robust / Limited-Robustness)
 8. Determine Path B availability (true / false)
 9. Generate sensitivity-analysis.json
-10. Generate HTML, PDF, and MD outputs
-11. Deliver to assessor with guidance for /recommend phase
+10. Generate HTML and Word outputs (user-facing) + MD output (internal pipeline)
+11. Deliver user-facing outputs to assessor with guidance for /recommend phase
 
 ### COMMUNICATION
 
@@ -514,10 +520,9 @@ PATH B AVAILABILITY: [TRUE / FALSE]
 [If TRUE: "Investment structures can be developed for professional assessor use."]
 [If FALSE: "Path A (improvement roadmap) only. Recommend focus on addressing critical gaps."]
 
-Three deliverable files generated:
+Your deliverables:
 1. HTML Sensitivity Report — Interactive dashboard
-2. PDF Sensitivity Report — Archivable summary
-3. Sensitivity Data MD — Upload to /recommend phase
+2. Word Sensitivity Report — Editable summary for review and comments
 
-Ready to proceed to /recommend? Upload the sensitivity data .md file when ready.
+Run /recommend when ready to proceed to the recommendations phase.
 ```

@@ -2,7 +2,7 @@
 name: design-system
 description: >
   Centralized visual identity and quality contract for all assessment outputs —
-  both interactive CP artifacts (Cowork React) and final HTML/PDF reports.
+  both interactive CP artifacts (Cowork React) and final HTML/Word reports.
   This is the single source of truth for colors, typography, component specs,
   chart palettes, and quality standards. Referenced by interactive-review and
   html-dashboard skills. Trigger phrases: "design system", "visual identity",
@@ -14,7 +14,7 @@ version: 1.0.0
 
 ## Purpose
 
-This is the **single source of truth** for visual identity across the entire assessment workflow. Both interactive CP artifacts (rendered in Cowork) and final HTML/PDF deliverables reference this file to ensure one consistent, professional brand from first interaction to final report.
+This is the **single source of truth** for visual identity across the entire assessment workflow. Both interactive CP artifacts (rendered in Cowork) and final HTML/Word deliverables reference this file to ensure one consistent, professional brand from first interaction to final report.
 
 **Two rendering contexts, one visual identity:**
 
@@ -142,7 +142,7 @@ Fill areas: 10% opacity of the series color.
 | Text secondary | `#94a3b8` | slate-400 |
 | Text muted | `#64748b` | slate-500 |
 
-**Light theme (HTML/PDF reports):**
+**Light theme (HTML/Word reports):**
 
 | Token | Hex | CSS |
 |-------|-----|-----|
@@ -363,7 +363,7 @@ This is the minimum quality bar for all outputs. Agents have full creative freed
 - [ ] **Charts**: Hover tooltips with formatted values. Legend click to toggle series. Responsive resize.
 - [ ] **Sortable tables**: Click-to-sort headers with visual indicator (arrow direction).
 
-### Print Readiness (PDF/print)
+### Print Readiness (Word/print)
 
 - [ ] **Page breaks**: Logical breaks before major sections. No orphaned headings.
 - [ ] **Charts preserved**: Canvas elements render in print. Colors not lost.
@@ -429,10 +429,10 @@ The following limitations are inherent to the current system and are **documente
 | Limitation | Standard | Status | Mitigation |
 |-----------|----------|--------|-----------|
 | **No outcome validation** — The scoring methodology has not been validated against actual investment outcomes (back-tested). | IOSCO CRA Code (annual methodology validation) | Acknowledged | Methodology is systematically constructed and peer-reviewed against professional standards. Outcome validation requires post-investment tracking data not currently available. |
-| **Audit trail is session-based** — The audit trail is maintained in the Cowork session state and exported to the final PDF. It is not stored in an append-only immutable log during the session. | SOC 2 Type II (processing integrity), ISAE 3402 | Acknowledged | Audit trail is sealed at Findings Review and embedded in the final PDF appendix. Within-session integrity depends on the Cowork platform's session management. Post-session, the PDF audit trail is the authoritative record. |
+| **Audit trail is session-based** — The audit trail is maintained in the Cowork session state and exported to the final Word document. It is not stored in an append-only immutable log during the session. | SOC 2 Type II (processing integrity), ISAE 3402 | Acknowledged | Audit trail is sealed at Findings Review and embedded in the final Word document appendix. Within-session integrity depends on the Cowork platform's session management. Post-session, the Word document audit trail is the authoritative record. |
 | **No real-time monitoring** — Assessments are point-in-time snapshots. No continuous monitoring of the assessed company occurs post-assessment. | COSO ERM (monitoring and review) | Out of scope | The tool's scope ends at recommendation delivery. Post-investment monitoring is the assessor's responsibility. Re-assessment is available via `/pre-assess` at any time. |
 | **AI model limitations** — The AI model has a training knowledge cutoff and may not reflect the most recent market developments, regulatory changes, or industry events. | EU AI Act Article 15 (accuracy, robustness) | Acknowledged | All scoring-eligible evidence is obtained via live retrieval (not training knowledge). The 3H Principle and Training-Derived exclusion rule mitigate this risk. |
-| **Single-assessor workflow** — The current workflow supports a single human assessor. Multi-party IC committee review, formal red-team panels, and multi-assessor consensus are not natively supported. | PE IC conventions (committee review) | Partial | The red-team challenge (Step 3b) provides an adversarial perspective. The final PDF is designed for IC circulation and can be reviewed by a committee externally. |
+| **Single-assessor workflow** — The current workflow supports a single human assessor. Multi-party IC committee review, formal red-team panels, and multi-assessor consensus are not natively supported. | PE IC conventions (committee review) | Partial | The red-team challenge (Step 3b) provides an adversarial perspective. The final Word document is designed for IC circulation and can be reviewed by a committee externally. |
 
 ---
 
