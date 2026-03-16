@@ -1,11 +1,11 @@
 ---
 name: interactive-review
 description: >
-  This skill should be used when generating interactive Confirmation Point (CP) review artifacts
+  This skill should be used when generating interactive review artifacts
   for the assessor. Provides the shared design system, component library, and generation patterns
-  for all CP artifacts across the assessment workflow. Trigger phrases: "generate CP review",
-  "confirmation point", "interactive review", "CP1", "CP2", "CP3", "CP4", "CP5",
-  "build review artifact", "render review dashboard".
+  for all review artifacts across the assessment workflow. Trigger phrases: "generate review",
+  "context review", "framework review", "scores review", "scope review", "findings review",
+  "interactive review", "build review artifact", "render review dashboard".
 version: 0.1.0
 ---
 
@@ -13,7 +13,7 @@ version: 0.1.0
 
 ## Overview
 
-Every Confirmation Point (CP1–CP5), the Sensitivity methodology selection, and the Assessor Profile collection render **inline interactive React artifacts** directly in the Cowork conversation. Each artifact is dynamically generated from the actual pipeline data at that stage — no static templates. The assessor reviews and adjusts within the artifact, then submits changes back to the workflow.
+Every review point (Context Review, Framework Review, Scores Review, Scope Review, Findings Review), the Sensitivity methodology selection, and the Assessor Profile collection render **inline interactive React artifacts** directly in the Cowork conversation. Each artifact is dynamically generated from the actual pipeline data at that stage — no static templates. The assessor reviews and adjusts within the artifact, then submits changes back to the workflow.
 
 ## Data Flow
 
@@ -77,7 +77,7 @@ CP artifacts render inside Cowork's dark conversation pane. Use the dark theme s
 
 ### Layout Pattern
 
-Every CP artifact follows this structure:
+Every review artifact follows this structure:
 
 ```jsx
 <div className="min-h-screen bg-slate-900 text-slate-50 p-6">
@@ -106,7 +106,7 @@ Every CP artifact follows this structure:
 
 ### Changes Footer Component
 
-Present in every CP artifact. Collapsed by default.
+Present in every review artifact. Collapsed by default.
 
 ```jsx
 function ChangesFooter({ changes }) {
@@ -299,19 +299,19 @@ All business rules from the assessment workflow are enforced directly in the art
 | Domain weights must sum to 100% | Auto-redistribute on change |
 | Module weights must sum to 1.0 per domain | Auto-redistribute on change |
 | Hard blockers are non-editable | Display only with red lock icon |
-| Scores locked at CP3/CP5 | No score edit controls; display only |
-| Assessment modes escalate only (CP4) | Dropdown only shows current mode and above |
+| Scores locked at Scores Review/Findings Review | No score edit controls; display only |
+| Assessment modes escalate only (Scope Review) | Dropdown only shows current mode and above |
 
 ---
 
 ## Generation Instructions
 
-When generating a CP artifact, follow this procedure:
+When generating a review artifact, follow this procedure:
 
-1. **Read the relevant JSON files** from the workspace for this CP
+1. **Read the relevant JSON files** from the workspace for this review point
 2. **Embed the data directly** into the React component as a const at the top of the artifact
 3. **Use the shared design system** — colors, typography, layout, components from this skill
-4. **Load the CP-specific reference** from `references/cp{N}-artifact.md` for the detailed layout
+4. **Load the review-specific reference** from `references/{review-name}-artifact.md` for the detailed layout
 5. **Include the ChangesFooter** in every artifact
 6. **Include all shared components** (DeterminationBadge, ScoreBar, SeverityBadge, etc.) inline
 7. **Enforce all constraints** from the table above in the UI logic
@@ -330,16 +330,16 @@ After the assessor interacts with the artifact and pastes the delta JSON:
 
 ---
 
-## CP Reference Index
+## Review Artifact Reference Index
 
-Detailed artifact specifications for each CP are in the `references/` directory:
+Detailed artifact specifications for each review point are in the `references/` directory:
 
-| File | CP | Data Sources |
-|------|----|-------------|
-| `references/cp1-artifact.md` | CP1: Context & Assessor Profile | context-profile.json, assessor-profile.json |
-| `references/cp2-artifact.md` | CP2: Assessment Framework | framework.json |
-| `references/cp3-artifact.md` | CP3: Scored Findings | readiness-register.json, fit-to-purpose-register.json, gap-register.json, dependency-map.json, go-nogo-determination.json |
-| `references/cp4-artifact.md` | CP4: Assessment Scope | assessment-scope-plan.json |
-| `references/cp5-artifact.md` | CP5: Reconciled Findings | integrated-findings-register.json, domain-findings-*.json, updated-go-nogo-determination.json |
+| File | Review Point | Data Sources |
+|------|-------------|-------------|
+| `references/context-review-artifact.md` | Context Review: Context & Assessor Profile | context-profile.json, assessor-profile.json |
+| `references/framework-review-artifact.md` | Framework Review: Assessment Framework | framework.json |
+| `references/scores-review-artifact.md` | Scores Review: Scored Findings | readiness-register.json, fit-to-purpose-register.json, gap-register.json, dependency-map.json, go-nogo-determination.json |
+| `references/scope-review-artifact.md` | Scope Review: Assessment Scope | assessment-scope-plan.json |
+| `references/findings-review-artifact.md` | Findings Review: Reconciled Findings | integrated-findings-register.json, domain-findings-*.json, updated-go-nogo-determination.json |
 | `references/sensitivity-selector.md` | Sensitivity Methodology | updated-go-nogo-determination.json, integrated-findings-register.json |
 | `references/assessor-profile-collector.md` | Assessor Profile Collection | Raw assessor inputs for criteria-resolver |

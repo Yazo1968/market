@@ -5,10 +5,10 @@ model: sonnet
 argument-hint: (no arguments required — reads from assessment/business-case-docs/)
 ---
 
-<!-- Checkpoints defined in this command:
-     CP1 — Context & Assessor Profile review (line ~178)
-     CP2 — Framework review (line ~229)
-     CP3 — Scored Findings review (line ~352)
+<!-- Review points defined in this command:
+     Context Review — Context & Assessor Profile review (line ~178)
+     Framework Review — Framework review (line ~229)
+     Scores Review — Scored Findings review (line ~352)
 -->
 
 ## /pre-assess Command: Initial Readiness & Fit Assessment
@@ -177,16 +177,16 @@ Invoke AskUserQuestion — type: single-select
 
 ---
 
-## CONFIRMATION POINT 1: Context & Assessor Profile
+## CONTEXT REVIEW: Context & Assessor Profile
 
 **What you see:** An interactive review artifact rendered inline in the conversation.
 
-**Generate the CP1 Interactive Review Artifact:**
+**Generate the Context Review Interactive Artifact:**
 
-Load the `interactive-review` skill and its `references/cp1-artifact.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
+Load the `interactive-review` skill and its `references/context-review-artifact.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
 
 1. **Embed the actual data** from `$WORKSPACE/assessment/pre-assessment/data/context-profile.json` and `$WORKSPACE/assessment/pre-assessment/data/assessor-profile.json` as constants at the top of the React component
-2. **Follow the CP1 artifact specification** in `skills/interactive-review/references/cp1-artifact.md` exactly — three tabs (Company Context, Assessor Profile, Confidence Flags) with all editable fields
+2. **Follow the Context Review artifact specification** in `skills/interactive-review/references/context-review-artifact.md` exactly — three tabs (Company Context, Assessor Profile, Confidence Flags) with all editable fields
 3. **Use the shared design system** from `skills/interactive-review/SKILL.md` — dark theme, color palette, shared components (DeterminationBadge, EditableField, LockedField, ChangesFooter)
 4. **Include the Changes Footer** (collapsed by default) with change counter and Copy to Clipboard button
 5. **Enforce all field constraints** — dropdown enums from the JSON schemas, required fields, data types
@@ -198,7 +198,7 @@ The artifact renders inline. The assessor reviews the extracted context and asse
 > ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
 
 Invoke AskUserQuestion — type: single-select
-- question: "CP1 — Review complete. Paste your changes from the artifact, or confirm no changes needed."
+- question: "Context Review — Review complete. Paste your changes from the artifact, or confirm no changes needed."
 - options: ["Confirm — No changes needed, proceed to framework construction", "I've pasted my changes above"]
 
 **What happens:**
@@ -223,7 +223,7 @@ Agent: **framework-builder**
 
 ---
 
-## CONFIRMATION POINT 2: Assessment Framework
+## FRAMEWORK REVIEW: Assessment Framework
 
 **What you see:**
 - **Domain Activation Table:** domain name | activation status (mandatory/optional) | criticality | weight (%) | module count
@@ -232,18 +232,18 @@ Agent: **framework-builder**
 
 **Before presenting to the assessor, save a review file:**
 
-Save the full CP2 summary as a formatted markdown file to the reports folder:
+Save the full Framework Review summary as a formatted markdown file to the reports folder:
 
 ```
-$WORKSPACE/assessment/pre-assessment/reports/CP2_Framework_[YYYY-MM-DD].md
+$WORKSPACE/assessment/pre-assessment/reports/FrameworkReview_[YYYY-MM-DD].md
 ```
 
-**Generate the CP2 Interactive Review Artifact:**
+**Generate the Framework Review Interactive Artifact:**
 
-Load the `interactive-review` skill and its `references/cp2-artifact.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
+Load the `interactive-review` skill and its `references/framework-review-artifact.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
 
 1. **Embed the actual data** from `$WORKSPACE/assessment/pre-assessment/data/framework.json` as a constant at the top of the React component
-2. **Follow the CP2 artifact specification** in `skills/interactive-review/references/cp2-artifact.md` exactly — domain cards with weight sliders, criticality dropdowns, module tables, hard blockers panel, live radar chart
+2. **Follow the Framework Review artifact specification** in `skills/interactive-review/references/framework-review-artifact.md` exactly — domain cards with weight sliders, criticality dropdowns, module tables, hard blockers panel, live radar chart
 3. **Use the shared design system** from `skills/interactive-review/SKILL.md`
 4. **Include the Changes Footer** (collapsed by default) with change counter and Copy to Clipboard button
 5. **Enforce all constraints in the UI:**
@@ -261,7 +261,7 @@ The artifact renders inline. The assessor reviews domains, adjusts weights via s
 > ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
 
 Invoke AskUserQuestion — type: single-select
-- question: "CP2 — Review complete. Paste your changes from the artifact, or confirm no changes needed."
+- question: "Framework Review — Review complete. Paste your changes from the artifact, or confirm no changes needed."
 - options: ["Confirm — Framework looks correct, proceed to research", "I've pasted my changes above"]
 
 **What happens:**
@@ -344,7 +344,7 @@ Script: **go_nogo_determinator.py**
 
 ---
 
-## CONFIRMATION POINT 3: Scored Findings
+## SCORES REVIEW: Scored Findings
 
 **What you see:**
 - **Overall Readiness Score** – domain-level scores + overall readiness %
@@ -355,11 +355,11 @@ Script: **go_nogo_determinator.py**
 
 **Before presenting to the assessor, save a review file:**
 
-Save the full CP3 summary as a formatted markdown file to the reports folder:
+Save the full Scores Review summary as a formatted markdown file to the reports folder:
 
-**Generate the CP3 Interactive Review Artifact:**
+**Generate the Scores Review Interactive Artifact:**
 
-Load the `interactive-review` skill and its `references/cp3-artifact.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
+Load the `interactive-review` skill and its `references/scores-review-artifact.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
 
 1. **Embed the actual data** from the following files as constants:
    - `$WORKSPACE/assessment/pre-assessment/data/readiness-register.json`
@@ -367,7 +367,7 @@ Load the `interactive-review` skill and its `references/cp3-artifact.md` referen
    - `$WORKSPACE/assessment/pre-assessment/data/gap-register.json`
    - `$WORKSPACE/assessment/pre-assessment/data/dependency-map.json`
    - `$WORKSPACE/assessment/pre-assessment/data/go-nogo-determination.json`
-2. **Follow the CP3 artifact specification** in `skills/interactive-review/references/cp3-artifact.md` exactly — executive summary header with determination badge and score gauges, four tabs (Domain Scores with dual-series radar chart, Gap Register with filters, Dependency Map flow visualization, Determination Detail with gate results)
+2. **Follow the Scores Review artifact specification** in `skills/interactive-review/references/scores-review-artifact.md` exactly — executive summary header with determination badge and score gauges, four tabs (Domain Scores with dual-series radar chart, Gap Register with filters, Dependency Map flow visualization, Determination Detail with gate results)
 3. **Use the shared design system** from `skills/interactive-review/SKILL.md`
 4. **Include the Changes Footer** (collapsed by default)
 5. **Scores are NOT editable** — display only. The only interactive elements are:
@@ -382,7 +382,7 @@ Flags and notes are recorded in the audit trail — they do **not** change score
 > ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
 
 Invoke AskUserQuestion — type: single-select
-- question: "CP3 — Review complete. Paste your flags/notes from the artifact, or confirm no changes needed."
+- question: "Scores Review — Review complete. Paste your flags/notes from the artifact, or confirm no changes needed."
 - options: ["Confirm — No flags or notes, proceed to QA/QC review", "I've pasted my flags/notes above"]
 
 **What happens:**

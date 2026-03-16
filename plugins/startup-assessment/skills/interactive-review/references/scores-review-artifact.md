@@ -1,4 +1,4 @@
-# CP3 Artifact: Scored Findings Review
+# Scores Review Artifact: Scored Findings Review
 
 ## Data Sources
 
@@ -14,7 +14,7 @@
 
 ```
 [Company Name]                              [DETERMINATION BADGE — large, color-coded]
-Pre-Assessment · Confirmation Point 3
+Pre-Assessment · Scores Review
 
 [Readiness: NN%]  [Fit-to-Purpose: NN%]  [Gate 1: ✓/✗] [Gate 2: ✓/✗] [Gate 3: ✓/✗]
 ```

@@ -43,7 +43,7 @@ Runs the complete pre-assessment workflow:
 8. Produces go/no-go determination
 9. Delivers 4 outputs: HTML report, PDF report, scored module register (JSON), research provenance register (JSON)
 
-**Confirmation Points:** 3 — Context Profile (CP1), Framework (CP2), Scored Findings (CP3)
+**Review Points:** 3 — Context Review, Framework Review, Scores Review
 
 **Outputs:**
 - `[CompanyName]_PreAssessment_[YYYY-MM-DD].html` — Interactive multi-tab report, executive dashboard landing
@@ -66,7 +66,7 @@ Runs the full assessment phase. Requires a GO or CONDITIONAL GO pre-assessment d
 6. Produces final assessment determination
 7. Delivers HTML report + PDF report + assessment data MD (upload this to run `/sensitivity`)
 
-**Confirmation Points:** 2 — Assessment Scope (CP4), Reconciled Findings (CP5)
+**Review Points:** 2 — Scope Review, Findings Review
 
 ---
 
@@ -136,15 +136,15 @@ Web retrieval (Brave Search) is the active fallback for all categories when stru
 5. Review the HTML report and PDF when delivered
 6. When ready to proceed, upload the `.md` data file and run `/assess`
 
-### Confirmation Points Guide
+### Review Points Guide
 
-| CP | When | What You See | What You Can Do |
-|----|------|-------------|-----------------|
-| CP1 | After context extraction | Company context profile + assessor mandate | Correct any extraction errors; adjust geographic frame |
-| CP2 | After framework construction | Active domains, modules, weights, rationale | Add modules; adjust criticality within bounds; cannot remove mandatory modules |
-| CP3 | After scoring | Scored registers, gap register, dependency map | Flag items for reconsideration; provide additional context |
-| CP4 | After scope determination | Assessment mode per domain, sequencing plan | Escalate modes (never reduce); confirm or adjust |
-| CP5 | After reconciliation | Cross-domain conflicts and resolutions | Flag any unresolved items; document overrides |
+| Review | When | What You See | What You Can Do |
+|--------|------|-------------|-----------------|
+| Context Review | After context extraction | Company context profile + assessor mandate | Correct any extraction errors; adjust geographic frame |
+| Framework Review | After framework construction | Active domains, modules, weights, rationale | Add modules; adjust criticality within bounds; cannot remove mandatory modules |
+| Scores Review | After scoring | Scored registers, gap register, dependency map | Flag items for reconsideration; provide additional context |
+| Scope Review | After scope determination | Assessment mode per domain, sequencing plan | Escalate modes (never reduce); confirm or adjust |
+| Findings Review | After reconciliation | Cross-domain conflicts and resolutions | Flag any unresolved items; document overrides |
 
 ---
 

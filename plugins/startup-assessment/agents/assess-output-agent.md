@@ -223,7 +223,7 @@ For each module:
 - Score aggregation validated: PASS / FAIL
 - All conflicts resolved: PASS / FAIL
 - All gaps documented: PASS / FAIL
-- CP5 checkpoint approved: PASS / FLAGGED / OVERRIDE
+- Findings Review checkpoint approved: PASS / FLAGGED / OVERRIDE
 
 #### Tab 6: Appendix
 
@@ -234,13 +234,13 @@ For each module:
   Timestamp | Action | Assessor | Details
   2026-03-05 10:15 | Domain 1 assessment started | Jane Doe | Mode: Deep-Independent
   2026-03-05 11:45 | Domain 1 assessment complete | Jane Doe | Score: 0.72
-  2026-03-05 12:00 | CP3 checkpoint approved | Jane Doe | All 10 domains assessed
+  2026-03-05 12:00 | Scores Review checkpoint approved | Jane Doe | All 10 domains assessed
   ...
   ```
 
 **Assessor Corrections & Overrides:**
 - List any corrections made to domain findings post-completion
-- List any determinations overridden by assessor at CP5
+- List any determinations overridden by assessor at Findings Review
 - Timestamp, reason, and approval status for each
 
 **Full Integration Calculations:**
@@ -433,7 +433,7 @@ Machine-readable structured data file for sensitivity phase upload. Contains all
 
 - Assessment mode per domain: [deep-independent / verification / gap-focused]
 - QA/QC status: [PASS / FLAGGED items]
-- CP5 checkpoint: [approved / flagged / override]
+- Findings Review checkpoint: [approved / flagged / override]
 - External research conducted: [Y/N]; [N] new sources retrieved
 
 ---

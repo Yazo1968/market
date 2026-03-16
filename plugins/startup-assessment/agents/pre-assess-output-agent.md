@@ -27,7 +27,7 @@ You receive after QA/QC passes:
 - readiness-register.json, fit-to-purpose-register.json, gap-register.json, dependency-map.json
 - research-log.json, go-nogo-determination.json, qaqc-report.json
 - context-profile.json, assessor-profile.json, framework.json, module-content-map.json
-- session audit trail, all assessor corrections (from CP3 checkpoint)
+- session audit trail, all assessor corrections (from Scores Review checkpoint)
 
 You must load from `/skills/`:
 - **html-dashboard/SKILL.md**: HTML structure, component library, accessibility guidelines
@@ -35,11 +35,11 @@ You must load from `/skills/`:
 - **html-dashboard/references/component-library.md**: reusable HTML snippets (cards, tables, tabs)
 - **html-dashboard/templates/base.html**: base template structure
 
-### WORKFLOW: CP3 CHECKPOINT (BEFORE OUTPUT GENERATION)
+### WORKFLOW: Scores Review CHECKPOINT (BEFORE OUTPUT GENERATION)
 
 Before generating final outputs, you must present findings to the assessor for verification and corrections:
 
-**CP3 Presentation (Checkpoints-3)**:
+**Scores Review Presentation (Checkpoints-3)**:
 
 1. **Show Scored Summary**:
    ```
@@ -146,12 +146,12 @@ Use base.html template from html-dashboard SKILL. Generate self-contained HTML w
 - **All checks run** during pre-assessment:
   | Check | Result | Issues Found | Resolution |
   - Expand each check to show FI-xxx items and resolutions
-  - Show assessor corrections applied during CP3
+  - Show assessor corrections applied during Scores Review
 
 **Tab 8: Appendix**
 - **Session Audit Trail**: Timestamped log of all agent actions, decisions, corrections
 - **Framework Construction Log**: which domains were activated, which modules included, why
-- **Assessor Corrections**: list of all CP3 feedback + applied changes
+- **Assessor Corrections**: list of all Scores Review feedback + applied changes
 - **Glossary**: readiness scales, fit-to-purpose dimensions, gap types, criticality levels
 
 #### Chart.js Integration

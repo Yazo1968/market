@@ -571,7 +571,7 @@ The assessor's risk tolerance (captured in the assessor profile) must be formall
 | **Moderate** (PE, family office, balanced) | Standard thresholds apply | Balanced risk/return framing; Path B structures balance protections with upside |
 | **Aggressive** (VC, angel, growth-focused) | Domain floors lowered by -5 points; early-stage gaps weighted less | Emphasize upside potential; lead with opportunity; Path B structures prioritize flexibility and optionality |
 
-**Implementation:** The `go_nogo_determinator.py` script accepts a `risk_appetite` parameter that adjusts the readiness score bands and domain floor thresholds per the table above. This is set during framework construction (CP2) based on the assessor profile and cannot be changed after CP2 confirmation.
+**Implementation:** The `go_nogo_determinator.py` script accepts a `risk_appetite` parameter that adjusts the readiness score bands and domain floor thresholds per the table above. This is set during framework construction (Framework Review) based on the assessor profile and cannot be changed after Framework Review confirmation.
 
 **Standards basis:** COSO ERM (risk appetite defined and linked to strategy), ISO 31000 (risk evaluation against risk criteria/appetite).
 

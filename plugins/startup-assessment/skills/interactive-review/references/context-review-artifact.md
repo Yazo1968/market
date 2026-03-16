@@ -1,4 +1,4 @@
-# CP1 Artifact: Context & Assessor Profile Review
+# Context Review Artifact: Context & Assessor Profile Review
 
 ## Data Sources
 
@@ -11,7 +11,7 @@
 
 ```
 [Company Name]                                    [Funding Stage Badge]
-Pre-Assessment · Confirmation Point 1
+Pre-Assessment · Context Review
 ```
 
 ### Tabs

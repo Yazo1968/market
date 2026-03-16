@@ -84,7 +84,7 @@ Read these files in order:
 6. `$WORKSPACE/assessment/assessment/data/assessment-scope-plan.json`
 7. All `$WORKSPACE/assessment/assessment/data/domain-findings-*.json` files — use the `Read` tool on each one found
 
-Also read any CP4 and CP5 review files in `$WORKSPACE/assessment/assessment/reports/` for audit trail context.
+Also read any Scope Review and Findings Review files in `$WORKSPACE/assessment/assessment/reports/` for audit trail context.
 
 Confirm in chat: "Loaded assessment data for [Company Name] — determination: [GO/CONDITIONAL GO/etc.]" before proceeding.
 

@@ -171,7 +171,7 @@ Agent: **recommendations-agent** (continued, output generation mode)
   - `$WORKSPACE/assessment/sensitivity/data/sensitivity-analysis.json`
   - `$WORKSPACE/assessment/pre-assessment/data/context-profile.json`
   - `$WORKSPACE/assessment/pre-assessment/data/assessor-profile.json`
-  - Session audit trail (CP1–CP5 confirmations and all adjustments)
+  - Session audit trail (all review point confirmations and adjustments)
 - **Mandatory**: Load the `design-system` skill and the `html-dashboard` skill before generating. Apply the centralized design system's tokens and meet the Quality Contract. Adapt tone to assessor type. This is the **final deliverable** — quality standards are at their highest here.
 - **Content freedom**: The agent determines optimal structure, sections, and narrative for this specific case — which paths to present, how to frame the roadmap, what deal terms to suggest, how to tell the investment story.
 - Generates 3 deliverable outputs (all saved to `$WORKSPACE/assessment/recommendations/reports/`):
@@ -185,11 +185,11 @@ Agent: **recommendations-agent** (continued, output generation mode)
    - Print-optimized HTML variant; format adapts to assessor type per `html-dashboard` skill
    - **FINAL DELIVERABLE** — includes complete session audit trail in appendix
    - Audit trail documents:
-     - CP1 (Context & Assessor Profile) confirmation
-     - CP2 (Framework) confirmation and any adjustments
-     - CP3 (Scored Findings) confirmation and any notes
-     - CP4 (Assessment Scope) confirmation and any escalations
-     - CP5 (Reconciled Findings) confirmation and any overrides
+     - Context Review confirmation
+     - Framework Review confirmation and any adjustments
+     - Scores Review confirmation and any notes
+     - Scope Review confirmation and any escalations
+     - Findings Review confirmation and any overrides
      - All research sources and confidence scores
      - All scoring logic and determination pathways
      - All sensitivity methodology and Path B eligibility logic

@@ -185,7 +185,7 @@ Produce **two outputs**:
    }
    ```
 
-2. **Human-Readable Summary** for CP1 presentation:
+2. **Human-Readable Summary** for Context Review presentation:
    - Assessor Profile: type, firm, investment thesis (1–2 sentences)
    - Decision Priorities: ranked list of domains with weight modifiers
    - Non-Negotiables: explicit list of deal-breaker criteria
@@ -193,7 +193,7 @@ Produce **two outputs**:
    - Report Format: which assessment memo format will be used
    - Assessor Notes: any special considerations or guidance for framework builder
 
-### CP1 Presentation Guidance
+### Context Review Presentation Guidance
 
 - Present assessor profile clearly and concisely in the human-readable summary
 - Confirm that priority rankings match the collected answers

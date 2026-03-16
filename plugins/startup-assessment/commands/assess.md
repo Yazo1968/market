@@ -5,9 +5,9 @@ model: sonnet
 argument-hint: (no arguments required — reads automatically from workspace folders)
 ---
 
-<!-- Checkpoints defined in this command:
-     CP4 — Assessment Scope review (line ~134)
-     CP5 — Reconciled Findings review (line ~263)
+<!-- Review points defined in this command:
+     Scope Review — Assessment Scope review (line ~134)
+     Findings Review — Reconciled Findings review (line ~263)
 -->
 
 ## /assess Command: Full Domain Assessment & Reconciliation
@@ -93,7 +93,7 @@ Read these files in order:
 9. `$WORKSPACE/assessment/pre-assessment/data/research-log.json`
 10. `$WORKSPACE/assessment/pre-assessment/data/preliminary-go-nogo-determination.json`
 
-Also read any `.md` files in `$WORKSPACE/assessment/pre-assessment/reports/` (CP1, CP2, CP3 review files) for audit trail context.
+Also read any `.md` files in `$WORKSPACE/assessment/pre-assessment/reports/` (Context Review, Framework Review, Scores Review files) for audit trail context.
 
 For the original business case documents in `$WORKSPACE/assessment/business-case-docs/`: read MD/DOCX/TXT files directly with the `Read` tool. PDFs are image-based — if their extracted text is not already in `$WORKSPACE/assessment/pre-assessment/data/business-case.md`, re-run OCR extraction (see `/pre-assess` Step 1 for the OCR script).
 
@@ -130,27 +130,27 @@ Agent: **scope-determinator**
 
 ---
 
-## CONFIRMATION POINT 4: Assessment Scope
+## SCOPE REVIEW: Assessment Scope
 
 **What you see:** An interactive review artifact rendered inline in the conversation.
 
 **Before presenting to the assessor, save a review file:**
 
-Save the full CP4 summary as a formatted markdown file:
+Save the full Scope Review summary as a formatted markdown file:
 
 ```
-assessment/assessment/reports/CP4_AssessmentScope_[YYYY-MM-DD].md
+assessment/assessment/reports/ScopeReview_[YYYY-MM-DD].md
 ```
 
-**Generate the CP4 Interactive Review Artifact:**
+**Generate the Scope Review Interactive Artifact:**
 
-Load the `interactive-review` skill and its `references/cp4-artifact.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
+Load the `interactive-review` skill and its `references/scope-review-artifact.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
 
 1. **Embed the actual data** from the following files as constants:
    - `$WORKSPACE/assessment/assessment/data/assessment-scope-plan.json`
    - `$WORKSPACE/assessment/pre-assessment/data/readiness-register.json` (for pre-assess scores display)
    - `$WORKSPACE/assessment/pre-assessment/data/fit-to-purpose-register.json` (for pre-assess scores display)
-2. **Follow the CP4 artifact specification** in `skills/interactive-review/references/cp4-artifact.md` exactly — scope table with mode escalation dropdowns, wave timeline visualization, mode distribution pie chart, pre-assessment context card
+2. **Follow the Scope Review artifact specification** in `skills/interactive-review/references/scope-review-artifact.md` exactly — scope table with mode escalation dropdowns, wave timeline visualization, mode distribution pie chart, pre-assessment context card
 3. **Use the shared design system** from `skills/interactive-review/SKILL.md`
 4. **Include the Changes Footer** (collapsed by default) with change counter and Copy to Clipboard button
 5. **Enforce all constraints in the UI:**
@@ -165,7 +165,7 @@ The artifact renders inline. The assessor reviews the scope plan, escalates mode
 > ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
 
 Invoke AskUserQuestion — type: single-select
-- question: "CP4 — Review complete. Paste your changes from the artifact, or confirm no changes needed."
+- question: "Scope Review — Review complete. Paste your changes from the artifact, or confirm no changes needed."
 - options: ["Confirm — The scope looks correct, proceed with domain assessment", "I've pasted my changes above"]
 
 **What happens:**
@@ -255,31 +255,31 @@ After reconciliation produces the integrated findings and determination, the sam
    - `challenge_survives`: boolean — does the original determination survive the red-team challenge?
    - `challenge_notes`: any modifications or caveats the red-team review suggests
 
-The red-team challenge is **informational only** — it does not change scores or determination. It is surfaced in CP5 and included in the final report appendix.
+The red-team challenge is **informational only** — it does not change scores or determination. It is surfaced in Findings Review and included in the final report appendix.
 
 ---
 
-## CONFIRMATION POINT 5: Reconciled Findings
+## FINDINGS REVIEW: Reconciled Findings
 
 **What you see:** An interactive review artifact rendered inline in the conversation.
 
 **Before presenting to the assessor, save a review file:**
 
-Save the full CP5 summary as a formatted markdown file:
+Save the full Findings Review summary as a formatted markdown file:
 
 ```
-assessment/assessment/reports/CP5_ReconciledFindings_[YYYY-MM-DD].md
+assessment/assessment/reports/FindingsReview_[YYYY-MM-DD].md
 ```
 
-**Generate the CP5 Interactive Review Artifact:**
+**Generate the Findings Review Interactive Artifact:**
 
-Load the `interactive-review` skill and its `references/cp5-artifact.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
+Load the `interactive-review` skill and its `references/findings-review-artifact.md` reference. Then generate a **self-contained React artifact** using the Cowork artifact rendering system. The artifact must:
 
 1. **Embed the actual data** from the following files as constants:
    - `$WORKSPACE/assessment/assessment/data/integrated-findings-register.json`
    - `$WORKSPACE/assessment/assessment/data/domain-findings-*.json` (all domain files)
    - `$WORKSPACE/assessment/assessment/data/updated-go-nogo-determination.json`
-2. **Follow the CP5 artifact specification** in `skills/interactive-review/references/cp5-artifact.md` exactly — final determination header with pre-assess vs assess comparison, five tabs (Cross-Domain Conflicts, Compounding Risks, Reinforcing Strengths, Domain-by-Domain Summary with expandable detail, Final Determination)
+2. **Follow the Findings Review artifact specification** in `skills/interactive-review/references/findings-review-artifact.md` exactly — final determination header with pre-assess vs assess comparison, five tabs (Cross-Domain Conflicts, Compounding Risks, Reinforcing Strengths, Domain-by-Domain Summary with expandable detail, Final Determination)
 3. **Use the shared design system** from `skills/interactive-review/SKILL.md`
 4. **Include the Changes Footer** (collapsed by default) with change counter and Copy to Clipboard button
 5. **Scores are NOT editable** — display only. The only interactive elements are:
@@ -294,7 +294,7 @@ Override notes and flags are recorded in the audit trail — they do **not** cha
 > ⚠️ **STRICT RULE — Interactive Questions:** Do NOT write question text as prose. Invoke `AskUserQuestion` silently — the widget renders automatically.
 
 Invoke AskUserQuestion — type: single-select
-- question: "CP5 — Review complete. Paste your overrides/notes from the artifact, or confirm no changes needed."
+- question: "Findings Review — Review complete. Paste your overrides/notes from the artifact, or confirm no changes needed."
 - options: ["Confirm — Lock findings and generate final assessment outputs", "I've pasted my overrides/notes above"]
 
 **What happens:**
@@ -345,8 +345,8 @@ All three outputs are displayed with download links. Final determination is disp
 ```
 assessment/assessment/
 ├── reports/
-│   ├── CP4_AssessmentScope_[YYYY-MM-DD].md
-│   ├── CP5_ReconciledFindings_[YYYY-MM-DD].md
+│   ├── ScopeReview_[YYYY-MM-DD].md
+│   ├── FindingsReview_[YYYY-MM-DD].md
 │   ├── [CompanyName]_Assessment_[YYYY-MM-DD].html
 │   ├── [CompanyName]_Assessment_[YYYY-MM-DD].pdf
 │   └── [CompanyName]_Assessment_[YYYY-MM-DD].md

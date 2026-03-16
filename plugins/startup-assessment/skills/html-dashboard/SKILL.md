@@ -593,16 +593,16 @@ HUMAN OVERSIGHT
 
 This assessment includes [count] human confirmation points:
 
-  CP1: Framework confirmation — Assessor confirmed domain activation, weighting,
+  Context Review: Assessor confirmed context profile, assessor mandate,
+       and extraction accuracy [timestamp]
+  Framework Review: Assessor confirmed domain activation, weighting,
        and assessment scope [timestamp]
-  CP2: Content mapping confirmation — Assessor confirmed module-content assignments
-       and research completeness [timestamp]
-  CP3: Scoring confirmation — Assessor confirmed all domain scores and gap
+  Scores Review: Assessor confirmed all domain scores and gap
        classifications [timestamp]
-  CP4: Determination confirmation — Assessor confirmed final determination after
+  Scope Review: Assessor confirmed assessment modes and domain
+       sequencing plan [timestamp]
+  Findings Review: Assessor confirmed final determination after
        cross-domain reconciliation and red-team challenge [timestamp]
-  CP5: Report confirmation — Assessor confirmed final report content and approved
-       delivery [timestamp]
 
 All assessor overrides and corrections are logged in the Session Audit Trail
 with timestamps per SOC 2 / ISAE 3402 temporal audit requirements.

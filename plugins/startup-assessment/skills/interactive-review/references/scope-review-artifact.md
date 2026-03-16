@@ -1,4 +1,4 @@
-# CP4 Artifact: Assessment Scope Review
+# Scope Review Artifact: Assessment Scope Review
 
 ## Data Source
 
@@ -12,7 +12,7 @@
 
 ```
 [Company Name]                              [Domains to Assess: N]
-Assessment · Confirmation Point 4            [Estimated Duration: ~Xh]
+Assessment · Scope Review            [Estimated Duration: ~Xh]
 ```
 
 **Wave Summary Bar:**

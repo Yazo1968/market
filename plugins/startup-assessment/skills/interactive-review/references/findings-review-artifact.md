@@ -1,4 +1,4 @@
-# CP5 Artifact: Reconciled Findings Review
+# Findings Review Artifact: Reconciled Findings Review
 
 ## Data Sources
 
@@ -12,7 +12,7 @@
 
 ```
 [Company Name]                                          [FINAL DETERMINATION BADGE]
-Assessment · Confirmation Point 5
+Assessment · Findings Review
 
 Pre-Assessment: [BADGE] ──▶ Assessment: [BADGE]     [Overall Score: NN%]
 ```
@@ -118,7 +118,7 @@ Compact table with one row per domain:
 
 **Tab 5: Final Determination**
 
-- Full determination card (same as CP3 Tab 4 but with assessment-phase data):
+- Full determination card (same as Scores Review Tab 4 but with assessment-phase data):
   - Large determination badge
   - Full rationale paragraph
   - Score breakdown (readiness, fit, overall)

@@ -1,4 +1,4 @@
-# CP2 Artifact: Assessment Framework Review
+# Framework Review Artifact: Assessment Framework Review
 
 ## Data Source
 
@@ -10,7 +10,7 @@
 
 ```
 [Company Name]                    [Active Domains: N/10] [Total Modules: N]
-Pre-Assessment · Confirmation Point 2
+Pre-Assessment · Framework Review
 ```
 
 **Stats bar** (below header):

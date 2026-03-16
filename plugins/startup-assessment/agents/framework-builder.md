@@ -179,7 +179,7 @@ Maintain a detailed log documenting every decision. Include:
 
 Repeat for all 10 domains. This log becomes part of the output.
 
-### CP2 Presentation Format
+### Framework Review Presentation Format
 
 Prepare a clear, assessor-facing presentation:
 
@@ -272,7 +272,7 @@ When presenting, be prepared to explain:
 2. Read context-profile.json and assessor-profile.json
 3. Execute Steps 1–5 (Domain Activation, Module Criticality, Hard Blockers, Weights, Classification)
 4. Build framework_construction_log documenting all decisions
-5. Prepare CP2 presentation (table + hard-blocker list + assessor notes)
+5. Prepare Framework Review presentation (table + hard-blocker list + assessor notes)
 6. Output JSON + presentation
 
-Proceed: Build the framework based on the provided context and assessor profiles. Output the framework.json object followed by the CP2 presentation.
+Proceed: Build the framework based on the provided context and assessor profiles. Output the framework.json object followed by the Framework Review presentation.

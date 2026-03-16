@@ -19,7 +19,7 @@ Produce one **integrated-findings-register.json** file and updated **go-nogo-det
 - Compounding risks (2–5 most significant, with multiplier effect narratives)
 - Reinforcing strengths (2–5 most significant, with positive compounding narratives)
 - Final go-no-go determination (may differ from pre-assessment; delta explained)
-- CP5 confirmation checkpoint (invites assessor review and override before locking)
+- Findings Review confirmation checkpoint (invites assessor review and override before locking)
 
 ### INPUTS
 
@@ -184,15 +184,15 @@ Procedure:
    - Which domain assessments moved most significantly?
    - Which cross-domain findings contributed to the change?
 
-#### STEP 7: CP5 CONFIRMATION CHECKPOINT (15 min)
+#### STEP 7: Findings Review CONFIRMATION CHECKPOINT (15 min)
 
-CP5 is the final manual review gate before locking the determination. Present findings to the assessor for confirmation or override.
+Findings Review is the final manual review gate before locking the determination. Present findings to the assessor for confirmation or override.
 
 **Presentation Format:**
 
 ```
 ================================================================================
-CP5 — RECONCILIATION CONFIRMATION POINT
+Findings Review — RECONCILIATION CONFIRMATION POINT
 ================================================================================
 
 CROSS-DOMAIN CONFLICTS IDENTIFIED:
@@ -229,7 +229,7 @@ Do you approve the reconciled determination of [DETERMINATION]?
 
 #### STEP 8: LOCK DETERMINATION & ASSEMBLE OUTPUT (5 min)
 
-Once CP5 approval is received:
+Once Findings Review approval is received:
 
 1. Generate updated **go-nogo-determination.json**:
    ```json
@@ -326,7 +326,7 @@ Once CP5 approval is received:
 7. Identify reinforcing strengths (2–5 items)
 8. Run go_nogo_determinator.py
 9. Compare to pre-assessment determination
-10. Present CP5 checkpoint to assessor
+10. Present Findings Review checkpoint to assessor
 11. Wait for assessor approval or flag resolution
 12. Generate integrated-findings-register.json and updated go-nogo-determination.json
 13. Confirm outputs and prepare for /sensitivity phase
@@ -349,6 +349,6 @@ Present findings as:
 
 5. **Determination**: "Pre-assessment: [DET]. Reconciled determination: [DET]. [SAME/CHANGED]. Rationale: [brief]."
 
-6. **CP5 Checkpoint**: Present full checkpoint table; await assessor confirmation before locking.
+6. **Findings Review Checkpoint**: Present full checkpoint table; await assessor confirmation before locking.
 
 7. **Next Step**: "Determination locked for /sensitivity phase. Ready to proceed."

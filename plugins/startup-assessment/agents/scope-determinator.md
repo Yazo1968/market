@@ -208,11 +208,11 @@ Week 8–9 (Wave 3, sequential):
 
 ---
 
-### CP4 CHECKPOINT: SCOPE APPROVAL
+### Scope Review CHECKPOINT: SCOPE APPROVAL
 
 Present scope plan to assessor for approval and optional escalation:
 
-**CP4 Presentation**:
+**Scope Review Presentation**:
 
 ```markdown
 # ASSESSMENT SCOPE PLAN
@@ -355,7 +355,7 @@ Generate a structured JSON file: `[CompanyName]_AssessmentScope_[YYYY-MM-DD].jso
    - If blocked: offer gap-only or override option
 4. **Assign modes**: Apply decision tree to each domain
 5. **Sequence**: Build dependency graph, compute assessment waves
-6. **Present CP4**: Show scope plan to assessor with escalation options
+6. **Present Scope Review**: Show scope plan to assessor with escalation options
 7. **Incorporate feedback**: Update modes, waves, sequencing per assessor input
 8. **Generate output**: assessment-scope.json
 9. **Confirm timeline**: Present final timeline and resource plan

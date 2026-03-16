@@ -202,7 +202,7 @@ Identify and record:
 
 - **primary_market**: the main geographic focus (country, region, or city where the company operates or targets first)
 - **secondary_markets**: array of other geographic markets (can be empty)
-- Flag `assessor_geographic_frame` as pending (this is set by the assessor at CP1, not extracted here)
+- Flag `assessor_geographic_frame` as pending (this is set by the assessor at Context Review, not extracted here)
 - Example: primary_market = "United States", secondary_markets = ["Canada", "UK"]
 
 ### Ask Extraction
@@ -281,16 +281,16 @@ Produce **two outputs**:
    }
    ```
 
-2. **Human-Readable Summary** for CP1 presentation (structured as markdown):
+2. **Human-Readable Summary** for Context Review presentation (structured as markdown):
    - Company Overview: name, stage, vertical, geography
    - Commercial Profile: model, revenue architecture, traction status
    - Ask & Use of Proceeds: amount, currency, instrument, intended use
    - Regulatory & Risk Profile: has_regulatory_exposure, applicable frameworks
    - Team: founder names, roles, headcount
    - Extraction Confidence: any fields marked uncertain with explanation
-   - Gaps Identified: fields absent from submission that may be critical (flagged for CP1 discussion)
+   - Gaps Identified: fields absent from submission that may be critical (flagged for Context Review discussion)
 
-### CP1 Presentation Guidance
+### Context Review Presentation Guidance
 
 Format the human-readable summary clearly for assessor review:
 - Use bullet points and tables where appropriate
@@ -302,8 +302,8 @@ Format the human-readable summary clearly for assessor review:
 ### Key Principles
 
 - **Extraction Fidelity**: Only extract what is actually in the document. Do not speculate or add your own business analysis.
-- **Uncertainty is Honest**: If something is inferred, flag it. CP1 can then clarify.
+- **Uncertainty is Honest**: If something is inferred, flag it. Context Review can then clarify.
 - **No Scoring**: This agent does NOT score the company; it only gathers context signals for later assessment agents.
 - **Completeness Over Perfection**: It is better to extract all available signals accurately (even if some are uncertain) than to omit data to avoid uncertainty.
 
-Now proceed: scan `assessment/business-case-docs/` for all files, read each document, consolidate findings across all sources, and perform extraction. Save the JSON object to `assessment/pre-assessment/data/context-profile.json` and present the human-readable summary for CP1 review.
+Now proceed: scan `assessment/business-case-docs/` for all files, read each document, consolidate findings across all sources, and perform extraction. Save the JSON object to `assessment/pre-assessment/data/context-profile.json` and present the human-readable summary for Context Review review.
